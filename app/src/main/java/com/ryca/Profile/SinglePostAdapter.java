@@ -1,0 +1,195 @@
+package com.ryca.Profile;
+
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.ryca.ImageViewActivity;
+import com.ryca.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ViewHolder> {
+    private  List<SinglePostModel> posts;
+
+    public SinglePostAdapter(List<SinglePostModel> posts) {
+        this.posts = posts;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate your item layout here
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.display_post, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Bind data to views here
+        SinglePostModel post = posts.get(position);
+
+        if (post.isSaved()) {
+            holder.savedImageView.setImageResource(R.drawable.saved);
+        } else {
+            holder.savedImageView.setImageResource(R.drawable.save);
+        }
+
+        Picasso.get()
+                .load(post.getPostImageUrl())
+                .fit()
+                .centerCrop(Gravity.TOP)
+                .into(holder.postImageView);
+        // Example: Set profile picture using an image loading library like Glide
+        Picasso.get()
+                .load(post.getProfilePictureUrl())
+                .fit()
+                .centerCrop(Gravity.TOP)
+                .into(holder.profilePictureImageView);
+
+        //      Set other data similarly
+        holder.usernameTextView.setText(post.getUsername());
+        holder.addressTextView.setText(post.getAddress());
+        holder.rate.setText("₹ " + post.getRating());
+        holder.category.setText(post.getCategory());
+        holder.description.setText(post.getDescription());
+        // Inside onBindViewHolder method
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return posts.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView profilePictureImageView, postImageView;
+        TextView usernameTextView;
+        TextView addressTextView, rate, category, description, interaction1,interaction2;
+        ImageView savedImageView;
+        // Add other views
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            profilePictureImageView = itemView.findViewById(R.id.profilepicturedp);
+            usernameTextView = itemView.findViewById(R.id.creatorsnamedp);
+            addressTextView = itemView.findViewById(R.id.creatorsaddressdp);
+            rate = itemView.findViewById(R.id.ratedp);
+            category = itemView.findViewById(R.id.categorydp);
+            description = itemView.findViewById(R.id.descriptiondp);
+            postImageView = itemView.findViewById(R.id.dppost);
+            savedImageView = itemView.findViewById(R.id.savedp);
+
+
+            // Set a click listener for the savedImageView
+            savedImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        // Handle save action here
+                        handleSaveAction(position);
+                    }
+                }
+            });
+
+
+            postImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Get the post at the clicked position
+                    SinglePostModel clickedPost = posts.get(getAdapterPosition());
+
+                    // Get the image URL of the post
+                    String imageUrl = clickedPost.getPostImageUrl();
+
+                    // Create an intent to start ImageViewActivity
+                    Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+
+                    // Put the image URL in the intent
+                    intent.putExtra("IMAGE_URL", imageUrl);
+
+                    // Start the activity
+                    itemView.getContext().startActivity(intent);
+                }
+            });
+
+        }
+
+        private void handleSaveAction(int position) {
+            // Get the post at the clicked position
+            SinglePostModel clickedPost = posts.get(position);
+
+            // Perform the save action here, e.g., update the database
+            savePostToFirebase(clickedPost);
+        }
+
+
+        // Just send the post id
+        private void savePostToFirebase(SinglePostModel post) {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                String userId = user.getUid();
+                String PostUser = post.getUserId();
+                // Create a reference to the Saved field
+                DatabaseReference savedReference = FirebaseDatabase.getInstance()
+                        .getReference("Saved")
+                        .child(userId)
+                        .child(PostUser);
+
+                // Assuming postID is a unique identifier for each post
+                String postID = post.getPostId();
+                boolean saveCheck = post.isSaved();
+
+                if (!saveCheck) {
+                    savedReference.child(postID).setValue(postID, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                // Firebase operation successful, update the UI
+                                savedImageView.setImageResource(R.drawable.saved);
+                                // Update the isSaved field in the post model
+                                post.setSaved(true);
+                            } else {
+                                Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                            }
+                        }
+                    });
+                } else {
+                    savedReference.child(postID).removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                // Firebase operation successful, update the UI
+                                savedImageView.setImageResource(R.drawable.save);
+                                // Update the isSaved field in the post model
+                                post.setSaved(false);
+                            } else {
+                                Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                            }
+                        }
+                    });
+
+
+                }
+            }
+        }
+    }
+}

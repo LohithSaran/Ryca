@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profilePicturecs"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:padding="5dp"
+        android:src="@drawable/profile"
+        android:textAlignment="center"
+        app:shapeAppearanceOverlay="@style/circular"
+        />
+
+
+    <TextView
+        android:id="@+id/creatorsname"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="19dp"
+        android:layout_toEndOf="@+id/profilePicturecs"
+        android:text="TextView"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/searchaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_below="@+id/creatorsname"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@+id/profilePicturecs"
+        android:text="TextView"
+        android:textSize="16dp" />
+
+
+</RelativeLayout>

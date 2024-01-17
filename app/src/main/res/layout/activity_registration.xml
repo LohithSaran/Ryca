@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbc"
+    tools:context=".LoginActivity">
+
+
+    <EditText
+        android:id="@+id/enteremailid"
+        android:layout_width="354dp"
+        android:layout_height="67dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="178dp"
+        android:layout_marginEnd="29dp"
+        android:background="@drawable/textview_background"
+        android:ems="10"
+
+        android:hint="Enter your email id"
+        android:inputType="textEmailAddress"
+        android:padding="20dp" />
+
+
+    <EditText
+        android:id="@+id/enterpassword"
+        android:layout_width="354dp"
+        android:layout_height="67dp"
+        android:layout_below="@+id/enterusername"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="355dp"
+        android:layout_marginEnd="29dp"
+        android:background="@drawable/textview_background"
+        android:ems="10"
+        android:hint="Create new password"
+        android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:paddingRight="80dp"
+
+        />
+
+    <ImageView
+        android:id="@+id/showpassw"
+        android:layout_width="36dp"
+        android:layout_height="35dp"
+        android:layout_alignStart="@+id/enterpassword"
+        android:layout_alignTop="@+id/enterpassword"
+        android:layout_alignEnd="@+id/enterpassword"
+        android:layout_marginStart="303dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/showpsw" />
+
+    <EditText
+        android:id="@+id/enterusername"
+        android:layout_width="354dp"
+        android:layout_height="67dp"
+        android:layout_below="@+id/enteremailid"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="265dp"
+        android:layout_marginEnd="29dp"
+        android:background="@drawable/textview_background"
+        android:ems="10"
+        android:hint="Create User name"
+        android:inputType="text"
+        android:padding="20dp" />
+
+    <ImageView
+        android:id="@+id/signupbtn"
+        android:layout_width="178dp"
+        android:layout_height="82dp"
+        android:layout_below="@+id/enterpassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="466dp"
+        android:layout_marginEnd="114dp"
+        app:srcCompat="@drawable/signup" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:layout_below="@+id/loginpgbtn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="631dp"
+        android:layout_marginEnd="0dp"
+        app:srcCompat="@drawable/orline" />
+
+    <TextView
+        android:id="@+id/loginpgbtn"
+        android:layout_width="266dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signupbtn"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="571dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginRight="-47dp"
+        android:text="Already have an account? Log in"
+        android:textColor="#0094FF"
+        android:textSize="18dp" />
+
+    <ImageView
+        android:id="@+id/creatacntbtn"
+        android:layout_width="239dp"
+        android:layout_height="91dp"
+        android:layout_below="@+id/imageView4"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="97dp"
+        android:layout_marginTop="701dp"
+        android:layout_marginEnd="96dp"
+        app:srcCompat="@drawable/continuewitgl" />
+
+
+
+
+</RelativeLayout>

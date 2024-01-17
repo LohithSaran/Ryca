@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Ryca" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.Ryca" parent="Base.Theme.Ryca" />
+
+    <style name="BottomNavigationStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">68dp</item> <!-- Set the desired height -->
+        <item name="android:background">@color/white</item>
+        <item name="itemIconSize">35dp</item> <!-- Set the desired icon size -->
+    </style>
+
+
+
+</resources>

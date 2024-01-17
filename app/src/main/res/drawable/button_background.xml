@@ -1,0 +1,18 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background shape -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="1dp"/>
+            <solid android:color="#FFA6C1"/>
+        </shape>
+    </item>
+
+    <!-- Vertical Line shape on the left -->
+    <item android:left="10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+        </shape>
+    </item>
+
+</layer-list>

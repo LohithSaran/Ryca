@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Profile.CreatorProfileActivity">
+
+    <EditText
+        android:id="@+id/shopname"
+        android:layout_width="318dp"
+        android:layout_height="77dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="368dp"
+        android:layout_marginEnd="43dp"
+        android:background="@drawable/button_background"
+        android:ems="10"
+        android:hint="Enter your shop name"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:maxLength="30"/>
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="125dp"
+        android:text="Shop Details"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+
+    <ImageView
+        android:id="@+id/newshopprof"
+        android:layout_width="wrap_content"
+        android:layout_height="136dp"
+        android:layout_below="@+id/textView11"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="126dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginEnd="120dp"
+        android:src="@drawable/profimage"
+        android:textAlignment="center"/>
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/shopdesc"
+        android:layout_width="318dp"
+        android:layout_height="175dp"
+        android:layout_below="@+id/newshopprof"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="208dp"
+        android:layout_marginEnd="43dp"
+        android:background="@drawable/button_background"
+        android:hint="Describe about your shop, like what are the products you sell."
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="20dp"
+        android:textAlignment="viewStart"
+        android:maxLength="200"/>
+
+    <ImageView
+        android:id="@+id/btnfinish"
+        android:layout_width="198dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/shopdesc"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="157dp"
+        android:layout_marginEnd="105dp"
+        android:src="@drawable/finish"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="197dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newshopprof"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="101dp"
+        android:text="Upload your shop photo"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+
+</RelativeLayout>

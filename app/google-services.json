@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "315441533670",
+    "firebase_url": "https://ryca-bf07f-default-rtdb.firebaseio.com",
+    "project_id": "ryca-bf07f",
+    "storage_bucket": "ryca-bf07f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315441533670:android:54f7a9a502c9dd5d72a127",
+        "android_client_info": {
+          "package_name": "com.ryca"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315441533670-vp0q8ntg79i0dukfpbnkgd4gmpi4cbsq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ryca",
+            "certificate_hash": "f949b04e2b4eb8bc8a58cb0d76dfda0fab71f6af"
+          }
+        },
+        {
+          "client_id": "315441533670-l8fcsnuhpec6mco0lj1iec8e46kck059.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyQmUPXYP7iS4sn-TQHGLSuWNIoJWJULQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315441533670-l8fcsnuhpec6mco0lj1iec8e46kck059.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
