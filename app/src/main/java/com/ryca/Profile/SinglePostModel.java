@@ -12,11 +12,10 @@ public class SinglePostModel {
     private String PostId;
     private boolean isSaved;
 
-    public SinglePostModel() {
-        
+    public SinglePostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
     }
 
-    public SinglePostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean fromFragment) {
+    public SinglePostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -26,9 +25,8 @@ public class SinglePostModel {
         this.description = description;
         this.userId = userId;
         this.PostId = PostId;
-        this.isSaved = fromFragment;
+        this.isSaved = isSaved;
     }
-
 
     public boolean isSaved() {
         return isSaved;

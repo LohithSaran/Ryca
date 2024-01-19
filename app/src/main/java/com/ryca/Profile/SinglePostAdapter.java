@@ -22,6 +22,7 @@ import com.ryca.ImageViewActivity;
 import com.ryca.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ViewHolder> {
@@ -46,8 +47,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
         if (post.isSaved()) {
             holder.savedImageView.setImageResource(R.drawable.saved);
+            Log.d("TrueOrFalse", "TrueFAdapt :" + post.getPostId() );
+            // Check this in the log as the post is visible it gets the id on the log it may help in interaction
+
         } else {
             holder.savedImageView.setImageResource(R.drawable.save);
+            Log.d("TrueOrFalse", "FalseFAdapt :" + post.getPostId() );
+
         }
 
         Picasso.get()
@@ -140,8 +146,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
             savePostToFirebase(clickedPost);
         }
 
-
-        // Just send the post id
         private void savePostToFirebase(SinglePostModel post) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
@@ -151,15 +155,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                 // Create a reference to the Saved field
                 DatabaseReference savedReference = FirebaseDatabase.getInstance()
                         .getReference("Saved")
-                        .child(userId)
-                        .child(PostUser);
+                        .child(userId);
 
                 // Assuming postID is a unique identifier for each post
                 String postID = post.getPostId();
                 boolean saveCheck = post.isSaved();
 
                 if (!saveCheck) {
-                    savedReference.child(postID).setValue(postID, new DatabaseReference.CompletionListener() {
+                    savedReference.child(postID).setValue(new HashMap<String, Object>() {{
+                        put("userId", PostUser);
+                        put("postImage", post.getPostImageUrl());
+                    }}, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                             if (error == null) {
@@ -172,6 +178,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                             }
                         }
                     });
+
                 } else {
                     savedReference.child(postID).removeValue(new DatabaseReference.CompletionListener() {
                         @Override

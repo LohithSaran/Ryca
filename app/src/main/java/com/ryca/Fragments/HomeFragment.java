@@ -379,7 +379,6 @@ public class HomeFragment extends Fragment {
 
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference("Saved")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(userId) // Assuming userId is the creator of the post
                 .child(PostId);
 
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {

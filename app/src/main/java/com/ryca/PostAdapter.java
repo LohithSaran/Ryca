@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.ryca.Fragments.CreatorsShowroom;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -375,15 +376,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 // Create a reference to the Saved field
                 DatabaseReference savedReference = FirebaseDatabase.getInstance()
                         .getReference("Saved")
-                        .child(userId)
-                        .child(PostUser);
+                        .child(userId);
 
                 // Assuming postID is a unique identifier for each post
                 String postID = post.getPostId();
                 boolean saveCheck = post.isSaved();
 
                 if (!saveCheck) {
-                    savedReference.child(postID).setValue(postID, new DatabaseReference.CompletionListener() {
+                    savedReference.child(postID).setValue(new HashMap<String, Object>() {{
+                        put("userId", PostUser);
+                        put("postImage", post.getPostImageUrl());
+                    }}, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                             if (error == null) {
