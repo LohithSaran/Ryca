@@ -2,6 +2,7 @@
 package com.ryca.Fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ryca.PostAdapter;
 import com.ryca.PostModel;
+import com.ryca.Profile.SavedPost;
 import com.ryca.R;
 
 import java.io.IOException;
@@ -125,6 +128,17 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(postAdapter);
+
+        ImageView savedImage = view.findViewById(R.id.savedposthp);
+
+        savedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), SavedPost.class);
+                startActivity(intent);
+            }
+        });
 
         // Call method to retrieve data from Firebase
         fetchFollowingUserIds();
@@ -378,23 +392,30 @@ public class HomeFragment extends Fragment {
     public void checkThePostId(String PostId, String userId) {
 
         DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference("Saved")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(PostId);
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String postKey = postSnapshot.getKey();
 
-                    // Toast.makeText(requireContext(), "position : " + userId + "~~" + PostId, Toast.LENGTH_SHORT).show();
-                    isSaved  = true;
+                    // Check if postKey is not null and has at least 20 characters
+                    if (postKey != null && postKey.length() >= 20) {
+                        String postKeySuffix = postKey.substring(14); // Get the last 20 characters omitting the first 14
+                        String postIdSuffix = PostId.substring(14); // Get the last 20 characters omitting the first 14
+
+                        // Check if the last 20 characters match
+                        if (PostId.equals(postKeySuffix)) {
+                            // Match found, set isSaved to true
+                            isSaved = true;
+                            break; // You can break if you only want to find the first match
+                        }
+                        else {
+                            isSaved = false;
+                        }
+                    }
                 }
-                else {
-
-                    isSaved = false;
-
-                }
-
             }
 
 

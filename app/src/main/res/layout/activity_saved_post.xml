@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile.SinglePostView">
+    tools:context=".Profile.SavedPost">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -15,35 +15,44 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/topText"
+            android:id="@+id/savedText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="143dp"
+            android:layout_marginBottom="7dp"
             android:gravity="center"
-            android:text="Saved Posts"
-            android:textAlignment="center"
+            android:text="Saved Exhibits"
             android:textSize="24dp"
             android:textStyle="bold" />
 
-
         <ImageView
             android:id="@+id/backbtn"
-            android:layout_width="33dp"
-            android:layout_height="26dp"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="95dp"
+            android:layout_marginBottom="9dp"
+            android:layout_toStartOf="@+id/savedText"
             app:srcCompat="@drawable/backbtn" />
 
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/singleviewpost"
+        android:id="@+id/photoGridsaved"
         android:layout_width="409dp"
-        android:layout_height="889dp"
+        android:layout_height="845dp"
+        android:background="#FFFFFF"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        android:layout_marginTop="5dp"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,9 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ryca.Fragments.CreatorsShowroom;
 import com.squareup.picasso.Picasso;
 
@@ -190,7 +192,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePictureImageView, postImageView;
         TextView usernameTextView;
-        TextView addressTextView, rate, category, description, interaction1,interaction2;
+        TextView addressTextView, rate, category, description, interaction1, interaction2;
         ImageView savedImageView;
         // Add other views
 
@@ -263,7 +265,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     fragmentTransaction.commit();
                 }
             });
-
 
 
             // Set a click listener for the savedImageView
@@ -373,50 +374,83 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             if (user != null) {
                 String userId = user.getUid();
                 String PostUser = post.getUserId();
-                // Create a reference to the Saved field
-                DatabaseReference savedReference = FirebaseDatabase.getInstance()
-                        .getReference("Saved")
-                        .child(userId);
 
                 // Assuming postID is a unique identifier for each post
                 String postID = post.getPostId();
                 boolean saveCheck = post.isSaved();
 
+                String timestamp = String.valueOf(System.currentTimeMillis());
+                String combinedKey = timestamp + "_" + postID;
+
+
+                DatabaseReference savedReference = FirebaseDatabase.getInstance()
+                        .getReference("Saved")
+                        .child(userId);
+
                 if (!saveCheck) {
-                    savedReference.child(postID).setValue(new HashMap<String, Object>() {{
+
+
+                    savedReference.child(combinedKey).setValue(new HashMap<String, Object>() {{
                         put("userId", PostUser);
+                        put("PostId", postID);
                         put("postImage", post.getPostImageUrl());
                     }}, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                             if (error == null) {
                                 // Firebase operation successful, update the UI
+
+
                                 savedImageView.setImageResource(R.drawable.saved);
                                 // Update the isSaved field in the post model
                                 post.setSaved(true);
+
                             } else {
                                 Log.e("Firebase", "Error updating save status: " + error.getMessage());
                             }
                         }
                     });
+                    // ...
                 } else {
-                    savedReference.child(postID).removeValue(new DatabaseReference.CompletionListener() {
+
+                    savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if (error == null) {
-                                // Firebase operation successful, update the UI
-                                savedImageView.setImageResource(R.drawable.save);
-                                // Update the isSaved field in the post model
-                                post.setSaved(false);
-                            } else {
-                                Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                                String snapshotKey = childSnapshot.getKey();
+                                if (snapshotKey != null && snapshotKey.length() >= 20) {
+                                    String last20Chars = snapshotKey.substring(snapshotKey.length() - 20);
+                                    if (last20Chars.equals(postID)) {
+                                        // Perform remove operation
+                                        Log.d("Suffix", "Removing value with key: " + snapshotKey + " tof: " + post.isSaved());
+                                        savedReference.child(snapshotKey).removeValue(new DatabaseReference.CompletionListener() {
+                                            @Override
+                                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                                if (error == null) {
+                                                    // Firebase operation successful, update the UI
+                                                    savedImageView.setImageResource(R.drawable.save);
+                                                    // Update the isSaved field in the post model
+                                                    post.setSaved(false);
+                                                    Log.d("Suffix", "Removing value with key: " + snapshotKey + " tof: " + post.isSaved());
+                                                } else {
+                                                    Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                                                }
+                                            }
+                                        });
+                                        break; // Stop iterating after finding the matching key
+                                    }
+                                }
                             }
                         }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Handle cancellation if needed
+                        }
                     });
-
-
                 }
             }
         }
     }
 }
+

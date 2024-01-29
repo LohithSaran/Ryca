@@ -357,7 +357,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                         profilePictureUrl,  username,  address, userId, postKeys, false));
+                                         profilePictureUrl,  username,  address, userId, postKeys, true));
 
                             }
 
@@ -661,7 +661,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl,  username,  address, userId, postKeys, false));
+                                        profilePictureUrl,  username,  address, userId, postKeys, true));
 
                             }
 
@@ -789,7 +789,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl, username, address, userId, postKeys, false));
+                                        profilePictureUrl, username, address, userId, postKeys, true));
 
                             }
 
