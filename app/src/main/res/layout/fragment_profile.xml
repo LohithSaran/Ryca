@@ -63,44 +63,13 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/username2cs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/bio"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="86dp"
-                    android:layout_marginTop="17dp"
-                    android:text="Contact Via : "
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/emailcs"
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
-                    android:layout_below="@id/bio"
-                    android:layout_marginStart="43dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_toEndOf="@id/username2cs"
-                    android:src="@drawable/baseline_email_24" />
-
-                <ImageView
-                    android:id="@+id/whatsappcs"
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
-                    android:layout_below="@id/bio"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="86dp"
-                    android:src="@drawable/baseline_call_24" />
-
-                <TextView
                     android:id="@+id/postcountcs"
                     android:layout_width="130dp"
                     android:layout_height="60dp"
-                    android:layout_below="@id/username2cs"
+                    android:layout_alignTop="@+id/bio"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="61dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="59dp"
+                    android:layout_marginTop="43dp"
                     android:background="@drawable/backgroundlook"
                     android:gravity="center"
                     android:textAlignment="center"
@@ -129,9 +98,9 @@
                     android:id="@+id/connectcs"
                     android:layout_width="130dp"
                     android:layout_height="60dp"
-                    android:layout_below="@id/username2cs"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_alignTop="@+id/bio"
+                    android:layout_marginStart="31dp"
+                    android:layout_marginTop="43dp"
                     android:layout_toEndOf="@+id/postcountcs"
                     android:background="@drawable/backgroundlook"
                     android:gravity="center"
@@ -146,11 +115,10 @@
                     android:layout_below="@id/profilePicturecs"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="83dp"
-                    android:layout_marginTop="-105dp"
+                    android:layout_marginTop="-106dp"
                     android:layout_marginEnd="8dp"
                     android:layout_toEndOf="@+id/profilePicturecs"
                     android:src="@drawable/verticalmenu" />
-
 
 
             </RelativeLayout>

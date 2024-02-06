@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context= ".Profile.OtpRegistration">
+    tools:context= ".MenuCodes.EditOtpVerify">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,11 +44,11 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/otpverify"
+            app:layout_constraintTop_toBottomOf="@+id/updateotpverify"
             android:textAlignment="center"/>
 
         <TextView
-            android:id="@+id/resendotp"
+            android:id="@+id/updateresendotp"
             android:layout_width="129dp"
             android:layout_height="33dp"
             android:layout_below="@+id/textView12"
@@ -69,7 +69,7 @@
             android:textAlignment="center"/>
 
         <EditText
-            android:id="@+id/otpverify"
+            android:id="@+id/updateotpverify"
             android:layout_width="210dp"
             android:layout_height="49dp"
             android:layout_alignParentStart="true"
@@ -89,7 +89,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
         <ImageView
-            android:id="@+id/buttonVerifyOtp"
+            android:id="@+id/updatebuttonVerifyOtp"
             android:layout_width="171dp"
             android:layout_height="58dp"
             android:layout_alignParentStart="true"
@@ -101,12 +101,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/resendotp"
+            app:layout_constraintTop_toBottomOf="@+id/updateresendotp"
             app:srcCompat="@drawable/next"
             android:textAlignment="center"/>
 
     </RelativeLayout>
 </FrameLayout>
-
-
-

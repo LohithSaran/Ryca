@@ -306,15 +306,29 @@ public class UploadImage extends AppCompatActivity {
                                                 break;
                                             }
                                         }
+//
+//                                        if (!categoryExists) {
+//                                            // Category does not exist, proceed with adding it
+//                                            long categoryCounter = dataSnapshot.getChildrenCount();
+//
+//                                            // Increment the counter
+//                                            categoryCounter++;
+//                                            creatorsRef.child("category" + categoryCounter).setValue(category.getText().toString().trim());
+//                                        }
 
                                         if (!categoryExists) {
-                                            // Category does not exist, proceed with adding it
+
                                             long categoryCounter = dataSnapshot.getChildrenCount();
 
-                                            // Increment the counter
                                             categoryCounter++;
-                                            creatorsRef.child("category" + categoryCounter).setValue(category.getText().toString().trim());
+
+                                            long timestamp = System.currentTimeMillis();
+
+                                            String key = "category" + categoryCounter + "_" + timestamp;
+ 
+                                            creatorsRef.child(key).setValue(category.getText().toString().trim());
                                         }
+
 
                                         // Update the database with the new Upload object
                                         dbreference.child(userId).child(postId).setValue(upload);

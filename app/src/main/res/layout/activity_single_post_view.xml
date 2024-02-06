@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="Saved Posts"
+            android:text="Saved Exhibits"
             android:textAlignment="center"
             android:textSize="24dp"
             android:textStyle="bold" />
@@ -39,7 +39,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/singleviewpost"
         android:layout_width="409dp"
-        android:layout_height="889dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Edit Profile"
+        android:id="@+id/editProfile"/>
+
+    <item android:title="Edit Category"
+        android:id="@+id/editCategory"/>
+
+    <item android:title="Update Email Id"
+        android:id="@+id/editemail"/>
+
+    <item android:title="Update Mobile Number"
+        android:id="@+id/editmobnumber"/>
+
+    <item android:title="Settings"
+        android:id="@+id/settings" />
+</menu>

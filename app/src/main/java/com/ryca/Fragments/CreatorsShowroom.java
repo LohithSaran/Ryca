@@ -1,6 +1,7 @@
 package com.ryca.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -58,6 +59,9 @@ public class CreatorsShowroom extends Fragment {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
     Bundle args = getArguments();
+    TextView connectCount;
+    int ModifyConnectCount;
+
 
     String userId;
 
@@ -85,7 +89,9 @@ public class CreatorsShowroom extends Fragment {
         TextView connect = rootView.findViewById(R.id.connectcs);
 
         ImageView sortRateImageView = rootView.findViewById(R.id.sortRatecs);
+        ImageView whatsapp = rootView.findViewById(R.id.whatsappcs);
 
+        connectCount = rootView.findViewById(R.id.connectcount);
 
 
         Bundle args = getArguments();
@@ -107,7 +113,31 @@ public class CreatorsShowroom extends Fragment {
         populateCategorySpinner(rootView);
         sortRateImageView.setOnClickListener(v -> showSortRateDialog(rootView));
 
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference connectref = FirebaseDatabase.getInstance().getReference("Connects").child(userId).child("Followers");
+
+
+        connectref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int followingCount = 0;
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    // Increment the count for each child
+                    followingCount++;
+                }
+                DatabaseReference countRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+                countRef.child("No of followers").setValue(followingCount);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser != null) {
 
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
@@ -125,6 +155,9 @@ public class CreatorsShowroom extends Fragment {
                                 String username = dataSnapshot.child("username").getValue(String.class);
                                 String location = dataSnapshot.child("Location").getValue(String.class);
                                 String city = dataSnapshot.child("City").getValue(String.class);
+                                String whatsappNumber = dataSnapshot.child("Whatsapp number").getValue(String.class);
+                                String emailContact = dataSnapshot.child("Email ID").getValue(String.class);
+                                int connectsCount = dataSnapshot.child("No of followers").getValue(Integer.class);
                                 Object postCountObject = dataSnapshot.child("No of post").getValue();
                                 Long postCount = 0L; // Default value if conversion fails or data is null
 
@@ -146,6 +179,32 @@ public class CreatorsShowroom extends Fragment {
                                 TextView bioTextView = rootView.findViewById(R.id.bio);
                                 TextView postCountTextView = rootView.findViewById(R.id.postcountcs);
                                 TextView descriptionTextView = rootView.findViewById(R.id.storedescriptioncs);
+                                ImageView email = rootView.findViewById(R.id.emailcs);
+
+                                whatsapp.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String whatsAppUrl = "https://wa.me/"+whatsappNumber+"?text=Interested Inquiry Regarding Your Establishments on Ryca App";
+
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setData(Uri.parse(whatsAppUrl));
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                email.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String subject = "Inquiry Regarding Your Establishments on Ryca App";
+                                        String mailto = "mailto:" + emailContact + "?subject=" + Uri.encode(subject);
+
+
+                                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                        intent.setData(Uri.parse(mailto));
+
+                                        startActivity(intent);
+                                    }
+                                });
 
                                 // Set profile picture
                                 if (TextUtils.isEmpty(profilePictureUrl)) {
@@ -169,7 +228,11 @@ public class CreatorsShowroom extends Fragment {
                                 usernameTextView.setText(username);
                                 bioTextView.setText(String.format("%s, %s", location, city));
                                 postCountTextView.setText(postCount + " Post");
+                                connectCount.setText(connectsCount + " Connects");
+                                ModifyConnectCount = connectsCount;
                                 descriptionTextView.setText(description);
+
+
 
                                 // Check the "creator" field and adjust visibility
                                 String creatorValueStr = dataSnapshot.child("creator").getValue(String.class);
@@ -218,60 +281,6 @@ public class CreatorsShowroom extends Fragment {
             // Use the current user's ID and the creator's ID to handle the follow action
             handleFollowAction(currentUserId, userId, connect);
         });
-
-
-//        uploadImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                authProfile = FirebaseAuth.getInstance();
-//                FirebaseUser currentUser = authProfile.getCurrentUser();
-//
-//                if (currentUser != null) {
-//                    String userId = currentUser.getUid();
-//
-//                    // Check the value of the "creator" field in the database
-//                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
-//                    userRef.child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            String creatorValueStr = snapshot.getValue(String.class);
-//
-//                            if (creatorValueStr != null) {
-//                                try {
-//                                    int creatorValue = Integer.parseInt(creatorValueStr);
-//
-//                                    if (creatorValue == 1) {
-//                                        // User is a creator (1), open UploadImage activity
-//                                        Intent intent = new Intent(getActivity(), UploadImage.class);
-//                                        startActivity(intent);
-//                                    } else {
-//                                        // User is not a creator (0), open CreatorRegistration activity
-//                                        Intent intent = new Intent(getActivity(), CreatorRegistration.class);
-//                                        startActivity(intent);
-//                                    }
-//                                } catch (NumberFormatException e) {
-//                                    // Handle the case where the value cannot be parsed as an integer
-//                                    Toast.makeText(getActivity(), "Invalid creator value format", Toast.LENGTH_SHORT).show();
-//                                }
-//                            } else {
-//                                // Handle the case where the value is null
-//                                Toast.makeText(getActivity(), "Creator value is null", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//                            // Handle the error, if any
-//                            Toast.makeText(getActivity(), "Database error", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                } else {
-//                    // Handle the case where the current user is null
-//                    Toast.makeText(getActivity(), "User not authenticated", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
 
             showProfileInfo();
@@ -465,6 +474,8 @@ public class CreatorsShowroom extends Fragment {
                                     connectsRef.child(currentUserId).child("Following").child(followingId).setValue(creatorId);
                                     connect.setText("Connected");
                                     connect.setBackgroundResource(R.drawable.connected_bc);
+
+                                    connectCount.setText(++ModifyConnectCount + " Connects");
                                 }
 
 
@@ -483,6 +494,8 @@ public class CreatorsShowroom extends Fragment {
                                     connectsRef.child(creatorId).child("Followers").child(followersId).setValue(currentUserId);
                                     connect.setText("Connected");
                                     connect.setBackgroundResource(R.drawable.connected_bc);
+
+                                    //connectCount.setText(++ModifyConnectCount + " Connects");
                                 }
 
                                 @Override
@@ -526,6 +539,7 @@ public class CreatorsShowroom extends Fragment {
         removeIdFromConnects(connectsRef.child(creatorId).child("Followers"), currentUserId);
         connect.setText("Connect");
         connect.setBackgroundResource(R.drawable.backgroundlook);
+        connectCount.setText(--ModifyConnectCount + " Connects");
     }
 
     private void removeIdFromConnects(DatabaseReference ref, String targetId) {

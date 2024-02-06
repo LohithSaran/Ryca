@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +41,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ryca.Fragments.ConnectsList;
+import com.ryca.MenuCodes.EditCategory;
+import com.ryca.MenuCodes.EditPhNoandEmail;
+import com.ryca.MenuCodes.EditProfile;
+import com.ryca.MenuCodes.Settings;
 import com.ryca.Profile.CreatorRegistration;
 import com.ryca.Profile.ProfileGridAdapter;
 import com.ryca.Profile.UploadImage;
@@ -58,6 +68,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth authProfile;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+    boolean creatorORnot;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -80,6 +91,25 @@ public class ProfileFragment extends Fragment {
         appBarLayout = rootView.findViewById(R.id.appBarLayout);
         profileLayout = rootView.findViewById(R.id.collapsingToolbar);
         ImageView sortRateImageView = rootView.findViewById(R.id.sortRatecs);
+        ImageView menu = rootView.findViewById(R.id.menucs);
+        TextView peoples = rootView.findViewById(R.id.connectcs);
+
+
+
+
+        peoples.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ConnectsList connectsList = new ConnectsList();
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.framelayout, connectsList);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         populateCategorySpinner(rootView);
         sortRateImageView.setOnClickListener(v -> showSortRateDialog(rootView));
@@ -163,9 +193,11 @@ public class ProfileFragment extends Fragment {
                                     if (creatorValue == 1) {
                                         // User is a creator (1), show all fields
                                         showAllFields(rootView);
+                                        creatorORnot = true;
                                     } else {
                                         // User is not a creator (0), hide some fields
                                         hideSomeFields(rootView);
+                                        creatorORnot = false;
                                     }
                                 } catch (NumberFormatException e) {
                                     // Handle the case where the value cannot be parsed as an integer
@@ -186,6 +218,81 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupMenu(v);
+            }
+
+            private void showPopupMenu(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.profile_menu, popupMenu.getMenu());
+
+                if (!creatorORnot) {
+                    // Find the items by their IDs and hide them
+                    MenuItem editCategoryItem = popupMenu.getMenu().findItem(R.id.editCategory);
+                    MenuItem editEmailItem = popupMenu.getMenu().findItem(R.id.editemail);
+                    MenuItem editMobilenoItem = popupMenu.getMenu().findItem(R.id.editmobnumber);
+
+                    if (editCategoryItem != null) {
+                        editCategoryItem.setVisible(false);
+                    }
+
+                    if (editEmailItem != null) {
+                        editEmailItem.setVisible(false);
+                    }
+                    if (editMobilenoItem != null) {
+                        editMobilenoItem.setVisible(false);
+                    }
+                }
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        if (item.getItemId() == R.id.editProfile) {
+                            Intent intent = new Intent(requireContext(), EditProfile.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                        if (item.getItemId() == R.id.editemail) {
+                            Intent intent = new Intent(requireContext(), EditPhNoandEmail.class);
+                            intent.putExtra("FromWhere", true);
+                            Toast.makeText(requireContext(), "fromemail", Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+                            return true;
+                        }
+                        if (item.getItemId() == R.id.editmobnumber) {
+                            Intent intent = new Intent(requireContext(), EditPhNoandEmail.class);
+                            intent.putExtra("FromWhere", false);
+                            Toast.makeText(requireContext(), "frommob", Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+                            return true;
+                        }
+                        if (item.getItemId() == R.id.editCategory) {
+                            Intent intent = new Intent(requireContext(), EditCategory.class);
+                            startActivity(intent);
+                            return true;
+                        }
+
+                        if (item.getItemId() == R.id.settings) {
+                            Intent intent = new Intent(requireContext(), Settings.class);
+                            startActivity(intent);
+                            return true;
+                        }
+
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
+
 
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
@@ -698,29 +805,19 @@ public class ProfileFragment extends Fragment {
 
     private void showAllFields(View rootView) {
         // Set visibility for all fields to VISIBLE
-        TextView username2 = rootView.findViewById(R.id.username2cs);
-        ImageView imageView = rootView.findViewById(R.id.emailcs);
-        ImageView imageView3 = rootView.findViewById(R.id.whatsappcs);
+
         TextView storedescription = rootView.findViewById(R.id.storedescriptioncs);
 
-        username2.setVisibility(View.VISIBLE);
-        imageView.setVisibility(View.VISIBLE);
-        imageView3.setVisibility(View.VISIBLE);
         storedescription.setVisibility(View.VISIBLE);
     }
 
     private void hideSomeFields(View rootView) {
         // Set visibility for some fields to INVISIBLE
-        TextView username2 = rootView.findViewById(R.id.username2cs);
-        ImageView imageView = rootView.findViewById(R.id.emailcs);
-        ImageView imageView3 = rootView.findViewById(R.id.whatsappcs);
+
         TextView storedescription = rootView.findViewById(R.id.storedescriptioncs);
         TextView biohide = rootView.findViewById(R.id.bio);
         RelativeLayout relativeLayout = rootView.findViewById(R.id.sortMethods);
 
-        username2.setVisibility(View.INVISIBLE);
-        imageView.setVisibility(View.INVISIBLE);
-        imageView3.setVisibility(View.INVISIBLE);
         storedescription.setVisibility(View.INVISIBLE);
         biohide.setVisibility(View.INVISIBLE);
         relativeLayout.setVisibility(View.INVISIBLE);

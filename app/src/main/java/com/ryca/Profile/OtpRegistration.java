@@ -84,7 +84,7 @@ import java.util.concurrent.TimeUnit;
         private void sendVerificationCode(String phoneNumber) {
             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                     phoneNumber,
-                    60,
+                    90,
                     TimeUnit.SECONDS,
                     this,
                     new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
