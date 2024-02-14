@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Report this exhibit"
+        android:id="@+id/reportExhibit"/>
+
+    <item android:title="Block this exhibitor"
+        android:id="@+id/blockExhibitor"/>
+
+</menu>

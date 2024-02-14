@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuCodes.AccountSettings">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutTop"
+        android:layout_width="412dp"
+        android:layout_height="46dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/topTexta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Account Settings"
+            android:textAlignment="center"
+            android:textSize="32dp"
+            android:textStyle="bold" />
+
+
+        <ImageView
+            android:id="@+id/backbtn"
+            android:layout_width="33dp"
+            android:layout_height="26dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            app:srcCompat="@drawable/backbtn" />
+
+    </RelativeLayout>
+
+    <!-- Layout to hold the fields that slide down -->
+
+    <TextView
+        android:id="@+id/accemailid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayoutTop"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="75dp"
+        android:background="@drawable/button_background"
+        android:paddingStart="20dp"
+        android:paddingEnd="15dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="24dp" />
+
+    <TextView
+        android:id="@+id/changePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/accemailid"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="45dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="showChangePasswordFields"
+        android:text="Change Password"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="41dp"
+        android:layout_height="34dp"
+        android:layout_below="@id/accemailid"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="45dp"
+        android:layout_toEndOf="@+id/changePassword"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_down_24" />
+
+    <RelativeLayout
+        android:id="@+id/passwordFieldsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/changePassword"
+        android:visibility="gone"
+        android:layout_marginTop="16dp">
+
+        <!-- Current Password -->
+        <EditText
+            android:id="@+id/currentPasswordEditText"
+            android:layout_width="354dp"
+            android:layout_height="67dp"
+            android:hint="Current Password"
+            android:padding="20dp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/textview_background"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:id="@+id/showpassw"
+            android:layout_width="36dp"
+            android:layout_height="35dp"
+            android:layout_alignStart="@+id/currentPasswordEditText"
+            android:layout_alignTop="@+id/currentPasswordEditText"
+            android:layout_alignEnd="@+id/currentPasswordEditText"
+            android:layout_marginStart="303dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="15dp"
+            app:srcCompat="@drawable/showpsw" />
+
+        <!-- New Password -->
+        <EditText
+            android:id="@+id/newPasswordEditText"
+            android:layout_width="354dp"
+            android:layout_height="67dp"
+            android:hint="New Password"
+            android:padding="20dp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/textview_background"
+            android:layout_below="@id/currentPasswordEditText"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:id="@+id/showpassww"
+            android:layout_width="36dp"
+            android:layout_height="35dp"
+            android:layout_alignStart="@+id/newPasswordEditText"
+            android:layout_alignTop="@+id/newPasswordEditText"
+            android:layout_alignEnd="@+id/newPasswordEditText"
+            android:layout_marginStart="303dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="15dp"
+            app:srcCompat="@drawable/showpsw" />
+
+
+        <!-- Confirm Password -->
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="354dp"
+            android:layout_height="67dp"
+            android:hint="Confirm Password"
+            android:padding="20dp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/textview_background"
+            android:layout_below="@id/newPasswordEditText"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:id="@+id/showpasswww"
+            android:layout_width="36dp"
+            android:layout_height="35dp"
+            android:layout_alignStart="@+id/confirmPasswordEditText"
+            android:layout_alignTop="@+id/confirmPasswordEditText"
+            android:layout_alignEnd="@+id/confirmPasswordEditText"
+            android:layout_marginStart="303dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="15dp"
+            app:srcCompat="@drawable/showpsw" />
+
+        <!-- Change Password Button -->
+        <ImageView
+            android:id="@+id/changePasswordButton"
+            android:layout_width="201dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/confirmPasswordEditText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/changepasswordbtn"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/passwordFieldsLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:text="Delete account"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:textColor="#EF1D1D"/>
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayoutTop"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="29dp"
+        android:text="Account ID"
+        android:textSize="24dp" />
+
+</RelativeLayout>
+
+

@@ -366,7 +366,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                         profilePictureUrl,  username,  address, userId, postKeys, true));
+                                         profilePictureUrl,  username,  address, userId, postKeys, true, false));
 
                             }
 
@@ -517,7 +517,7 @@ public class CreatorsShowroom extends Fragment {
     private void showDisconnectAlert(String currentUserId, String creatorId, TextView connect) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Disconnect");
-        builder.setMessage("Are you sure you want to disconnect from this creator?");
+        builder.setMessage("Are you sure you want to disconnect from this exhibitor?");
 
         builder.setPositiveButton("Yes", (dialog, which) -> {
             // User confirmed disconnection, proceed to disconnect
@@ -675,7 +675,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl,  username,  address, userId, postKeys, true));
+                                        profilePictureUrl,  username,  address, userId, postKeys, true, false));
 
                             }
 
@@ -803,7 +803,7 @@ public class CreatorsShowroom extends Fragment {
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                                 photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                                 photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl, username, address, userId, postKeys, true));
+                                        profilePictureUrl, username, address, userId, postKeys, true, false));
 
                             }
 

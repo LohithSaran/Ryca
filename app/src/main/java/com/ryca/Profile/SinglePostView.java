@@ -84,6 +84,7 @@ public class SinglePostView extends AppCompatActivity {
             String userId = intent.getStringExtra("userId");
             String position = intent.getStringExtra("ClickedPosition");
             boolean fromFragment = intent.getBooleanExtra("FromFragment", false);
+            boolean fromMenu = intent.getBooleanExtra("FromMenu", false);
             postKeyArray = intent.getStringArrayListExtra("PostKeyArray");
 
             Toast.makeText(this, "number" + position, Toast.LENGTH_SHORT).show();
@@ -109,7 +110,7 @@ public class SinglePostView extends AppCompatActivity {
                     String postKey = postKeyArray.get(i);
 
                     Log.d("SinglePostVieww", "PostKey " + i + ": " + postKey);
-                    DisplaySinglePost(username, userAddress, userProfileImage, postKey, userId);
+                    DisplaySinglePost(username, userAddress, userProfileImage, postKey, userId, fromMenu);
 
                 }
             }
@@ -138,7 +139,7 @@ public class SinglePostView extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String userIDd = (String) snapshot.child("userId").getValue();
 
-                            PassDataToDisplaySinglePost( userIDd, postKey);
+                            PassDataToDisplaySinglePost( userIDd, postKey,fromMenu);
                         }
 
                         @Override
@@ -156,7 +157,7 @@ public class SinglePostView extends AppCompatActivity {
 
 
 
-    private void PassDataToDisplaySinglePost(String userid, String postKey) {
+    private void PassDataToDisplaySinglePost(String userid, String postKey, boolean fromMenu) {
 
         if (userid != null) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Creators").child(userid);
@@ -171,7 +172,7 @@ public class SinglePostView extends AppCompatActivity {
                         String address = snapshot.child("Location").getValue(String.class);
 
                         String postKeySuffix2 = postKey.substring(14);
-                        DisplaySinglePost(Username, address, profilePictureUrl, postKeySuffix2, userid);
+                        DisplaySinglePost(Username, address, profilePictureUrl, postKeySuffix2, userid, fromMenu);
 
                         //Log.d("checkkk" + "itismess" , Username+ address+ profilePictureUrl + " ~ " + postKeySuffix2 + " ~ " + userid);
 
@@ -190,7 +191,7 @@ public class SinglePostView extends AppCompatActivity {
 
 
 
-    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId) {
+    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId, boolean fromMenu) {
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postKey);
 
@@ -208,7 +209,7 @@ public class SinglePostView extends AppCompatActivity {
                             String description = snapshot.child("imgdesc").getValue(String.class);
 
                             Log.d("TrueOrFalse", "statusBS :" + isSaved + " ~ " + postKey);
-                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved);
+                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu);
 
                             SinglepostList.add(Singlepost);
                             Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + postImageUrl + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);

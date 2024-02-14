@@ -22,7 +22,7 @@ public class Settings extends AppCompatActivity {
 
     ImageView about,gethelp,termandcond,accsettings;
     TextView abouttxt,gethelptxt,termandcondtxt,accsettingstxt,logouttxt;
-    RelativeLayout aboutrl,gethelprl,termandconrl,accsettingsrl;
+    RelativeLayout aboutrl,gethelprl,termandconrl,accsettingsrl, logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +43,28 @@ public class Settings extends AppCompatActivity {
         gethelprl = findViewById(R.id.relativLayoutGetHelp);
         termandconrl = findViewById(R.id.relativLayoutTerms);
         accsettingsrl = findViewById(R.id.relativAcctSettings);
+        logout = findViewById(R.id.relativLayoutLogout);
+
+
+        accsettingsrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.this, AccountSettings.class);
+                startActivity(intent);
+            }
+        });
 
         logouttxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Perform logout action here
+                // For example, clear session data and navigate to login screen
+                showLogoutConfirmationDialog();
+
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Perform logout action here

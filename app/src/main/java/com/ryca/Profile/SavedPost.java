@@ -84,7 +84,7 @@ public class SavedPost extends AppCompatActivity {
                             RecyclerView photoGrid = findViewById(R.id.photoGridsaved);
                             photoGrid.setLayoutManager(new GridLayoutManager(SavedPost.this, 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(SavedPost.this, postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, false));
+                                    profilePictureUrl,  username,  address, userId, postKeys, false, false));
 
                         }
 

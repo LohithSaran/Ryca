@@ -27,10 +27,11 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
     private String userId;
     private List<String> PostId;
     private boolean fragmentState;
+    private boolean menu;
 
 
     public ProfileGridAdapter(Context context, List<String> postUrls,
-                              String profilePictureUrl, String username, String address, String userId, List<String> PostId, boolean b) {
+                              String profilePictureUrl, String username, String address, String userId, List<String> PostId, boolean b, boolean menu) {
         this.context = context;
         this.postUrls = postUrls;
         this.profilePictureUrl = profilePictureUrl;
@@ -39,6 +40,7 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
         this.userId = userId;
         this.PostId = PostId;
         this.fragmentState = b;
+        this.menu = menu;
     }
 
     @NonNull
@@ -68,6 +70,7 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
             intent.putExtra("userProfileImage", profilePictureUrl);
             intent.putExtra("userId", userId);
             intent.putExtra("FromFragment", fragmentState);
+            intent.putExtra("FromMenu", menu);
             intent.putExtra("ClickedPosition", postkeyy);
             intent.putStringArrayListExtra("PostKeyArray", (ArrayList<String>) PostId);
 

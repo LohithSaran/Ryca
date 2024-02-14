@@ -11,11 +11,12 @@ public class SinglePostModel {
     private String userId;
     private String PostId;
     private boolean isSaved;
+    private boolean menu;
 
-    public SinglePostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
+    public SinglePostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu) {
     }
 
-    public SinglePostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
+    public SinglePostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -26,6 +27,15 @@ public class SinglePostModel {
         this.userId = userId;
         this.PostId = PostId;
         this.isSaved = isSaved;
+        this.menu = menu;
+    }
+
+    public boolean isMenu() {
+        return menu;
+    }
+
+    public void setMenu(boolean menu) {
+        this.menu = menu;
     }
 
     public boolean isSaved() {

@@ -439,7 +439,7 @@ public class ProfileFragment extends Fragment {
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, true));
+                                    profilePictureUrl,  username,  address, userId, postKeys, true, true));
 
                         }
 
@@ -615,7 +615,7 @@ public class ProfileFragment extends Fragment {
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, true));
+                                    profilePictureUrl,  username,  address, userId, postKeys, true , true));
 
                         }
 
@@ -743,7 +743,7 @@ public class ProfileFragment extends Fragment {
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl, username, address, userId, postKeys, true));
+                                    profilePictureUrl, username, address, userId, postKeys, true, true));
 
                         }
 
