@@ -1,0 +1,171 @@
+package com.ryca.Fragments;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.ryca.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class HomeFragment extends Fragment {
+
+    private FirebaseDatabase database;
+    private DatabaseReference connectsRef;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
+    private String currentUserId = user.getUid();
+
+    // Structure to hold the pockets of posts
+    private Map<String, Map<String, Map<String, Boolean>>> namedPockets = new LinkedHashMap<>();
+    int postCount ;
+
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        database = FirebaseDatabase.getInstance();
+        fetchFollowingListAndCreatePockets();
+
+        return view;
+    }
+
+    private void fetchFollowingListAndCreatePockets() {
+        connectsRef = database.getReference("Connects").child(currentUserId).child("Following");
+        connectsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> followingIds = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    followingIds.add((String) snapshot.getValue());
+                }
+                createPockets(followingIds);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
+
+    private void createPockets(List<String> followingIds) {
+        int exhibitorCount = followingIds.size();
+        int pocketNumber = 1; // Start naming pockets from 1
+
+        for (int i = 0; i < exhibitorCount; i += 5) {
+            Map<String, Map<String, Boolean>> pocket = new HashMap<>();
+            for (int j = i; j < i + 5 && j < exhibitorCount; j++) {
+                String exhibitorId = followingIds.get(j);
+                fetchPostsForExhibitor(exhibitorId, pocket, "pocket" + pocketNumber);
+            }
+            namedPockets.put("pocket" + pocketNumber, pocket);
+            pocketNumber++; // Increment the pocket number for the next pocket's name
+        }
+
+    }
+
+    private void fetchPostsForExhibitor(String exhibitorId, Map<String, Map<String, Boolean>> pocket, String pocketName) {
+        DatabaseReference postsRef = database.getReference("Post").child(exhibitorId);
+        postsRef.orderByKey().limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Boolean> posts = new LinkedHashMap<>(); // Use LinkedHashMap to preserve insertion order
+                List<DataSnapshot> reverseOrderPosts = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    reverseOrderPosts.add(snapshot);
+                }
+                Collections.reverse(reverseOrderPosts);
+                for (DataSnapshot snapshot : reverseOrderPosts) {
+                    posts.put(snapshot.getKey(), true); // Mark posts as true (unseen)
+                }
+                pocket.put(exhibitorId, posts);
+                namedPockets.put(pocketName, pocket); // Update the pocket in namedPockets with new data
+                Log.d("Pocketts", namedPockets.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+
+    }
+
+
+    // Define a method to retrieve post IDs from pockets
+    private void retrievePostIdsFromPockets() {
+        List<String> postIds = new ArrayList<>();
+
+        for (String pocketName : namedPockets.keySet()) {
+            Map<String, Map<String, Boolean>> pocket = namedPockets.get(pocketName);
+            Log.d("Posttts", "Passing" + pocket);
+            for (String exhibitorId : pocket.keySet()) {
+                Map<String, Boolean> posts = pocket.get(exhibitorId);
+                Log.d("Posttts", "Passing post: " + posts);
+                for (String postId : posts.keySet()) {
+                    // Check if the post ID exists in the interaction field
+                    DatabaseReference interactionRef = database.getReference("Interaction")
+                            .child(currentUserId)
+                            .child(exhibitorId)
+                            .child(postId);
+                    retrievePostId(interactionRef, postId, postIds);
+                    Log.d("Posttts", "Passing");
+
+                }
+            }
+        }
+    }
+
+    private void retrievePostId(DatabaseReference interactionRef, String postId, List<String> postIds) {
+        interactionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Post ID doesn't exist in the interaction field, add it to the list
+                    postIds.add(postId);
+                    if (postIds.size() == 20) {
+                        // We have retrieved 20 post IDs, display them
+                        //displayPosts(postIds);
+                        Log.d("Posttts", "Display: " + postIds);
+
+                        return;
+                    }
+                } else {
+                    Log.d("Posttts", "Nothing to show here");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
+
+
+}

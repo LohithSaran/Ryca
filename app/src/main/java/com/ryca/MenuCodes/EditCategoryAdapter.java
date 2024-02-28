@@ -86,7 +86,7 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
     private void showEditPopupDialog(EditCategoryModel position) {
         // Create an AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Edit Category " + "\"" +position.getCategoryName()+"\"" + " with ");
+        builder.setTitle("Edit Category " + "\"" + position.getCategoryName() + "\"" + " with ");
 
         // Create a LinearLayout to hold the views
         LinearLayout layout = new LinearLayout(context);
@@ -102,7 +102,7 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String nextText = editText.getText().toString();
+                String nextText = editText.getText().toString().trim();
 
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -112,7 +112,6 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                     String currentCategoryName = position.getCategoryName();
 
                     // Update in Creators section
-                    // Update in Creators Section
                     DatabaseReference creatorsRef = FirebaseDatabase.getInstance().getReference("Creators")
                             .child(userId)
                             .child("Category");
@@ -123,38 +122,24 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 String compareValue = (String) ds.getValue();
 
-
-                                if (compareValue.equals(nextText)) {
+                                // Updated to use equalsIgnoreCase for case-insensitive comparison
+                                if (compareValue.equalsIgnoreCase(nextText)) {
                                     Toast.makeText(context, "The category " + nextText + " already exist, try different category name", Toast.LENGTH_LONG).show();
                                     break;
-                                }
-                                else {
+                                } else {
+                                    // Use equalsIgnoreCase to check category name case-insensitively
+                                    if (compareValue.equalsIgnoreCase(currentCategoryName)) {
+                                        String keyToEdit = ds.getKey();
 
-                                if (compareValue.equals(currentCategoryName)) {
-
-
-                                    String keyToEdit = ds.getKey();
-
-                                    creatorsRef.child(keyToEdit).setValue(nextText).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(context, "Your category " + nextText + " updated successfully!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
+                                        creatorsRef.child(keyToEdit).setValue(nextText).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(context, "Your category " + nextText + " updated successfully!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 }
                             }
-                            }
-//
-//                            String currentValue = dataSnapshot.getValue(String.class);
-//                            String editKey = creatorsRef.getKey();
-//                            Toast.makeText(context, "display : " + creatorsRef, Toast.LENGTH_SHORT).show();
-//                            // Check if the current value is not null
-//                            if (currentValue != null) {
-//                                // Update the value of currentCategoryName with nextText
-//
-//                                 creatorsRef.child(editKey).setValue(nextText);
-//                            }
                         }
 
                         @Override
@@ -162,7 +147,6 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                             // Handle errors if any
                         }
                     });
-
 
                     // Update in Post section
                     DatabaseReference postRef = FirebaseDatabase.getInstance().getReference("Post")
@@ -181,7 +165,8 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         String postCategory = dataSnapshot.getValue(String.class);
 
-                                        if (postCategory != null && postCategory.equals(currentCategoryName)) {
+                                        // Updated to use equalsIgnoreCase for case-insensitive comparison
+                                        if (postCategory != null && postCategory.equalsIgnoreCase(currentCategoryName)) {
                                             // Update the category to nextText
                                             categoryRef.setValue(nextText);
                                         }
@@ -208,7 +193,6 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                 dialog.dismiss();
             }
         });
-
 
         // Set negative button (Cancel)
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -243,7 +227,7 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                         int postCount = 0;
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                             String postCategory = postSnapshot.child("category").getValue(String.class);
-                            if (postCategory != null && postCategory.equals(categoryModel.getCategoryName())) {
+                            if (postCategory != null && postCategory.equalsIgnoreCase(categoryModel.getCategoryName())) {
                                 postCount++;
                             }
                         }
@@ -288,8 +272,8 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String compareValue = ds.getValue(String.class);
-                            if (compareValue != null && compareValue.equals(categoryModel.getCategoryName())) {
+                            String compareValue = ds.getValue(String.class).trim();
+                            if (compareValue != null && compareValue.equalsIgnoreCase(categoryModel.getCategoryName())) {
                                 String keyToDelete = ds.getKey();
                                 creatorsRef.child(keyToDelete).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -303,7 +287,7 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                                     String postId = postSnapshot.getKey();
                                                     String postCategory = postSnapshot.child("category").getValue(String.class);
 
-                                                    if (postCategory != null && postCategory.equals(categoryModel.getCategoryName())) {
+                                                    if (postCategory != null && postCategory.equalsIgnoreCase(categoryModel.getCategoryName())) {
                                                         // Delete the post
                                                         postRef.child(postId).removeValue();
                                                     }

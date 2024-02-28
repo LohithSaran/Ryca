@@ -1,435 +1,367 @@
-package com.ryca.Profile;
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <!-- Your Toolbar goes here -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            <!-- Content layout inside CollapsingToolbarLayout -->
+            <RelativeLayout
+                android:id="@+id/toppart"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:layout_collapseMode="parallax">
+
+                <!-- Your TextView and ImageView -->
+                <TextView
+                    android:id="@+id/rycalogohp"
+                    android:layout_width="114dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="-6dp"
+                    android:fontFamily="@font/kurale"
+                    android:text="Ryca"
+                    android:textColor="#FFA6C1"
+                    android:textSize="45dp" />
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+                <ImageView
+                    android:id="@+id/savedposthp"
+                    android:layout_width="43dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="222dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="13dp"
+                    android:layout_toEndOf="@+id/rycalogohp"
+                    android:gravity="center"
+                    app:srcCompat="@drawable/saved" />
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+            </RelativeLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.ryca.R;
+    <!-- NestedScrollView to hold collapsible content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+        <!-- Your content layout -->
+        <RelativeLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp">
 
-// if you can't figure what you have done check the last stored ryca backup in hard disk that is the check point
-// this code is the logic for the saved single post with some bugs that doesn't let us to display post in single post find the issue and clear it
+            <!-- Rest of your layout content -->
 
+            <RelativeLayout
+                android:id="@+id/CategorySelected"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/addedCategoryRecycler"
+                    android:layout_width="347dp"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal" />
 
-public class SinglePostView extends AppCompatActivity {
+                <ImageView
+                    android:id="@+id/AddCategorybtn"
+                    android:layout_width="42dp"
+                    android:layout_height="44dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toEndOf="@+id/addedCategoryRecycler"
+                    app:srcCompat="@drawable/uploadimg" />
 
-    private ArrayList<String> postKeyArray;
-    private boolean loading = true;
-    int counter;
-    boolean isSaved;
+            </RelativeLayout>
 
-    String userID;
-    private List<SinglePostModel> SinglepostList;
-    private SinglePostAdapter singlePostAdapter;
-    FirebaseAuth mAuth;
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String userId = currentUser.getUid();
-    DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference("Saved").child(userId);
-    TextView toptext;
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/CategorySelected">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/postRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_post_view);
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        SinglepostList = new ArrayList<>();
-        singlePostAdapter = new SinglePostAdapter(SinglepostList);
 
-        RecyclerView recyclerView = findViewById(R.id.singleviewpost);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(singlePostAdapter);
-        toptext = findViewById(R.id.topText);
 
-        ImageView backbtn = findViewById(R.id.backbtn);
 
-        backbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                onBackPressed();
-            }
-        });
 
 
-        // Retrieve extras from the Intent
-        Intent intent = getIntent();
-        if (intent != null) {
-            String username = intent.getStringExtra("username");
-            String userAddress = intent.getStringExtra("userAddress");
-            String userProfileImage = intent.getStringExtra("userProfileImage");
-            String userId = intent.getStringExtra("userId");
-            String position = intent.getStringExtra("ClickedPosition");
-            boolean fromFragment = intent.getBooleanExtra("FromFragment", false);
-            postKeyArray = intent.getStringArrayListExtra("PostKeyArray");
 
-            Toast.makeText(this, "number" + position, Toast.LENGTH_SHORT).show();
 
 
-            if (fromFragment) {
 
-                toptext.setText("Exhibition");
-                for (int i = 0; i < postKeyArray.size(); i++) {
-                    String postKey = postKeyArray.get(i);
 
-                    if (postKey.equals(String.valueOf(position))) {
-                        counter = i;
-                        Log.d("SinglePostVieww", "countinLoop :" + counter);
-                        break;
-                    }
-                }
 
 
-                Collections.reverse(postKeyArray);
-                Log.d("SinglePostVieww", "count :" + counter);
-                for (int i = counter; i < postKeyArray.size(); i++) {
-                    String postKey = postKeyArray.get(i);
 
-                    Log.d("SinglePostVieww", "PostKey " + i + ": " + postKey);
-                    DisplaySinglePost(username, userAddress, userProfileImage, postKey, userId);
 
-                }
-            }
 
-            if (!fromFragment) {
 
-                toptext.setText("Saved Exhibits");
-                for (int i = 0; i < postKeyArray.size(); i++) {
-                    String postKey = postKeyArray.get(i);
 
-                    if (postKey.equals(String.valueOf(position))) {
-                        counter = i;
-                        Log.d("SinglePostVieww", "countinLoop :" + counter);
-                        break;
-                    }
-                }
 
 
-                Collections.reverse(postKeyArray);
-                Log.d("SinglePostVieww", "count :" + counter);
-                for (int i = counter; i < postKeyArray.size(); i++) {
-                    String postKey = postKeyArray.get(i);
 
-                    savedReference.child(postKey).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String userIDd = (String) snapshot.child("userId").getValue();
 
-                            PassDataToDisplaySinglePost( userIDd, postKey);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
 
-                }
 
-            }
 
-        }
-    }
 
 
 
-    private void PassDataToDisplaySinglePost(String userid, String postKey) {
+Working file
 
-        if (userid != null) {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Creators").child(userid);
 
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        // Retrieve user data
-                        String profilePictureUrl = snapshot.child("Profile picture").getValue(String.class);
-                        String Username = snapshot.child("Shop Name").getValue(String.class);
-                        String address = snapshot.child("Location").getValue(String.class);
 
-                        String postKeySuffix2 = postKey.substring(14);
-                        DisplaySinglePost(Username, address, profilePictureUrl, postKeySuffix2, userid);
+<!-- fragment_profile.xml -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-                        //Log.d("checkkk" + "itismess" , Username+ address+ profilePictureUrl + " ~ " + postKeySuffix2 + " ~ " + userid);
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="96dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                }
-            });
-        }
+            <!-- Content layout inside CollapsingToolbarLayout -->
+            <RelativeLayout
+                android:id="@+id/toppart"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="5dp"
+                android:layout_margin="5dp"
+                 >
 
-    }
 
+                <!-- Your TextView and ImageView -->
+                <TextView
+                    android:id="@+id/rycalogohp"
+                    android:layout_width="114dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="-6dp"
+                    android:fontFamily="@font/kurale"
+                    android:text="Ryca"
+                    android:textColor="#FFA6C1"
+                    android:textSize="45dp" />
 
+                <ImageView
+                    android:id="@+id/savedposthp"
+                    android:layout_width="43dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="222dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="13dp"
+                    android:layout_toEndOf="@+id/rycalogohp"
+                    android:gravity="center"
+                    app:srcCompat="@drawable/saved" />
 
+            </RelativeLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId) {
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postKey);
+    <RelativeLayout
+        android:id="@+id/CategorySelected"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/collapsingToolbar"
+        >
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
 
-                    checkThePostId(postKey, userId, new OnCheckPostIdCallback() {
-                        @Override
-                        public void onCallback(boolean isSaved) {
-                            String postImageUrl = snapshot.child("imageURL").getValue(String.class);
-                            String rating = snapshot.child("prodprice").getValue(String.class);
-                            String category = snapshot.child("category").getValue(String.class);
-                            String description = snapshot.child("imgdesc").getValue(String.class);
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addedCategoryRecycler"
+            android:layout_width="347dp"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
 
-                            Log.d("TrueOrFalse", "statusBS :" + isSaved + " ~ " + postKey);
-                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved);
+            />
 
-                            SinglepostList.add(Singlepost);
-                            Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + postImageUrl + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);
-                            singlePostAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle onCancelled
-            }
-        });
-    }
-
-
-    public interface OnCheckPostIdCallback {
-        void onCallback(boolean isSaved);
-    }
-
-
-    public void checkThePostId(String PostId, String userId, OnCheckPostIdCallback callback) {
-        DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference("Saved")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean isSaved = false;
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String postKey = postSnapshot.getKey();
-
-                    // Check if postKey is not null and has at least 20 characters
-                    if (postKey != null && postKey.length() >= 20) {
-                        String postKeySuffix = postKey.substring(14); // Get the last 20 characters omitting the first 14
-                        String postIdSuffix = PostId.substring(14); // Get the last 20 characters omitting the first 14
-
-                        // Check if the last 20 characters match
-                        if (PostId.equals(postKeySuffix)) {
-                            // Match found, set isSaved to true
-                            isSaved = true;
-                            break; // You can break if you only want to find the first match
-                        } else {
-                            isSaved = false;
-                        }
-                    }
-                }
-
-                callback.onCallback(isSaved);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Error checking save status: " + databaseError.getMessage());
-                // Default to false in case of error
-                callback.onCallback(false);
-            }
-        });
-    }
-
-
-
-}
-
-
-
-// old and normal method to set value of isSaved variable incase the above code shows any error try this but need to solve variable affect problem
-//package com.ryca.Profile;
-//
-//import android.content.Intent;
-//import android.os.Bundle;
-//import android.util.Log;
-//import android.widget.Toast;
-//
-//import androidx.annotation.NonNull;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.database.DataSnapshot;
-//import com.google.firebase.database.DatabaseError;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.ValueEventListener;
-//import com.ryca.R;
-//
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.List;
-//
-//public class SinglePostView extends AppCompatActivity {
-//
-//    private ArrayList<String> postKeyArray;
-//    private boolean loading = true;
-//    int counter;
-//    boolean isSaved;
-//    private List<SinglePostModel> SinglepostList;
-//    private SinglePostAdapter singlePostAdapter;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_single_post_view);
-//
-//        SinglepostList = new ArrayList<>();
-//        singlePostAdapter = new SinglePostAdapter(SinglepostList);
-//
-//        RecyclerView recyclerView = findViewById(R.id.singleviewpost);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setAdapter(singlePostAdapter);
-//
-//
-//        // Retrieve extras from the Intent
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            String username = intent.getStringExtra("username");
-//            String userAddress = intent.getStringExtra("userAddress");
-//            String userProfileImage = intent.getStringExtra("userProfileImage");
-//            String userId = intent.getStringExtra("userId");
-//            String position = intent.getStringExtra("ClickedPosition");
-//            boolean fromFragment = intent.getBooleanExtra("FromFragment", false);
-//            postKeyArray = intent.getStringArrayListExtra("PostKeyArray");
-//
-//            Toast.makeText(this, "number" + position, Toast.LENGTH_SHORT).show();
-//
-//
-//
-//            for (int i = 0; i < postKeyArray.size(); i++) {
-//                String postKey = postKeyArray.get(i);
-//
-//                if (postKey.equals(String.valueOf(position))) {
-//                    counter = i;
-//                    Log.d("SinglePostVieww", "countinLoop :" + counter);
-//                    break;
-//                }
-//            }
-//
-//
-//            Collections.reverse(postKeyArray);
-//            Log.d("SinglePostVieww", "count :" + counter);
-//            for (int i = counter; i < postKeyArray.size(); i++) {
-//                String postKey = postKeyArray.get(i);
-//
-//                    Log.d("SinglePostVieww", "PostKey " + i + ": " + postKey);
-//                    DisplaySinglePost(username,userAddress,userProfileImage,postKey,userId);
-//
-//            }
-//
-//        }
-//    }
-//
-//    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId) {
-//
-//        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postKey);
-//
-//
-//        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()) {
-//
-//                    Log.d("SinglePostViewww", "shots :"+ postKey);
-//
-//                    checkThePostId(postKey, userId);
-//                    String postImageUrl = snapshot.child("imageURL").getValue(String.class);
-//                    String rating = snapshot.child("prodprice").getValue(String.class);
-//                    String category = snapshot.child("category").getValue(String.class);
-//                    String description = snapshot.child("imgdesc").getValue(String.class);
-//
-//                    Log.d("TrueOrFalse", "statusBS :" + isSaved +  " ~ "  + postKey);
-//                    SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description,userId, postKey, isSaved);
-//
-//                    SinglepostList.add(Singlepost);
-//                    Log.d("SinglePostViewwww", "values :"+ userProfileImage+ " : " + username+ " : " +userAddress+" : " + postImageUrl+ " : " +rating+ category+ " : " +description+ " : " +userId+ " : " +postKey+ " : " +isSaved);
-//                    singlePostAdapter.notifyDataSetChanged();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-//
-//    public void checkThePostId(String PostId, String userId) {
-//
-//        DatabaseReference savedReference = FirebaseDatabase.getInstance().getReference("Saved")
-//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                .child(PostId);
-//
-//        savedReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//
-//                    // Toast.makeText(requireContext(), "position : " + userId + "~~" + PostId, Toast.LENGTH_SHORT).show();
-//                    isSaved  = true;
-//                    Log.d("TrueOrFalse", "True :" + dataSnapshot.getKey() );
-//                }
-//                else {
-//
-//                    isSaved = false;
-//                    Log.d("TrueOrFalse", "False :" + dataSnapshot.getKey() );
-//
-//                }
-//
-//            }
-//
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e("Firebase", "Error checking save status: " + databaseError.getMessage());
-//                // Default to false in case of error
-//            }
-//        });
-//    }
-//
-//}
+        <ImageView
+            android:id="@+id/AddCategorybtn"
+            android:layout_width="42dp"
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@+id/addedCategoryRecycler"
+            app:srcCompat="@drawable/uploadimg" />
+
+
+
+    </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/postRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+// Original code
+
+
+<!-- fragment_profile.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/toppart"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/rycalogohp"
+            android:layout_width="114dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-6dp"
+            android:fontFamily="@font/kurale"
+            android:text="Ryca"
+            android:textColor="#FFA6C1"
+            android:textSize="45dp" />
+
+        <ImageView
+            android:id="@+id/savedposthp"
+            android:layout_width="43dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="222dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="13dp"
+            android:layout_toEndOf="@+id/rycalogohp"
+            android:gravity="center"
+            app:srcCompat="@drawable/saved" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/CategorySelected"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/toppart"
+        >
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addedCategoryRecycler"
+            android:layout_width="347dp"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
+
+            />
+
+        <ImageView
+            android:id="@+id/AddCategorybtn"
+            android:layout_width="42dp"
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@+id/addedCategoryRecycler"
+            app:srcCompat="@drawable/uploadimg" />
+
+
+
+    </RelativeLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/CategorySelected">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

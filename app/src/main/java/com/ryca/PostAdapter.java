@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,6 +32,11 @@ import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private static List<PostModel> posts;
+    private List<String> postIds;
+
+    public void setData(List<String> newPostIds) {
+        this.postIds = newPostIds;
+    }
 
     public PostAdapter(List<PostModel> posts) {
         this.posts = posts;
@@ -75,113 +79,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.rate.setText("₹ " + post.getRating());
         holder.category.setText(post.getCategory());
         holder.description.setText(post.getDescription());
-        // Inside onBindViewHolder method
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
 
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-        holder.category.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-        holder.description.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-        holder.rate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-        holder.interaction1.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-        holder.interaction2.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // User touched the post, handle the interaction
-                        holder.handlePostInteraction();
-                        break;
-                    // Handle other touch events if needed
-                }
-
-                return true;
-            }
-        });
-
-
-        // ...
-
-        // Add click listeners or other interactions as needed
     }
 
     @Override
@@ -241,7 +139,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
 
-                    handlePostInteraction();
+
                     // Get the post at the clicked position
                     PostModel clickedPost = posts.get(getAdapterPosition());
 
@@ -275,7 +173,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     if (position != RecyclerView.NO_POSITION) {
                         // Handle save action here
                         handleSaveAction(position);
-                        handlePostInteraction();
+
                     }
                 }
             });
@@ -303,61 +201,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         }
 
-        public boolean onTouch(View v, MotionEvent event) {
-            int action = event.getAction();
 
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    // User touched the post, handle the interaction
-                    handlePostInteraction();
-                    break;
-                // Handle other touch events if needed
-            }
 
-            return true;
-        }
-
-        private void handlePostInteraction() {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                // Get the post at the clicked position
-                PostModel clickedPost = posts.get(position);
-
-                // Perform the interaction action here, e.g., update the Interaction field in the database
-                savePostToInteractionField(clickedPost);
-            }
-        }
-
-        private void savePostToInteractionField(PostModel post) {
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
-
-            if (user != null) {
-                String userId = user.getUid();
-                String postUserId = post.getUserId();
-                String postId = post.getPostId();
-
-                // Create a reference to the Interaction field
-                DatabaseReference interactionReference = FirebaseDatabase.getInstance()
-                        .getReference("Interaction")
-                        .child(userId)
-                        .child(postUserId);
-
-                // Save the post ID to the Interaction field
-                interactionReference.child(postId).setValue(true, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        if (error == null) {
-                            // Firebase operation successful
-                            Log.d("Firebase", "Post ID saved to Interaction field");
-                            // You can add any additional logic here
-                        } else {
-                            Log.e("Firebase", "Error saving post ID to Interaction field: " + error.getMessage());
-                        }
-                    }
-                });
-            }
-        }
 
         private void handleSaveAction(int position) {
             // Get the post at the clicked position
