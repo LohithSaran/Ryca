@@ -58,6 +58,10 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'androidx.room:room-runtime:2.6.1'
 
+    implementation 'com.google.firebase:firebase-dynamic-links:20.1.0'
+
+    implementation 'com.android.volley:volley:1.2.0'
+
 
     //implementation 'com.github.yalantis:ucrop:2.2.6-native'
 

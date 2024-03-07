@@ -110,7 +110,7 @@ public class SinglePostView extends AppCompatActivity {
                     String postKey = postKeyArray.get(i);
 
                     Log.d("SinglePostVieww", "PostKey " + i + ": " + postKey);
-                    DisplaySinglePost(username, userAddress, userProfileImage, postKey, userId, fromMenu);
+                    DisplaySinglePost(username, userAddress, userProfileImage, postKey, userId, fromMenu,false);
 
                 }
             }
@@ -172,7 +172,7 @@ public class SinglePostView extends AppCompatActivity {
                         String address = snapshot.child("Location").getValue(String.class);
 
                         String postKeySuffix2 = postKey.substring(14);
-                        DisplaySinglePost(Username, address, profilePictureUrl, postKeySuffix2, userid, fromMenu);
+                        DisplaySinglePost(Username, address, profilePictureUrl, postKeySuffix2, userid, fromMenu,true);
 
                         //Log.d("checkkk" + "itismess" , Username+ address+ profilePictureUrl + " ~ " + postKeySuffix2 + " ~ " + userid);
 
@@ -191,7 +191,7 @@ public class SinglePostView extends AppCompatActivity {
 
 
 
-    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId, boolean fromMenu) {
+    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId, boolean fromMenu, boolean NavigationToProfile) {
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postKey);
 
@@ -209,7 +209,7 @@ public class SinglePostView extends AppCompatActivity {
                             String description = snapshot.child("imgdesc").getValue(String.class);
 
                             Log.d("TrueOrFalse", "statusBS :" + isSaved + " ~ " + postKey);
-                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu);
+                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu,NavigationToProfile);
 
                             SinglepostList.add(Singlepost);
                             Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + postImageUrl + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);

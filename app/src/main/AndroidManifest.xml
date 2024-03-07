@@ -28,6 +28,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ryca"
         tools:targetApi="31">
+        <activity android:name=".DeepLinkActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="yourapp.com"
+                    android:pathPrefix="/post" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".MenuCodes.AccountSettings"
             android:exported="false" />

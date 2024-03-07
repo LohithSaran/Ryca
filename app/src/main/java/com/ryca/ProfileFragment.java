@@ -48,6 +48,7 @@ import com.ryca.MenuCodes.EditProfile;
 import com.ryca.MenuCodes.Settings;
 import com.ryca.Profile.CreatorRegistration;
 import com.ryca.Profile.ProfileGridAdapter;
+import com.ryca.Profile.SavedPost;
 import com.ryca.Profile.UploadImage;
 import com.squareup.picasso.Picasso;
 
@@ -93,8 +94,10 @@ public class ProfileFragment extends Fragment {
         ImageView sortRateImageView = rootView.findViewById(R.id.sortRatecs);
         ImageView menu = rootView.findViewById(R.id.menucs);
         TextView peoples = rootView.findViewById(R.id.connectcs);
+        TextView address = rootView.findViewById(R.id.bio);
 
 
+        address.setSelected(true);
 
 
         peoples.setOnClickListener(new View.OnClickListener() {
@@ -275,6 +278,12 @@ public class ProfileFragment extends Fragment {
                         }
                         if (item.getItemId() == R.id.editCategory) {
                             Intent intent = new Intent(requireContext(), EditCategory.class);
+                            startActivity(intent);
+                            return true;
+                        }
+
+                        if (item.getItemId() == R.id.savedExhibits) {
+                            Intent intent = new Intent(requireContext(), SavedPost.class);
                             startActivity(intent);
                             return true;
                         }

@@ -59,7 +59,7 @@ public class CreatorsShowroom extends Fragment {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
     Bundle args = getArguments();
-    TextView connectCount;
+    TextView connectCount, address;
     int ModifyConnectCount;
 
 
@@ -92,7 +92,8 @@ public class CreatorsShowroom extends Fragment {
         ImageView whatsapp = rootView.findViewById(R.id.whatsappcs);
 
         connectCount = rootView.findViewById(R.id.connectcount);
-
+        address = rootView.findViewById(R.id.bio);
+        address.setSelected(true);
 
         Bundle args = getArguments();
 

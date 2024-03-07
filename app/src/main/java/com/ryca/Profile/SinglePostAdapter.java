@@ -5,6 +5,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -34,8 +35,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ryca.HomeActivity;
 import com.ryca.ImageViewActivity;
 import com.ryca.R;
 import com.squareup.picasso.Picasso;
@@ -108,7 +112,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
         ImageView profilePictureImageView, postImageView;
         TextView usernameTextView;
         TextView addressTextView, rate, category, description, interaction1,interaction2;
-        ImageView savedImageView, Menu;
+        ImageView savedImageView, Menu, sharePost;
         // Add other views
 
         public ViewHolder(@NonNull View itemView) {
@@ -122,6 +126,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
             postImageView = itemView.findViewById(R.id.dppost);
             savedImageView = itemView.findViewById(R.id.savedp);
             Menu = itemView.findViewById(R.id.dpmenu);
+            sharePost = itemView.findViewById(R.id.sharedp);
 
 
             // Set a click listener for the savedImageView
@@ -132,6 +137,70 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                     if (position != RecyclerView.NO_POSITION) {
                         // Handle save action here
                         handleSaveAction(position);
+                    }
+                }
+            });
+
+
+            usernameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Get the post at the clicked position
+                    SinglePostModel clickedPost = posts.get(getAdapterPosition());
+
+                    if (clickedPost.isNavigationToProfile()) {
+                        // Get the user ID of the post
+                        String userID = clickedPost.getUserId();
+
+                        // Create an intent to start HomeActivity
+                        Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                        // Add data to intent
+                        intent.putExtra("userId", userID);
+                        intent.putExtra("fragment", "creatorsShowroom");
+
+                        // Start HomeActivity
+                        itemView.getContext().startActivity(intent);
+                    }
+                }
+            });
+
+            profilePictureImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Get the post at the clicked position
+                    SinglePostModel clickedPost = posts.get(getAdapterPosition());
+                    if (clickedPost.isNavigationToProfile()) {
+
+                        // Get the user ID of the post
+                        String userID = clickedPost.getUserId();
+
+                        // Create an intent to start HomeActivity
+                        Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                        // Add data to intent
+                        intent.putExtra("userId", userID);
+                        intent.putExtra("fragment", "creatorsShowroom");
+
+                        // Start HomeActivity
+                        itemView.getContext().startActivity(intent);
+                    }
+
+                }
+            });
+
+            sharePost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Get the position of the clicked item
+                    int position = getAdapterPosition();
+                    // Ensure the position is valid
+                    if (position != RecyclerView.NO_POSITION) {
+                        SinglePostModel clickedPost = posts.get(position);
+                        String postId = clickedPost.getPostId(); // Assuming PostModel has getPostId()
+                        String userId = clickedPost.getUserId(); // Assuming PostModel has getUserId()
+
+                        // Generate the dynamic link
+                        createAndShareDynamicLink(postId, userId, v.getContext());
+                        Toast.makeText(category.getContext(), "Its working!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -175,6 +244,30 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
 
 
+        private void createAndShareDynamicLink(String postId, String userId, Context context) {
+            // Assuming you have already set up a domain and a link format
+            // Replace "https://yourapp.page.link" with your actual domain Uri prefix
+            // Replace "https://yourdomain.com/post" with the URL pattern you intend to use
+            // String link = "https://ryca.page.link/?link=https://yourapp.com/post?postId=" + postId + "&userId=" + userId +"&apn=com.ryca" ;
+
+            String deepLink = "https://yourapp.com/post?postId=" + postId + "&userId=" + userId;
+            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse(deepLink))
+                    .setDomainUriPrefix("https://ryca.page.link") // Your dynamic link domain
+                    .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.ryca") // Your package name
+                            .build())
+                    .buildShortDynamicLink()
+                    .addOnSuccessListener(shortDynamicLink -> {
+                        // Short link created
+                        Uri dynamicLinkUri = shortDynamicLink.getShortLink();
+                        // Now, share the link
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this post: " + dynamicLinkUri.toString());
+                        context.startActivity(Intent.createChooser(shareIntent, "Share Post"));
+                    })
+                    .addOnFailureListener(e -> Log.w("DynamicLink", "Error creating dynamic link", e));
+        }
 
 
         private void profileMenu(View v){

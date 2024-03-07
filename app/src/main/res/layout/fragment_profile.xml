@@ -49,7 +49,14 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="8dp"
                     android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:scrollHorizontally="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    />
+
 
                 <TextView
                     android:id="@+id/username"
