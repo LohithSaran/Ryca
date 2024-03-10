@@ -61,7 +61,7 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="53dp"
         android:background="@drawable/button_background"
-        android:hint="Enter product description"
+        android:hint="Color or Discount or Offers or Details of the product"
         android:maxLength="100"
         android:paddingLeft="15dp"
         />

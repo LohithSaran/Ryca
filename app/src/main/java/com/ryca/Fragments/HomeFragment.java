@@ -57,12 +57,10 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
     Map<String, String> postUserMap = new HashMap<>();
     Map<String, String> AllPostUserMap = new HashMap<>();
     private boolean loading = false; // Flag to track loading state
-
-
-    private static final int PAGE_SIZE = 20;
     private boolean isLastPage = false;
     private boolean isLoading = false;
     ProgressBar paginationProgressBar;
+    int count = 0;
 
 
 
@@ -124,20 +122,12 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 int visibleItemCount = layoutManager.getChildCount();
                 int totalItemCount = layoutManager.getItemCount();
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-
                 // Load more if we're not currently loading, we haven't loaded all items, and the user has scrolled to the bottom
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
                         isLoading = true; // Set loading state to prevent multiple load calls
-                        if (postUserMap != null) {
-                            AllPostUserMap = postUserMap;
-                            Log.d("userMap", AllPostUserMap.toString());
-                        }
                         showLoading(); // Optionally show a loading indicator
                         fetchAndDisplayPosts();
-//                        Toast.makeText(getContext(), "wait lets see!", Toast.LENGTH_SHORT).show();
-
-//                        Toast.makeText(getContext(), "Yes Calling!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -151,13 +141,15 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
         DatabaseReference interactionRef = FirebaseDatabase.getInstance().getReference().child("Interaction").child(currentUserId);
         // Clear the postUserMap before starting to fetch new data
         postUserMap.clear();
-
-        // Fetch the last 20 posts from Interaction
         interactionRef.limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int postCount = 0;
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot postSnapshot : categorySnapshot.getChildren()) {
+                        if (postCount >= 20) {
+                            break; // Stop adding more posts once 20 posts are retrieved
+                        }
                         String postId = postSnapshot.getKey();
                         String userId = postSnapshot.getValue(String.class);
                         // Check if the postId is already present in AllPostUserMap
@@ -165,18 +157,22 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                             // If not present, add to both postUserMap and AllPostUserMap
                             postUserMap.put(postId, userId);
                             AllPostUserMap.put(postId, userId); // Assuming you want to keep track of all seen posts
+                            postCount++; // Increment the post counter
+                            count++;
+
                         }
                     }
                 }
                 // Now that we have our map populated, display the posts
-              if (postUserMap == null || postUserMap.isEmpty()) {
-                  Toast.makeText(getContext(), "No more Exhibits to display, Add another category to see more exhibits.", Toast.LENGTH_LONG).show();
-                  hideLoading();
-              }else {
+                if (postUserMap.isEmpty()) {
+                    Toast.makeText(getContext(), "No more Exhibits to display, Add another category to see more exhibits.", Toast.LENGTH_LONG).show();
+                    hideLoading();
+                } else {
+                    loading = false;
+                    displayPosts(postUserMap);
+                    Toast.makeText(getContext(), "Count is : " + count, Toast.LENGTH_SHORT).show();
 
-                  displayPosts(postUserMap);
-              }
-
+                }
             }
 
             @Override
@@ -186,12 +182,13 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
         });
     }
 
+
     private void displayPosts(Map<String, String> postUserMap) {
         if (loading) return; // Return if already loading posts
         loading = true; // Set loading to true since we're starting to load posts
-        if (this.postUserMap != null) {
+        if (postUserMap != null) {
 
-            for (Map.Entry<String, String> entry : this.postUserMap.entrySet()) {
+            for (Map.Entry<String, String> entry : postUserMap.entrySet()) {
                 final String postId = entry.getKey();
                 final String userId = entry.getValue();
 
@@ -269,6 +266,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 }
                 // Now that you have your categories, update your UI accordingly
                 updateCategories(fetchedCategories);
+
             }
 
             @Override
@@ -291,6 +289,10 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
         // Notify the adapter of the change
         categoryAdapter.notifyDataSetChanged();
+
+        if (fetchedCategories != null) {
+            fetchAndDisplayPosts();
+        }
     }
 
 
@@ -428,8 +430,11 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
                             String postId = postSnapshot.getKey();
                             String category = (String) postSnapshot.child("category").getValue();
+                            String description = (String) postSnapshot.child("imgdesc").getValue();
                             // Check if the category matches and the postId is unique
-                            if (category != null && category.toLowerCase().equals(result.get(userId).toLowerCase()) && !uniquePostIds.containsKey(postId)) {
+                            if (category != null && category.toLowerCase().contains(result.get(userId).toLowerCase())
+                                    || description != null && description.toLowerCase().contains(result.get(userId).toLowerCase())
+                                    && !uniquePostIds.containsKey(postId)) {
                                 uniquePostIds.put(postId, userId); // Store postId and userId
                                 Log.d("checkkk", uniquePostIds.toString());
                                 breakLoop++;
@@ -613,7 +618,17 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 });
             }
         }
+        if (postAdapter.getItemCount() == 1) {
+            // Ensure this runs on the UI thread if you're changing UI elements or interacting with the UI in any way
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fetchAndDisplayPosts();
+                }
+            });
+        }
     }
+
 
 
     public interface PostCheckCallback {

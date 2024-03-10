@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.CircleFragment">
+    tools:context=".Fragments.SearchFragment">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <EditText
-            android:id="@+id/searchbox"
+            android:id="@+id/searchboxRedirect"
             android:layout_width="388dp"
             android:layout_height="65dp"
             android:layout_alignParentStart="true"
@@ -28,11 +28,7 @@
             android:paddingTop="10dp"
             android:paddingRight="20dp"
             android:paddingBottom="5dp"
-            android:text="">
-
-            <requestFocus />
-        </EditText>
-
+            android:text="" />
 
         <ImageView
             android:id="@+id/searchgicon"
@@ -43,16 +39,33 @@
             android:src="@drawable/searchlogo" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchedUserList"
+            android:id="@+id/ExhibitorsShowcase"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/searchbox"
+            android:layout_below="@+id/searchboxRedirect"
+            android:layout_marginTop="10dp"
 
+            />
+
+        <TextView
+            android:id="@+id/beginningText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="406dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_horizontal"
+            android:text="Connect with exhibitors to get their latest updates"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:visibility="gone"
             />
 
 
     </RelativeLayout>
 
-
 </RelativeLayout>
-

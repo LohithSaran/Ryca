@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -61,10 +62,18 @@ public class CircleFragment extends Fragment {
         searchedUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         searchedUserList.setAdapter(userAdapter);
 
-        searchBar = view.findViewById(R.id.searchbox);
-
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        searchBox.requestFocus();
+
+        searchBox.post(() -> {
+            if (searchBox.requestFocus()) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(requireActivity().INPUT_METHOD_SERVICE);
+                imm.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
 
         userAdapter.setOnItemClickListener(new UserAdapter.OnItemClickListener() {
             @Override

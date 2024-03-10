@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.ryca.Fragments.CircleFragment;
 import com.ryca.Fragments.CreatorsShowroom;
 import com.ryca.Fragments.HomeFragment;
+import com.ryca.Fragments.SearchFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
                     selectedFragment = new HomeFragment();
                     break;
                 case "circle":
-                    selectedFragment = new CircleFragment();
+                    selectedFragment = new SearchFragment();
                     break;
                 case "profile":
                     selectedFragment = new ProfileFragment();
@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (itemId == R.id.homenav) {
                             selectedFragment = new HomeFragment();
                         } else if (itemId == R.id.circlenav) {
-                            selectedFragment = new CircleFragment();
+                            selectedFragment = new SearchFragment();
                         } else if (itemId == R.id.profilenav) {
                             selectedFragment = new ProfileFragment();
                             // Re-enable navigation here if needed
