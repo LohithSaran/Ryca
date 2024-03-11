@@ -444,11 +444,12 @@ public class ProfileFragment extends Fragment {
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
                             String username = userSnapshot.child("username").getValue(String.class);
                             String address = userSnapshot.child("Location").getValue(String.class);
+                            String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, true, true));
+                                    profilePictureUrl,  username,  address, userId, postKeys, city, true, true));
 
                         }
 
@@ -620,11 +621,12 @@ public class ProfileFragment extends Fragment {
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
                             String username = userSnapshot.child("username").getValue(String.class);
                             String address = userSnapshot.child("Location").getValue(String.class);
+                            String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, true , true));
+                                    profilePictureUrl,  username,  address, userId, postKeys, city, true , true));
 
                         }
 
@@ -748,11 +750,12 @@ public class ProfileFragment extends Fragment {
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
                             String username = userSnapshot.child("username").getValue(String.class);
                             String address = userSnapshot.child("Location").getValue(String.class);
+                            String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
                             photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
                             photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl, username, address, userId, postKeys, true, true));
+                                    profilePictureUrl, username, address, userId, postKeys, city, true, true));
 
                         }
 

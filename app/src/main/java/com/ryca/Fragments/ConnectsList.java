@@ -152,12 +152,14 @@ public class ConnectsList extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String ShopName = snapshot.child("Shop Name").getValue(String.class);
                             String Location = snapshot.child("Location").getValue(String.class);
+                            String city = snapshot.child("City").getValue(String.class);
                             String ProfilePicture = snapshot.child("Profile picture").getValue(String.class);
 
                             User user = new User();
                             user.setId(connectID);
                             user.setUsername(ShopName);
                             user.setAdd(Location);
+                            user.setCity(city);
                             user.setImageurl(ProfilePicture);
 
                             ConnectuserList.add(user);

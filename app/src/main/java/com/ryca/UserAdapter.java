@@ -56,7 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         // Add a null check for user
         if (user != null) {
             holder.username.setText(user.getUsername());
-            holder.address.setText(user.getAdd());
+            holder.address.setText(user.getAdd() + ", " + user.getCity());
 
             // Add a null check for user.getImageurl()
             if (user.getImageurl() != null) {
@@ -100,6 +100,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             username = itemView.findViewById(R.id.creatorsname);
             address = itemView.findViewById(R.id.searchaddress);
             userProfile = itemView.findViewById(R.id.profilePicturecs);
+
+            address.setSelected(true);
 
         }
     }

@@ -25,13 +25,14 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
     private String username;
     private String address;
     private String userId;
+    private String city;
     private List<String> PostId;
     private boolean fragmentState;
     private boolean menu;
 
 
     public ProfileGridAdapter(Context context, List<String> postUrls,
-                              String profilePictureUrl, String username, String address, String userId, List<String> PostId, boolean b, boolean menu) {
+                              String profilePictureUrl, String username, String address, String userId, List<String> PostId, String city, boolean b, boolean menu) {
         this.context = context;
         this.postUrls = postUrls;
         this.profilePictureUrl = profilePictureUrl;
@@ -39,6 +40,7 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
         this.address = address;
         this.userId = userId;
         this.PostId = PostId;
+        this.city = city;
         this.fragmentState = b;
         this.menu = menu;
     }
@@ -67,6 +69,7 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
             // Replace the placeholders with actual data from your model or database
             intent.putExtra("username", username);
             intent.putExtra("userAddress", address);
+            intent.putExtra("city", city);
             intent.putExtra("userProfileImage", profilePictureUrl);
             intent.putExtra("userId", userId);
             intent.putExtra("FromFragment", fragmentState);

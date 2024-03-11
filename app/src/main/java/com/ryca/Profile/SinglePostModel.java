@@ -10,14 +10,15 @@ public class SinglePostModel {
     private String description;
     private String userId;
     private String PostId;
+    private String city;
     private boolean isSaved;
     private boolean menu;
     private boolean NavigationToProfile;
 
-    public SinglePostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
+    public SinglePostModel(String postImageUrl, String username, String address, String city, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
     }
 
-    public SinglePostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
+    public SinglePostModel(String profilePictureUrl, String username, String address, String city, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -27,9 +28,18 @@ public class SinglePostModel {
         this.description = description;
         this.userId = userId;
         this.PostId = PostId;
+        this.city = city;
         this.isSaved = isSaved;
         this.menu = menu;
         this.NavigationToProfile = NavigationToProfile;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public boolean isNavigationToProfile() {

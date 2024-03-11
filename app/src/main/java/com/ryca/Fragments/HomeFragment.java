@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -99,7 +100,8 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
         recyclerView.setAdapter(postAdapter);
         paginationProgressBar = view.findViewById(R.id.paginationProgressBar);
 
-        // Example function to show progress bar
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
 
 
         populateTheCategories();
@@ -130,6 +132,16 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                         fetchAndDisplayPosts();
                     }
                 }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Implement logic to reload posts
+                fetchAndDisplayPosts();
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         });
 
@@ -209,11 +221,12 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                 String shopName = creatorSnapshot.child("Shop Name").getValue(String.class);
                                 String profilePicture = creatorSnapshot.child("Profile picture").getValue(String.class);
                                 String location = creatorSnapshot.child("Location").getValue(String.class);
+                                String city = creatorSnapshot.child("City").getValue(String.class);
 
-                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null) {
+                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
 
                                     checkThePostId(postId, isSaved -> {
-                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, isSaved);
+                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                         postList.add(post); // Assuming postList is accessible here
                                         postAdapter.notifyDataSetChanged(); // Assuming postAdapter is accessible and set up
                                     });
@@ -460,6 +473,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                         String imageURL = (String) dataSnapshot.child("imageURL").getValue();
                                         String category = (String) dataSnapshot.child("category").getValue();
 
+
                                         DatabaseReference creatorRef = FirebaseDatabase.getInstance().getReference().child("Creators").child(userId);
                                         creatorRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
@@ -468,12 +482,12 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String shopName = (String) creatorSnapshot.child("Shop Name").getValue();
                                                 String profilePicture = (String) creatorSnapshot.child("Profile picture").getValue();
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
-
+                                                String city = (String) creatorSnapshot.child("City").getValue();
                                                 // Assuming PostModel and postAdapter are previously defined and set up
-                                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null) {
+                                                if (profilePicture != null && shopName!= null && location != null && city != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null ) {
 
                                                     checkThePostId(postId, isSaved -> {
-                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, isSaved);
+                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                                         postList.add(post);
                                                         postAdapter.notifyDataSetChanged();
                                                         // Any additional logic that depends on the isSaved value
@@ -522,12 +536,12 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String shopName = (String) creatorSnapshot.child("Shop Name").getValue();
                                                 String profilePicture = (String) creatorSnapshot.child("Profile picture").getValue();
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
+                                                String city = (String) creatorSnapshot.child("City").getValue();
+                                                // Assuming PostModel and postAdapter are previously defined and set up
+                                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
 
-                                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null) {
-
-                                                    // Assuming PostModel and postAdapter are previously defined and set up
                                                     checkThePostId(postId, isSaved -> {
-                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, isSaved);
+                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                                         postList.add(post);
                                                         postAdapter.notifyDataSetChanged();
                                                         // Any additional logic that depends on the isSaved value

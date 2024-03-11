@@ -94,7 +94,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
         //      Set other data similarly
         holder.usernameTextView.setText(post.getUsername());
-        holder.addressTextView.setText(post.getAddress());
+        holder.addressTextView.setText(post.getAddress() + ", "+ post.getCity());
         holder.rate.setText("₹ " + post.getRating());
         holder.category.setText(post.getCategory());
         holder.description.setText(post.getDescription());
@@ -129,6 +129,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
             sharePost = itemView.findViewById(R.id.sharedp);
 
 
+            addressTextView.setSelected(true);
+            rate.setSelected(true);
             // Set a click listener for the savedImageView
             savedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override

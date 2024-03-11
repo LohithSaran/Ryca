@@ -41,7 +41,13 @@
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/profilePicturecs"
         android:text="TextView"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:scrollHorizontally="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        />
 
 
 </RelativeLayout>

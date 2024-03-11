@@ -8,17 +8,27 @@ public class User {
     private String username;
     private String imageurl;
     private String add;
+    private String city;
 
 
     public User() {
 
     }
 
-    public User(String id, String username, String imageurl, String add) {
+    public User(String id, String username, String imageurl, String add, String city) {
         this.id = id;
         this.username = username;
         this.imageurl = imageurl;
         this.add = add;
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getId() {

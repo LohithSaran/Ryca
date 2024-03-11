@@ -161,6 +161,7 @@ public class CircleFragment extends Fragment {
                         user.setId(userId);
                         user.setUsername(shopName);
                         user.setAdd(userSnapshot.child("Location").getValue(String.class));
+                        user.setCity(userSnapshot.child("City").getValue(String.class));
                         user.setImageurl(userSnapshot.child("Profile picture").getValue(String.class));
 
                         userList.add(user);

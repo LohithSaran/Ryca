@@ -10,12 +10,13 @@ public class PostModel {
     private String description;
     private String userId;
     private String PostId;
+    private String city;
     private boolean isSaved;
 
-    public PostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
+    public PostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId,String city , boolean isSaved) {
     }
 
-    public PostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved) {
+    public PostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, String city, boolean isSaved) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -26,6 +27,15 @@ public class PostModel {
         this.userId = userId;
         this.PostId = PostId;
         this.isSaved = isSaved;
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public boolean isSaved() {

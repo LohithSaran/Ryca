@@ -83,7 +83,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         //      Set other data similarly
         holder.usernameTextView.setText(post.getUsername());
-        holder.addressTextView.setText(post.getAddress());
+        holder.addressTextView.setText(post.getAddress() +", " + post.getCity());
         holder.rate.setText("₹ " + post.getRating());
         holder.category.setText(post.getCategory());
         holder.description.setText(post.getDescription());
@@ -118,6 +118,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             Menu = itemView.findViewById(R.id.dpmenu);
 
             addressTextView.setSelected(true);
+            rate.setSelected(true);
 
             usernameTextView.setOnClickListener(new View.OnClickListener() {
                 @Override

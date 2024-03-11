@@ -98,8 +98,9 @@ public class DeepLinkActivity extends AppCompatActivity {
                         String profilePictureUrl = snapshot.child("Profile picture").getValue(String.class);
                         String Username = snapshot.child("Shop Name").getValue(String.class);
                         String address = snapshot.child("Location").getValue(String.class);
+                        String city = snapshot.child("City").getValue(String.class);
 
-                        DisplaySinglePost(Username, address, profilePictureUrl, postKey, userid, fromMenu);
+                        DisplaySinglePost(Username, address, city, profilePictureUrl, postKey, userid, fromMenu);
 
                        // Log.d("checkkk" + "itismess" , Username+ address+ profilePictureUrl + " ~ " + postKeySuffix2 + " ~ " + userid);
 
@@ -118,7 +119,7 @@ public class DeepLinkActivity extends AppCompatActivity {
 
 
 
-    private void DisplaySinglePost(String username, String userAddress, String userProfileImage, String postKey, String userId, boolean fromMenu) {
+    private void DisplaySinglePost(String username, String userAddress, String city, String userProfileImage, String postKey, String userId, boolean fromMenu) {
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postKey);
 
@@ -136,7 +137,7 @@ public class DeepLinkActivity extends AppCompatActivity {
                             String description = snapshot.child("imgdesc").getValue(String.class);
 
                             Log.d("TrueOrFalse", "statusBS :" + isSaved + " ~ " + postKey);
-                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu, true);
+                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, city, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu, true);
 
                             SinglepostList.add(Singlepost);
                             Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + postImageUrl + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);

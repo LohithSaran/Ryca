@@ -74,14 +74,17 @@
 
     <TextView
         android:id="@+id/ratedp"
-        android:layout_width="203dp"
+        android:layout_width="250dp"
         android:layout_height="37dp"
         android:layout_below="@+id/dppost"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="17dp"
         android:layout_marginTop="13dp"
-        android:layout_marginEnd="191dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+
         android:text="TextView"
         android:textColor="#FF0000"
         android:textSize="26dp"
