@@ -168,8 +168,8 @@ public class Registration extends AppCompatActivity {
                                                                 userRef.child("City").setValue("");
                                                                 userRef.child("CurrentLocation").setValue("");
                                                                 userRef.child("shop description").setValue("");
-                                                                userRef.child("No of post").setValue("0");
-                                                                userRef.child("No of followers").setValue("");
+                                                                userRef.child("No of post").setValue(0);
+                                                                userRef.child("No of followers").setValue(0);
                                                                 userRef.child("Profile picture").setValue("");
                                                                 userRef.child("Whatsapp number").setValue("");
                                                                 userRef.child("Email ID").setValue("");
@@ -311,8 +311,8 @@ public class Registration extends AppCompatActivity {
                                     userRef.child("City").setValue("");
                                     userRef.child("CurrentLocation").setValue("");
                                     userRef.child("shop description").setValue("");
-                                    userRef.child("No of post").setValue("0");
-                                    userRef.child("No of followers").setValue("");
+                                    userRef.child("No of post").setValue(0);
+                                    userRef.child("No of followers").setValue(0);
                                     userRef.child("Profile picture").setValue("");
                                     userRef.child("Whatsapp number").setValue("");
                                     userRef.child("Email ID").setValue("");

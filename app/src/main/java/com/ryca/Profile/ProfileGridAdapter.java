@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,8 +61,6 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
 
         // Add a click listener to each item to show a Toast with the post URL
         holder.itemView.setOnClickListener(v -> {
-            Toast.makeText(context, "Clicked: " + postkeyy, Toast.LENGTH_SHORT).show();
-
             Intent intent = new Intent(context, SinglePostView.class);
             // Add extra data (user and post details) to the intent
             // Replace the placeholders with actual data from your model or database

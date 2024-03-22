@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbc"
+    tools:context=".LoginActivity">
+
+    <RelativeLayout
+        android:id="@+id/containerRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        >
+
+
+
+        <ImageView
+            android:id="@+id/continuewtgl"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="84dp"
+            android:layout_marginEnd="84dp"
+            app:srcCompat="@drawable/continuewitgl"
+            android:layout_below="@id/forgotpsw"
+            android:layout_marginTop="45dp"/>
+
+        <EditText
+            android:id="@+id/enteremail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="27dp"
+            android:background="@drawable/textview_background"
+            android:ems="10"
+
+            android:hint="Enter your email id"
+            android:inputType="textEmailAddress"
+            android:padding="20dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/passwordRelative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/enteremail"
+            android:layout_marginTop="25dp">
+            <EditText
+                android:id="@+id/enterpassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="27dp"
+                android:background="@drawable/textview_background"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="20dp"
+                android:paddingRight="80dp"
+                android:padding="20dp" />
+
+            <ImageView
+                android:id="@+id/showpass"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignTop="@+id/enterpassword"
+                android:layout_alignEnd="@+id/enterpassword"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="15dp"
+                app:srcCompat="@drawable/showpsw" />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/loginbtn"
+            android:layout_width="178dp"
+            android:layout_height="65dp"
+            android:layout_below="@+id/passwordRelative"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="118dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="112dp"
+            app:srcCompat="@drawable/loginbtn" />
+
+        <TextView
+            android:id="@+id/forgotpsw"
+            android:layout_width="204dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:text="forgot your password?"
+            android:textColor="#0094FF"
+            android:layout_below="@id/loginbtn"
+            android:layout_marginTop="45dp"
+            android:textAlignment="center"
+             />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@+id/continuewtgl"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="-1dp"
+            app:srcCompat="@drawable/orline" />
+
+        <TextView
+            android:id="@+id/creatacntbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView4"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="20dp"
+            android:text="Don't have an account? Create Now! 👉🏻"
+            android:textSize="20dp"
+             android:textAlignment="center"
+            android:textColor="#0094FF"
+            />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

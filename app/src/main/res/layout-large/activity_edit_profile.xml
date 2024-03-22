@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuCodes.EditProfile">
+
+
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="288dp"
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="56dp"
+        android:text="Update profile details"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="28dp"
+        android:textStyle="bold" />
+
+
+    <RelativeLayout
+        android:id="@+id/containerRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+        <EditText
+            android:id="@+id/updateshopname"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/textView14"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="43dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Update your shop name"
+            android:inputType="text"
+            android:maxLength="30"
+            android:paddingLeft="20dp" />
+
+        <EditText
+            android:id="@+id/updateshopaddress"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/updateshopname"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="43dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Update your shop address"
+            android:inputType="text"
+            android:paddingLeft="20dp" />
+
+        <EditText
+            android:id="@+id/updateCity"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/updateshopaddress"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="43dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Update your city, town or village"
+            android:inputType="text"
+            android:maxLength="30"
+            android:paddingLeft="20dp" />
+
+
+        <ImageView
+            android:id="@+id/updateshopprof"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="115dp"
+            android:layout_marginEnd="115dp"
+            android:src="@drawable/profimage"
+            android:textAlignment="center" />
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/updateshopdesc"
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:layout_below="@+id/updateCity"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="43dp"
+            android:background="@drawable/button_background"
+            android:hint="Add recent Offers or Discounts in your shop, about your shop etc..."
+            android:maxLength="250"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="20dp"
+            android:textAlignment="viewStart" />
+
+        <TextView
+            android:id="@+id/updatebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView14"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="106dp"
+            android:layout_marginTop="367dp"
+            android:layout_marginEnd="107dp"
+            android:background="@drawable/background_button"
+            android:paddingLeft="35dp"
+            android:paddingTop="14dp"
+            android:paddingRight="35dp"
+
+            android:paddingBottom="14dp"
+            android:text="Finish"
+            android:textAlignment="center"
+            android:textSize="28dp" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@+id/updateshopprof"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="15dp"
+            android:text="Update your shop profile photo"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.ryca.Profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class SavedPost extends AppCompatActivity {
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user = mAuth.getCurrentUser();
+    int count ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,19 +58,41 @@ public class SavedPost extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     // Assuming each post has an "imageUrl" field
                     String imageUrl = postSnapshot.child("postImage").getValue(String.class);
+                    String postId = postSnapshot.child("PostId").getValue(String.class);
+                    String userId = postSnapshot.child("userId").getValue(String.class);
                     String postKey = postSnapshot.getKey();
+                    DatabaseReference postCheckRef = FirebaseDatabase.getInstance().getReference("Post").child(userId).child(postId);
+
+                    postCheckRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot postCheckSnapshot) {
+
+                            if (postCheckSnapshot.exists() && imageUrl != null) {
+                                postUrls.add(imageUrl);
+                                postKeys.add(postKey);
+                                count++;
+                                Log.d("Posttts" , "PostKey " + count + " : "+ postKey + "\n" + "ImageUrl " + count + " : " + imageUrl  );
+                            } else {
+                                // Post doesn't exist in "Post" node, remove it from "Saved"
+                                postsRef.child(postKey).removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.d("Firebase", "Removed unmatched saved post: " + postId);
+                                    } else {
+                                        Log.e("Firebase", "Failed to remove unmatched saved post: " + postId, task.getException());
+                                    }
+                                });
+                            }
 
 
-                    if (imageUrl != null) {
-                        postUrls.add(imageUrl);
-                    }
-                    if (postKey != null) {
-                        postKeys.add(postKey);
-                    }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.e("Firebase", "Failed to check post existence", databaseError.toException());
+                        }
+                    });
                 }
-
-                // Reverse the order of postUrls to display the newest posts first
-                Collections.reverse(postUrls);
+//                Collections.reverse(postKeys);
 
                 DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
@@ -83,6 +107,8 @@ public class SavedPost extends AppCompatActivity {
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = findViewById(R.id.photoGridsaved);
                             photoGrid.setLayoutManager(new GridLayoutManager(SavedPost.this, 3)); // Adjust the span count as needed
+//                            Collections.reverse(postUrls);
+                            Collections.reverse(postUrls);
                             photoGrid.setAdapter(new ProfileGridAdapter(SavedPost.this, postUrls,
                                     profilePictureUrl,  username,  address, userId, postKeys, "", false, false));
 

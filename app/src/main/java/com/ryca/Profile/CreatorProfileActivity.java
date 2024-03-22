@@ -1,10 +1,13 @@
 package com.ryca.Profile;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,7 +48,7 @@ import java.io.File;
 public class CreatorProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView finishbtn;
+    private TextView finishbtn;
     private EditText shopdesc, shopname;
     private TextView skipfornow;
     private ProgressBar progressBar;
@@ -54,6 +59,7 @@ public class CreatorProfileActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private DatabaseReference dbReference,CreatorRef;
     private StorageTask<UploadTask.TaskSnapshot> mUploadTask;
+    private static final int REQUEST_CODE_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +78,14 @@ public class CreatorProfileActivity extends AppCompatActivity {
         profimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+                    chooseImageBelow11();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    chooseImagee();
+                }
             }
         });
 
@@ -190,7 +203,62 @@ public class CreatorProfileActivity extends AppCompatActivity {
     }
 
 
-    private void chooseImage() {
+    private void chooseImagee() {
+        // Check if permission is granted
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(CreatorProfileActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_CODE_PERMISSION);
+        }
+        else {
+            ActivityCompat.requestPermissions(CreatorProfileActivity.this,new String[]{Manifest.permission.READ_MEDIA_IMAGES}
+                    ,REQUEST_CODE_PERMISSION);
+        }
+
+    }
+
+    private void chooseImageBelow11() {
+        // Check if permission is granted
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        } else {
+            // Permission is already granted, proceed with your logic
+            openImagePicker();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else {
+                    Toast.makeText(this, "Permission denied, can't upload profile picture, don't worry you can change permission any time in settings", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else {
+                    Toast.makeText(this, "Permission denied, can't upload profile picture, don't worry you can change permission any time in settings", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+    }
+
+
+    private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);

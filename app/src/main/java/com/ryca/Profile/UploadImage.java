@@ -1,14 +1,20 @@
 package com.ryca.Profile;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +31,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,10 +55,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 public class UploadImage extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView uploadbtn, imgchoose;
+    private TextView uploadbtn, imgchoose;
     //    private TextView showuploadimg;
     private EditText imgdesc, prodprice, category;
     private ProgressBar progressBar;
@@ -65,6 +74,8 @@ public class UploadImage extends AppCompatActivity {
     FirebaseUser user = mAuth.getCurrentUser();
     private boolean isUploading = false;
     private ProgressDialog progressDialog;
+    private static final int REQUEST_CODE_PERMISSION = 101;
+
 
 
 
@@ -138,8 +149,17 @@ public class UploadImage extends AppCompatActivity {
         imgchoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
-            }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+                    chooseImageBelow11();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    chooseImagee();
+                    }
+                }
+
         });
 
 
@@ -164,12 +184,137 @@ public class UploadImage extends AppCompatActivity {
             }
         });
 
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onBackPressed();
+            }
+        });
 
 
     }
 
+    private void chooseImagee() {
+        // Check if permission is granted
 
-    private void chooseImage() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(UploadImage.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_CODE_PERMISSION);
+        }
+        else {
+            ActivityCompat.requestPermissions(UploadImage.this,new String[]{Manifest.permission.READ_MEDIA_IMAGES}
+                    ,REQUEST_CODE_PERMISSION);
+        }
+
+    }
+
+    private void chooseImageBelow11() {
+        // Check if permission is granted
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        } else {
+            // Permission is already granted, proceed with your logic
+            openImagePicker();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_MEDIA_IMAGES)) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UploadImage.this);
+                    builder.setTitle("Requesting permission");
+                    builder.setMessage("We promise we don't misuse your data." + "\n" + "Your device will not allow to access photos to upload without you providing the permission, so allow permission by settings -> Permissions -> Photos and videos -> Allow.");
+                    builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Dismiss the dialog or handle any other action
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.addCategory("android.intent.category.DEFAULT");
+                                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                                startActivityIfNeeded(intent, 101);
+
+                            } catch (Exception e) {
+
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                startActivityIfNeeded(intent, 101);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setCancelable(false); // Prevent the dialog from being dismissed by tapping outside
+                    builder.show();
+
+                } else {
+
+                    chooseImagee();
+                }
+            }
+        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+                if (requestCode == REQUEST_CODE_PERMISSION) {
+                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        openImagePicker();
+                    } else {
+                        showPermissionInstructionsDialog();
+                    }
+
+                }
+            }
+    }
+
+    private void showPermissionInstructionsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(UploadImage.this);
+        builder.setTitle("Permission Required");
+        builder.setMessage("We promise we don't misuse your data." + "\n" + "Your device will not allow to access photos to upload without you providing the permission, so allow permission by clicking settings -> Permissions -> Storage -> Allow.");
+        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Open app settings to allow permission
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Close the dialog or handle any other action
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(false); // Prevent the dialog from being dismissed by tapping outside
+        builder.show();
+    }
+
+    private void openImagePicker() {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -325,7 +470,7 @@ public class UploadImage extends AppCompatActivity {
                                             long timestamp = System.currentTimeMillis();
 
                                             String key = "category" + categoryCounter + "_" + timestamp;
- 
+
                                             creatorsRef.child(key).setValue(category.getText().toString().trim());
                                         }
 

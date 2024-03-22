@@ -1,12 +1,15 @@
 package com.ryca.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ryca.HomeActivity;
+import com.ryca.ImageViewActivity;
 import com.ryca.Profile.ProfileGridAdapter;
 import com.ryca.R;
 import com.squareup.picasso.Picasso;
@@ -61,6 +66,7 @@ public class CreatorsShowroom extends Fragment {
     Bundle args = getArguments();
     TextView connectCount, address;
     int ModifyConnectCount;
+    String ReportName;
 
 
     String userId;
@@ -83,13 +89,13 @@ public class CreatorsShowroom extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_creators_showroom, container, false);
 
-
         appBarLayout = rootView.findViewById(R.id.appBarLayout);
         profileLayout = rootView.findViewById(R.id.collapsingToolbar);
         TextView connect = rootView.findViewById(R.id.connectcs);
 
         ImageView sortRateImageView = rootView.findViewById(R.id.sortRatecs);
         ImageView whatsapp = rootView.findViewById(R.id.whatsappcs);
+        ImageView menucs = rootView.findViewById(R.id.menucs);
 
         connectCount = rootView.findViewById(R.id.connectcount);
         address = rootView.findViewById(R.id.bio);
@@ -159,19 +165,20 @@ public class CreatorsShowroom extends Fragment {
                                 String whatsappNumber = dataSnapshot.child("Whatsapp number").getValue(String.class);
                                 String emailContact = dataSnapshot.child("Email ID").getValue(String.class);
                                 int connectsCount = dataSnapshot.child("No of followers").getValue(Integer.class);
-                                Object postCountObject = dataSnapshot.child("No of post").getValue();
-                                Long postCount = 0L; // Default value if conversion fails or data is null
-
-                                if (postCountObject instanceof Long) {
-                                    postCount = (Long) postCountObject;
-                                } else if (postCountObject instanceof String) {
-                                    try {
-                                        postCount = Long.parseLong((String) postCountObject);
-                                    } catch (NumberFormatException e) {
-                                        // Handle the case where the String cannot be parsed to Long
-                                        e.printStackTrace(); // You might want to log this error for debugging
-                                    }
-                                }
+                                int postCount = dataSnapshot.child("No of post").getValue(Integer.class);
+//                                Object postCountObject = dataSnapshot.child("No of post").getValue();
+//                                Long postCount = 0L; // Default value if conversion fails or data is null
+//
+//                                if (postCountObject instanceof Long) {
+//                                    postCount = (Long) postCountObject;
+//                                } else if (postCountObject instanceof String) {
+//                                    try {
+//                                        postCount = Long.parseLong((String) postCountObject);
+//                                    } catch (NumberFormatException e) {
+//                                        // Handle the case where the String cannot be parsed to Long
+//                                        e.printStackTrace(); // You might want to log this error for debugging
+//                                    }
+//                                }
                                 String description = dataSnapshot.child("shop description").getValue(String.class);
 
                                 // Set user data in the respective views
@@ -181,6 +188,23 @@ public class CreatorsShowroom extends Fragment {
                                 TextView postCountTextView = rootView.findViewById(R.id.postcountcs);
                                 TextView descriptionTextView = rootView.findViewById(R.id.storedescriptioncs);
                                 ImageView email = rootView.findViewById(R.id.emailcs);
+
+
+                                profilePictureImageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String imageUrl = profilePictureUrl;
+
+                                        // Create an intent to start ImageViewActivity
+                                        Intent intent = new Intent(getContext(), ImageViewActivity.class);
+
+                                        // Put the image URL in the intent
+                                        intent.putExtra("IMAGE_URL", imageUrl);
+                                        intent.putExtra("fromWhere", "1");
+
+                                        startActivity(intent);
+                                    }
+                                });
 
                                 whatsapp.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -228,7 +252,7 @@ public class CreatorsShowroom extends Fragment {
                                 // Set other user information
                                 usernameTextView.setText(username);
                                 bioTextView.setText(String.format("%s, %s", location, city));
-                                postCountTextView.setText(postCount + " Post");
+                                postCountTextView.setText(postCount + " Exhibit");
                                 connectCount.setText(connectsCount + " Connects");
                                 ModifyConnectCount = connectsCount;
                                 descriptionTextView.setText(description);
@@ -251,11 +275,11 @@ public class CreatorsShowroom extends Fragment {
                                         }
                                     } catch (NumberFormatException e) {
                                         // Handle the case where the value cannot be parsed as an integer
-                                        Toast.makeText(requireContext(), "Invalid creator value format", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(requireContext(), "Invalid exhibitors value format", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     // Handle the case where the value is null
-                                    Toast.makeText(requireContext(), "Creator value is null", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Exhibitors value is null", Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -353,11 +377,12 @@ public class CreatorsShowroom extends Fragment {
                     Collections.reverse(postUrls);
 
 
-                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(currentUserId);
+                    DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
                     userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            if (isAdded()) {
                             if (userSnapshot.exists()) {
                                 // Retrieve user data
                                 String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -365,13 +390,17 @@ public class CreatorsShowroom extends Fragment {
                                 String address = userSnapshot.child("Location").getValue(String.class);
                                 String city = userSnapshot.child("City").getValue(String.class);
                                 String userIdd = userSnapshot.getKey();
+                                ReportName = username;
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                         profilePictureUrl,  username,  address, userId, postKeys, city, true, false));
+                                Context context = getContext(); // Safe to call getContext() after checking isAdded()
+                                if (context != null) {
+                                    photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                    photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                            profilePictureUrl, username, address, userId, postKeys, city, true, false));
+                                }
 
                             }
-
+                        }
                         }
 
                         @Override
@@ -422,6 +451,48 @@ public class CreatorsShowroom extends Fragment {
                 }
             });
 
+        menucs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupMenu(v);
+            }
+
+            private void showPopupMenu(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.exhibitor_showroom_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        if (item.getItemId() == R.id.reportShowroom) {
+
+                            String subject = "Feedback Regarding an Exhibitor ";
+                            String recipientEmail = "rycaapp@gmail.com";
+
+                            if (ReportName != null) {
+                                String mailto = "mailto:" + recipientEmail +
+                                        "?subject=" + Uri.encode(subject) +
+                                        "&body=" + Uri.encode("Check out this Exhibitor: " + ReportName );
+
+
+                                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                intent.setData(Uri.parse(mailto));
+
+                                startActivity(intent);
+                            }
+
+
+                            return true;
+                        }
+                        return true;
+                    }
+                });
+
+                popupMenu.show();
+            }
+        });
         return rootView;
     }
 
@@ -565,7 +636,6 @@ public class CreatorsShowroom extends Fragment {
         if (currentUser != null) {
             //String userId = currentUser.getUid();
 
-            Toast.makeText(getContext(), "From populateCategory" + userId, Toast.LENGTH_SHORT).show();
             DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("Creators").child(userId).child("Category");
 
             categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -668,6 +738,7 @@ public class CreatorsShowroom extends Fragment {
                     userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            if (isAdded()) {
                             if (userSnapshot.exists()) {
                                 // Retrieve user data
                                 String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -676,12 +747,15 @@ public class CreatorsShowroom extends Fragment {
                                 String city = userSnapshot.child("City").getValue(String.class);
                                 String userIdd = userSnapshot.getKey();
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl,  username,  address, userId, postKeys,city, true, false));
+                                Context context = getContext(); // Safe to call getContext() after checking isAdded()
+                                if (context != null) {
+                                    photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                    photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                            profilePictureUrl, username, address, userId, postKeys, city, true, false));
+                                }
 
                             }
-
+                        }
                         }
 
                         @Override
@@ -702,7 +776,7 @@ public class CreatorsShowroom extends Fragment {
 
     private void showSortRateDialog(View rootView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Filter by Rate");
+        builder.setTitle("Filter by Price");
 
         // Set up the layout for the dialog
         LinearLayout layout = new LinearLayout(requireContext());
@@ -711,12 +785,12 @@ public class CreatorsShowroom extends Fragment {
 
         // Create EditText views for min and max rates
         EditText etMinRate = new EditText(requireContext());
-        etMinRate.setHint("Min Rate");
+        etMinRate.setHint("Min Price");
         etMinRate.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(etMinRate);
 
         EditText etMaxRate = new EditText(requireContext());
-        etMaxRate.setHint("Max Rate");
+        etMaxRate.setHint("Max Price");
         etMaxRate.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(etMaxRate);
 
@@ -797,6 +871,7 @@ public class CreatorsShowroom extends Fragment {
                     userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            if (isAdded()) {
                             if (userSnapshot.exists()) {
                                 // Retrieve user data
                                 String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -805,12 +880,15 @@ public class CreatorsShowroom extends Fragment {
                                 String city = userSnapshot.child("city").getValue(String.class);
                                 String userIdd = userSnapshot.getKey();
                                 RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                        profilePictureUrl, username, address, userId, postKeys, city, true, false));
+                                Context context = getContext(); // Safe to call getContext() after checking isAdded()
+                                if (context != null) {
+                                    photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                    photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                            profilePictureUrl, username, address, userId, postKeys, city, true, false));
+                                }
 
                             }
-
+                        }
                         }
 
                         @Override

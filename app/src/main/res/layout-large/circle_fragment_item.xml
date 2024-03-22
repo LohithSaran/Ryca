@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="450dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp"
+    android:paddingBottom="20dp"
+    android:padding="5dp">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profilepicturedp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/circular"
+        app:srcCompat="@drawable/profile"
+        />
+
+    <TextView
+        android:id="@+id/creatorsnamedp"
+        android:layout_width="267dp"
+        android:layout_height="19dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="59dp"
+        android:layout_toEndOf="@+id/profilepicturedp"
+        android:text="TextView"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/creatorsaddressdp"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/creatorsnamedp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="33dp"
+        android:layout_toEndOf="@+id/profilepicturedp"
+        android:ellipsize="marquee"
+
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="TextView"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/creatorsaddressdp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bannerbackground"
+        android:paddingStart="20dp"
+        android:paddingBottom="15dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="15dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="790dp"
+        android:layout_height="274dp"
+        android:layout_below="@+id/banner"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/updateExhibit1"
+            android:layout_width="245dp"
+            android:layout_height="245dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/profimage" />
+
+        <ImageView
+            android:id="@+id/updateExhibit2"
+            android:layout_width="245dp"
+            android:layout_height="245dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/updateExhibit1"
+            android:src="@drawable/profimage" />
+
+        <ImageView
+            android:id="@+id/updateExhibit3"
+            android:layout_width="245dp"
+            android:layout_height="245dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/updateExhibit2"
+            android:src="@drawable/profimage" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageContainer"
+        android:background="@drawable/simpline" />
+
+
+
+</RelativeLayout>

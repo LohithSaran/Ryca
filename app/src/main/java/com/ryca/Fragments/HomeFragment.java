@@ -15,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,7 +60,6 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
     private boolean isLastPage = false;
     private boolean isLoading = false;
     ProgressBar paginationProgressBar;
-    int count = 0;
 
 
 
@@ -100,7 +98,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
         recyclerView.setAdapter(postAdapter);
         paginationProgressBar = view.findViewById(R.id.paginationProgressBar);
 
-        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+//        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
 
 
@@ -135,15 +133,15 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Implement logic to reload posts
-                fetchAndDisplayPosts();
-                swipeRefreshLayout.setRefreshing(false);
-
-            }
-        });
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                // Implement logic to reload posts
+//                fetchAndDisplayPosts();
+//                swipeRefreshLayout.setRefreshing(false);
+//
+//            }
+//        });
 
         return view;
     }
@@ -170,19 +168,21 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                             postUserMap.put(postId, userId);
                             AllPostUserMap.put(postId, userId); // Assuming you want to keep track of all seen posts
                             postCount++; // Increment the post counter
-                            count++;
 
                         }
                     }
                 }
                 // Now that we have our map populated, display the posts
                 if (postUserMap.isEmpty()) {
-                    Toast.makeText(getContext(), "No more Exhibits to display, Add another category to see more exhibits.", Toast.LENGTH_LONG).show();
+                    if (isAdded()) {
+                        if (postAdapter.getItemCount() > 0) {
+                            Toast.makeText(getContext(), "No more Exhibits to display, Add another category to see more exhibits.", Toast.LENGTH_LONG).show();
+                        }
+                    }
                     hideLoading();
                 } else {
                     loading = false;
                     displayPosts(postUserMap);
-                    Toast.makeText(getContext(), "Count is : " + count, Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -408,16 +408,13 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
                 }
                 if (!finalSearchResult) {
-                    Toast.makeText(requireContext(), "Sorry there are no Exhibitors with the product you are searching, Please try some other categories", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Sorry there are no Exhibitors with the product you are searching, Please try some other categories", Toast.LENGTH_SHORT).show();
                 }
 
                 if (postAdapter.getItemCount() == 0) {
                     displayFivePost(searchResults);
-                    Toast.makeText(requireContext(), "No", Toast.LENGTH_SHORT).show();
                 }else {
                     DisplayAllPost(searchResults);
-                    Toast.makeText(requireContext(), "Yes :" + searchResults, Toast.LENGTH_LONG).show();
-                    //Log.d("Posttts", "SecondCall "+ searchResults);
                 }
             }
 
@@ -680,7 +677,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
 
     public void onItemRemoved(List<AddCategoryModel> updatedList, String removedValue) {
-        Toast.makeText(requireContext(), "this: "+removedValue, Toast.LENGTH_SHORT).show();
+
         RemoveValueFromFirebase(removedValue);
     }
 
@@ -704,7 +701,6 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 // Notify the adapter of the change
                 categoryAdapter.notifyDataSetChanged();
 
-                Toast.makeText(requireContext(), "Category removed successfully.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(requireContext(), "Failed to remove category.", Toast.LENGTH_SHORT).show();
             }

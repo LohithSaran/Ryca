@@ -1,6 +1,7 @@
 package com.ryca;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -140,19 +141,20 @@ public class ProfileFragment extends Fragment {
                             String username = dataSnapshot.child("username").getValue(String.class);
                             String location = dataSnapshot.child("Location").getValue(String.class);
                             String city = dataSnapshot.child("City").getValue(String.class);
-                            Object postCountObject = dataSnapshot.child("No of post").getValue();
-                            Long postCount = 0L; // Default value if conversion fails or data is null
-
-                            if (postCountObject instanceof Long) {
-                                postCount = (Long) postCountObject;
-                            } else if (postCountObject instanceof String) {
-                                try {
-                                    postCount = Long.parseLong((String) postCountObject);
-                                } catch (NumberFormatException e) {
-                                    // Handle the case where the String cannot be parsed to Long
-                                    e.printStackTrace(); // You might want to log this error for debugging
-                                }
-                            }
+                            int postCount = dataSnapshot.child("No of post").getValue(Integer.class);
+//                            Object postCountObject = dataSnapshot.child("No of post").getValue();
+//                            Long postCount = 0L; // Default value if conversion fails or data is null
+//
+//                            if (postCountObject instanceof Long) {
+//                                postCount = (Long) postCountObject;
+//                            } else if (postCountObject instanceof String) {
+//                                try {
+//                                    postCount = Long.parseLong((String) postCountObject);
+//                                } catch (NumberFormatException e) {
+//                                    // Handle the case where the String cannot be parsed to Long
+//                                    e.printStackTrace(); // You might want to log this error for debugging
+//                                }
+//                            }
                             String description = dataSnapshot.child("shop description").getValue(String.class);
 
                             // Set user data in the respective views
@@ -183,7 +185,7 @@ public class ProfileFragment extends Fragment {
                             // Set other user information
                             usernameTextView.setText(username);
                             bioTextView.setText(String.format("%s , %s", location, city));
-                            postCountTextView.setText(postCount + " Post");
+                            postCountTextView.setText(postCount + " Exhibit");
                             descriptionTextView.setText(description);
 
                             // Check the "creator" field and adjust visibility
@@ -204,11 +206,11 @@ public class ProfileFragment extends Fragment {
                                     }
                                 } catch (NumberFormatException e) {
                                     // Handle the case where the value cannot be parsed as an integer
-                                    Toast.makeText(requireContext(), "Invalid creator value format", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Invalid exhibitor value format", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // Handle the case where the value is null
-                                Toast.makeText(requireContext(), "Creator value is null", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Exhibitor value is null", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -265,14 +267,12 @@ public class ProfileFragment extends Fragment {
                         if (item.getItemId() == R.id.editemail) {
                             Intent intent = new Intent(requireContext(), EditPhNoandEmail.class);
                             intent.putExtra("FromWhere", true);
-                            Toast.makeText(requireContext(), "fromemail", Toast.LENGTH_SHORT).show();
                             startActivity(intent);
                             return true;
                         }
                         if (item.getItemId() == R.id.editmobnumber) {
                             Intent intent = new Intent(requireContext(), EditPhNoandEmail.class);
                             intent.putExtra("FromWhere", false);
-                            Toast.makeText(requireContext(), "frommob", Toast.LENGTH_SHORT).show();
                             startActivity(intent);
                             return true;
                         }
@@ -340,11 +340,11 @@ public class ProfileFragment extends Fragment {
                                     }
                                 } catch (NumberFormatException e) {
                                     // Handle the case where the value cannot be parsed as an integer
-                                    Toast.makeText(getActivity(), "Invalid creator value format", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Invalid exhibitor value format", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // Handle the case where the value is null
-                                Toast.makeText(getActivity(), "Creator value is null", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Exhibitor value is null", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -439,6 +439,7 @@ public class ProfileFragment extends Fragment {
                 userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                        if (isAdded()) {
                         if (userSnapshot.exists()) {
                             // Retrieve user data
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -447,12 +448,15 @@ public class ProfileFragment extends Fragment {
                             String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                            photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                            photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, city, true, true));
+                            Context context = getContext();
+                            if (context != null) {
+                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                        profilePictureUrl, username, address, userId, postKeys, city, true, true));
+                            }
 
                         }
-
+                    }
                     }
 
                     @Override
@@ -616,6 +620,7 @@ public class ProfileFragment extends Fragment {
                 userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                        if (isAdded()) {
                         if (userSnapshot.exists()) {
                             // Retrieve user data
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -624,12 +629,15 @@ public class ProfileFragment extends Fragment {
                             String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                            photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                            photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl,  username,  address, userId, postKeys, city, true , true));
+                            Context context = getContext(); // Safe to call getContext() after checking isAdded()
+                            if (context != null) {
+                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                        profilePictureUrl, username, address, userId, postKeys, city, true, true));
+                            }
 
                         }
-
+                    }
                     }
 
                     @Override
@@ -650,7 +658,7 @@ public class ProfileFragment extends Fragment {
 
     private void showSortRateDialog(View rootView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Filter by Rate");
+        builder.setTitle("Filter by Price");
 
         // Set up the layout for the dialog
         LinearLayout layout = new LinearLayout(requireContext());
@@ -659,12 +667,12 @@ public class ProfileFragment extends Fragment {
 
         // Create EditText views for min and max rates
         EditText etMinRate = new EditText(requireContext());
-        etMinRate.setHint("Min Rate");
+        etMinRate.setHint("Min Price");
         etMinRate.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(etMinRate);
 
         EditText etMaxRate = new EditText(requireContext());
-        etMaxRate.setHint("Max Rate");
+        etMaxRate.setHint("Max Price");
         etMaxRate.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(etMaxRate);
 
@@ -745,6 +753,7 @@ public class ProfileFragment extends Fragment {
                 userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                        if (isAdded()) {
                         if (userSnapshot.exists()) {
                             // Retrieve user data
                             String profilePictureUrl = userSnapshot.child("Profile picture").getValue(String.class);
@@ -753,12 +762,15 @@ public class ProfileFragment extends Fragment {
                             String city = userSnapshot.child("City").getValue(String.class);
                             String userIdd = userSnapshot.getKey();
                             RecyclerView photoGrid = rootView.findViewById(R.id.photoGridcs);
-                            photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
-                            photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
-                                    profilePictureUrl, username, address, userId, postKeys, city, true, true));
+                            Context context = getContext(); // Safe to call getContext() after checking isAdded()
+                            if (context != null) {
+                                photoGrid.setLayoutManager(new GridLayoutManager(requireContext(), 3)); // Adjust the span count as needed
+                                photoGrid.setAdapter(new ProfileGridAdapter(requireContext(), postUrls,
+                                        profilePictureUrl, username, address, userId, postKeys, city, true, true));
+                            }
 
                         }
-
+                    }
                     }
 
                     @Override

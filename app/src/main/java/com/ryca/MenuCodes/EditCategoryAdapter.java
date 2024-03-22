@@ -1,7 +1,10 @@
 package com.ryca.MenuCodes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ryca.R;
 
 import java.util.List;
@@ -135,6 +141,18 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 Toast.makeText(context, "Your category " + nextText + " updated successfully!", Toast.LENGTH_SHORT).show();
+
+                                                if (context instanceof Activity) {
+                                                    Activity activity = (Activity) context;
+                                                    Intent intent = new Intent(activity, EditCategory.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                    activity.overridePendingTransition(0, 0);
+                                                    activity.finish();
+
+                                                    activity.overridePendingTransition(0, 0);
+                                                    activity.startActivity(intent);
+                                                }
+
                                             }
                                         });
                                     }
@@ -286,15 +304,35 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                     String postId = postSnapshot.getKey();
                                                     String postCategory = postSnapshot.child("category").getValue(String.class);
+                                                    String imageUrl = postSnapshot.child("imageURL").getValue(String.class); // Retrieve the image URL
+
 
                                                     if (postCategory != null && postCategory.equalsIgnoreCase(categoryModel.getCategoryName())) {
+
+                                                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                            StorageReference imageRef = storage.getReferenceFromUrl(imageUrl);
+
+                                                            imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void unused) {
+                                                                    Log.d("Storage", "Image successfully deleted");
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.e("Storage", "Failed to delete image", e);
+                                                                }
+                                                            });
+                                                        }
+
                                                         // Delete the post
                                                         postRef.child(postId).removeValue();
                                                     }
                                                 }
 
                                                 // Notify the user that posts have been deleted
-                                                Toast.makeText(context, postCount + " posts deleted", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, postCount + " exhibits deleted", Toast.LENGTH_SHORT).show();
                                             }
 
                                             @Override
@@ -316,7 +354,18 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                                     userRef.child("No of post").setValue(newPostCount);
 
                                                     // Notify the user that posts and category have been deleted
-                                                    Toast.makeText(context, postCount + " posts and category deleted", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(context, postCount + " exhibit and category deleted", Toast.LENGTH_SHORT).show();
+
+                                                    if (context instanceof Activity) {
+                                                        Activity activity = (Activity) context;
+                                                        Intent intent = new Intent(activity, EditCategory.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                        activity.overridePendingTransition(0, 0);
+                                                        activity.finish();
+
+                                                        activity.overridePendingTransition(0, 0);
+                                                        activity.startActivity(intent);
+                                                    }
                                                 }
                                             }
 

@@ -112,8 +112,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             description = itemView.findViewById(R.id.descriptiondp);
             postImageView = itemView.findViewById(R.id.dppost);
             savedImageView = itemView.findViewById(R.id.savedp);
-            interaction1 = itemView.findViewById(R.id.interaction1);
-            interaction2 = itemView.findViewById(R.id.interaction2);
             sharePost = itemView.findViewById(R.id.sharedp);
             Menu = itemView.findViewById(R.id.dpmenu);
 
@@ -130,21 +128,43 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     // Get the user ID of the post
                     String userID = clickedPost.getUserId();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("userId", userID);
-                    bundle.putString("fragment", "creatorsShowroom");
+                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
-                    creatorsShowroomFragment.setArguments(bundle);
+                    if (currentUserId.equals(userID)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userID);
+                        bundle.putString("fragment", "profile");
 
-                    // Use itemView as the context to get the FragmentManager
-                    FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
 
-                    // Add the transaction to the back stack before committing
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                        // Use itemView as the context to get the FragmentManager
+                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+
+                        // Add the transaction to the back stack before committing
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.framelayout, profileFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }else {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userID);
+                        bundle.putString("fragment", "creatorsShowroom");
+
+                        CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
+                        creatorsShowroomFragment.setArguments(bundle);
+
+                        // Use itemView as the context to get the FragmentManager
+                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+
+                        // Add the transaction to the back stack before committing
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+
                 }
             });
 
@@ -161,7 +181,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                         // Generate the dynamic link
                         createAndShareDynamicLink(postId, userId, v.getContext());
-                        Toast.makeText(category.getContext(), "Its working!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -172,31 +191,51 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
 
-
                     // Get the post at the clicked position
                     PostModel clickedPost = posts.get(getAdapterPosition());
 
                     // Get the user ID of the post
                     String userID = clickedPost.getUserId();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("userId", userID);
-                    bundle.putString("fragment", "creatorsShowroom");
+                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
-                    creatorsShowroomFragment.setArguments(bundle);
+                    if (currentUserId.equals(userID)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userID);
+                        bundle.putString("fragment", "profile");
 
-                    // Use itemView as the context to get the FragmentManager
-                    FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
 
-                    // Add the transaction to the back stack before committing
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                        // Use itemView as the context to get the FragmentManager
+                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+
+                        // Add the transaction to the back stack before committing
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.framelayout, profileFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }else {
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userID);
+                        bundle.putString("fragment", "creatorsShowroom");
+
+                        CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
+                        creatorsShowroomFragment.setArguments(bundle);
+
+                        // Use itemView as the context to get the FragmentManager
+                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+
+                        // Add the transaction to the back stack before committing
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+
                 }
             });
-
 
             // Set a click listener for the savedImageView
             savedImageView.setOnClickListener(new View.OnClickListener() {
@@ -257,10 +296,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 public boolean onMenuItemClick(MenuItem item) {
 
                     if (item.getItemId() == R.id.reportExhibit) {
+                        int position = getAdapterPosition();
+                        // Ensure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            PostModel clickedPost = posts.get(position);
+                            String postId = clickedPost.getPostId(); // Assuming PostModel has getPostId()
+                            String userId = clickedPost.getUserId(); // Assuming PostModel has getUserId()
 
-                    }
-                    if (item.getItemId() == R.id.blockExhibitor) {
-
+                            // Generate the dynamic link
+                            createAndRreportDynamicLink(postId, userId, v.getContext());
+                        }
                     }
                     return true;
                 }
@@ -269,6 +314,42 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             // Show the popup menu
             popupMenu.show();
         }
+
+        private void createAndRreportDynamicLink(String postId, String userId, Context context) {
+            // Assuming you have already set up a domain and a link format
+            // Replace "https://yourapp.page.link" with your actual domain Uri prefix
+            // Replace "https://yourdomain.com/post" with the URL pattern you intend to use
+            // String link = "https://ryca.page.link/?link=https://yourapp.com/post?postId=" + postId + "&userId=" + userId +"&apn=com.ryca" ;
+
+            String deepLink = "https://yourapp.com/post?postId=" + postId + "&userId=" + userId;
+            String recipientEmail = "rycaapp@gmail.com";
+            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse(deepLink))
+                    .setDomainUriPrefix("https://ryca.page.link") // Your dynamic link domain
+                    .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.ryca") // Your package name
+                            .build())
+                    .buildShortDynamicLink()
+                    .addOnSuccessListener(shortDynamicLink -> {
+                        // Short link created
+                        Uri dynamicLinkUri = shortDynamicLink.getShortLink();
+                        // Now, share the link
+
+                        String subject = "Feedback Regarding an Exhibit Experience ";
+
+                        String mailto = "mailto:" + recipientEmail +
+                                "?subject=" + Uri.encode(subject) +
+                                "&body=" + Uri.encode("Check out this exhibit: " + dynamicLinkUri.toString());
+
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse(mailto));
+
+                        context.startActivity(intent);
+
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(context, "Error reporting exhibit, please try again later.", Toast.LENGTH_LONG).show());
+        }
+
 
         private void createAndShareDynamicLink(String postId, String userId, Context context) {
             // Assuming you have already set up a domain and a link format

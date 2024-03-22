@@ -2,6 +2,7 @@ package com.ryca.MenuCodes;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -20,30 +21,37 @@ import java.io.File;
 
 public class Settings extends AppCompatActivity {
 
-    ImageView about,gethelp,termandcond,accsettings;
-    TextView abouttxt,gethelptxt,termandcondtxt,accsettingstxt,logouttxt;
-    RelativeLayout aboutrl,gethelprl,termandconrl,accsettingsrl, logout;
+    ImageView about,gethelp,accsettings, backbtn;
+    TextView  gethelptxt ,accsettingstxt,logouttxt;
+    RelativeLayout  gethelprl ,accsettingsrl, logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        about = findViewById(R.id.aboutgobtn);
+
         gethelp = findViewById(R.id.gethelpbtn);
-        termandcond = findViewById(R.id.termsbtn);
+
         accsettings = findViewById(R.id.accSettingsbtn);
 
-        abouttxt = findViewById(R.id.abouttext);
+
         gethelptxt = findViewById(R.id.getHelp);
-        termandcondtxt = findViewById(R.id.termstext);
+
         accsettingstxt = findViewById(R.id.accsettingstext);
         logouttxt = findViewById(R.id.logoutext);
-
-        aboutrl = findViewById(R.id.relativLayoutAboutUs);
         gethelprl = findViewById(R.id.relativLayoutGetHelp);
-        termandconrl = findViewById(R.id.relativLayoutTerms);
         accsettingsrl = findViewById(R.id.relativAcctSettings);
         logout = findViewById(R.id.relativLayoutLogout);
+        backbtn = findViewById(R.id.backbtn);
+
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onBackPressed();
+            }
+        });
 
 
         accsettingsrl.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +82,42 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        gethelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHelp();
+            }
+        });
+
+        gethelprl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHelp();
+            }
+        });
+
+        gethelptxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHelp();
+            }
+        });
+    }
+
+
+    public void getHelp() {
+        String subject = "Request for Assistance";
+        String recipientEmail = "rycaapp@gmail.com";
+
+
+            String mailto = "mailto:" + recipientEmail +
+                    "?subject=" + Uri.encode(subject);
+
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse(mailto));
+
+            startActivity(intent);
     }
 
     private void showLogoutConfirmationDialog() {

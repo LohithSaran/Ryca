@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Profile.CreatorProfileActivity">
 
-    <EditText
-        android:id="@+id/shopname"
-        android:layout_width="318dp"
-        android:layout_height="77dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="49dp"
-        android:layout_marginTop="324dp"
-        android:layout_marginEnd="44dp"
-        android:background="@drawable/button_background"
-        android:ems="10"
-        android:hint="Enter your shop name"
-        android:inputType="text"
-        android:maxLength="30"
-        android:paddingLeft="20dp" />
-
     <TextView
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
@@ -38,91 +21,102 @@
         android:textStyle="bold"
         android:textAlignment="center"/>
 
-    <ImageView
-        android:id="@+id/newshopprof"
-        android:layout_width="wrap_content"
-        android:layout_height="136dp"
+
+    <RelativeLayout
+        android:id="@+id/containerRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/textView11"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="126dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginEnd="120dp"
-        android:src="@drawable/profimage"
-        android:textAlignment="center"/>
+        android:layout_marginTop="36dp"
+        android:orientation="vertical">
 
-    <MultiAutoCompleteTextView
-        android:id="@+id/shopdesc"
-        android:layout_width="318dp"
-        android:layout_height="175dp"
-        android:layout_below="@+id/newshopprof"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="49dp"
-        android:layout_marginTop="157dp"
-        android:layout_marginEnd="44dp"
-        android:background="@drawable/button_background"
-        android:hint="Add recent Offers or Discounts in your shop, about your shop etc..."
-        android:maxLength="250"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="20dp"
-        android:textAlignment="viewStart" />
+        <EditText
+            android:id="@+id/shopname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView14"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Enter your shop name"
+            android:inputType="text"
+            android:maxLength="30"
+            android:padding="20dp" />
 
-    <ImageView
-        android:id="@+id/btnfinish"
-        android:layout_width="198dp"
-        android:layout_height="60dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginEnd="106dp"
-        android:layout_marginBottom="25dp"
-        android:src="@drawable/finish"
-        android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="197dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newshopprof"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="113dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="101dp"
-        android:text="Upload your shop photo"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
+        <ImageView
+            android:id="@+id/newshopprof"
+            android:layout_width="wrap_content"
+            android:layout_height="136dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="126dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="120dp"
+            android:src="@drawable/profimage"
+            android:textAlignment="center" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="24dp"
-        android:layout_height="26dp"
-        android:layout_below="@+id/shopdesc"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="15dp"
-        app:srcCompat="@drawable/info" />
+        <MultiAutoCompleteTextView
+            android:id="@+id/shopdesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shopname"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/button_background"
+            android:hint="Use this box as a banner for your shop! Add your latest discounts and offers. Updating your offers here will help more people see them when they're browsing for discounted products."
+            android:maxLength="250"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="20dp"
+            android:textAlignment="viewStart" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/shopdesc"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="-9dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="62dp"
-        android:layout_toEndOf="@+id/imageView6"
-        android:padding="5dp"
-        android:paddingBottom="10dp"
-        android:text="Use this box as a banner for your shop! Add your latest discounts and offers. Updating your offers here will help more people see them when they're browsing for discounted products. You can always update these details or offers in the 'Edit Profile' option in your profile."
-        android:textColor="#0040FF" />
+        <TextView
+            android:id="@+id/btnfinish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shopdesc"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+
+            android:layout_marginStart="107dp"
+            android:layout_marginTop="65dp"
+            android:layout_marginEnd="106dp"
+            android:background="@drawable/background_button"
+            android:paddingLeft="20dp"
+            android:paddingTop="14dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="14dp"
+            android:src="@drawable/finish"
+            android:text="Finish"
+            android:textAlignment="center"
+            android:textSize="24dp" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="197dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newshopprof"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="113dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="101dp"
+            android:text="Upload your shop photo"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

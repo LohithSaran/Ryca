@@ -35,8 +35,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ImageView googlecnt, loginbtn, createactbtn, showpassword;
-    TextView forgotpsw, progressText;
+    ImageView googlecnt, loginbtn, showpassword;
+    TextView forgotpsw, progressText,createactbtn;
     EditText enteremail, enterpassword;
 
     ProgressDialog progressDialog;

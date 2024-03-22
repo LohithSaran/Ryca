@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,8 @@ public class DeepLinkActivity extends AppCompatActivity {
 
     private List<SinglePostModel> SinglepostList;
     private SinglePostAdapter singlePostAdapter;
+
+    ImageView backbtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,7 @@ public class DeepLinkActivity extends AppCompatActivity {
 
         SinglepostList = new ArrayList<>();
         singlePostAdapter = new SinglePostAdapter(SinglepostList);
+        backbtn = findViewById(R.id.backbtn);
 
         RecyclerView recyclerView = findViewById(R.id.DeepLinkRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -46,6 +50,14 @@ public class DeepLinkActivity extends AppCompatActivity {
         recyclerView.setAdapter(singlePostAdapter);
 
         handleIntent(getIntent());
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onBackPressed();
+            }
+        });
     }
 
     private void handleIntent(Intent intent) {
@@ -64,7 +76,6 @@ public class DeepLinkActivity extends AppCompatActivity {
                             String postId = deepLink.getQueryParameter("postId");
                             String userId = deepLink.getQueryParameter("userId");
                             Log.d("DynamicLink", "Received deep link: " + deepLink.toString() + " userID :" + userId + " PostId" +postId);
-                            Toast.makeText(DeepLinkActivity.this, "This :" + userId + "~" +postId, Toast.LENGTH_LONG).show();
                             // Use postId and userId to load and display the appropriate content
                             PassDataToDisplaySinglePost(userId, postId,false);
                         }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +64,7 @@ import java.util.concurrent.TimeUnit;
                 }
             });
 
-            ImageView verifyOtpButton = findViewById(R.id.buttonVerifyOtp);
+            TextView verifyOtpButton = findViewById(R.id.buttonVerifyOtp);
 
             verifyOtpButton.setOnClickListener(new View.OnClickListener() {
                 @Override

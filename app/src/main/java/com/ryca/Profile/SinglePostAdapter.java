@@ -149,20 +149,29 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                 public void onClick(View v) {
                     // Get the post at the clicked position
                     SinglePostModel clickedPost = posts.get(getAdapterPosition());
-
                     if (clickedPost.isNavigationToProfile()) {
-                        // Get the user ID of the post
+
+                        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String userID = clickedPost.getUserId();
+                        if (currentUserId.equals(userID)) {
 
-                        // Create an intent to start HomeActivity
-                        Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
-                        // Add data to intent
-                        intent.putExtra("userId", userID);
-                        intent.putExtra("fragment", "creatorsShowroom");
+                            Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                            intent.putExtra("fragment", "profile");
+                            // Start HomeActivity
+                            itemView.getContext().startActivity(intent);
+                        } else {
+                            // Get the user ID of the post
+                            // Create an intent to start HomeActivity
+                            Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                            // Add data to intent
+                            intent.putExtra("userId", userID);
+                            intent.putExtra("fragment", "creatorsShowroom");
 
-                        // Start HomeActivity
-                        itemView.getContext().startActivity(intent);
+                            // Start HomeActivity
+                            itemView.getContext().startActivity(intent);
+                        }
                     }
+
                 }
             });
 
@@ -173,17 +182,25 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                     SinglePostModel clickedPost = posts.get(getAdapterPosition());
                     if (clickedPost.isNavigationToProfile()) {
 
-                        // Get the user ID of the post
+                        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         String userID = clickedPost.getUserId();
+                        if (currentUserId.equals(userID)) {
 
-                        // Create an intent to start HomeActivity
-                        Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
-                        // Add data to intent
-                        intent.putExtra("userId", userID);
-                        intent.putExtra("fragment", "creatorsShowroom");
+                            Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                            intent.putExtra("fragment", "profile");
+                            // Start HomeActivity
+                            itemView.getContext().startActivity(intent);
+                        } else {
+                            // Get the user ID of the post
+                            // Create an intent to start HomeActivity
+                            Intent intent = new Intent(itemView.getContext(), HomeActivity.class);
+                            // Add data to intent
+                            intent.putExtra("userId", userID);
+                            intent.putExtra("fragment", "creatorsShowroom");
 
-                        // Start HomeActivity
-                        itemView.getContext().startActivity(intent);
+                            // Start HomeActivity
+                            itemView.getContext().startActivity(intent);
+                        }
                     }
 
                 }
@@ -202,8 +219,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
                         // Generate the dynamic link
                         createAndShareDynamicLink(postId, userId, v.getContext());
-                        Toast.makeText(category.getContext(), "Its working!", Toast.LENGTH_SHORT).show();
-                    }
+                     }
                 }
             });
 
@@ -410,7 +426,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                         public void onSuccess(Void aVoid) {
                             // Data updated successfully
                             Context context = anchorView.getContext();
-                            Toast.makeText(context, "Changes updated successfully, reload this page to see changes.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Changes updated successfully, Go back and continue.", Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -577,10 +593,16 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                 public boolean onMenuItemClick(MenuItem item) {
 
                     if (item.getItemId() == R.id.reportExhibit) {
+                        int position = getAdapterPosition();
+                        // Ensure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            SinglePostModel clickedPost = posts.get(position);
+                            String postId = clickedPost.getPostId(); // Assuming PostModel has getPostId()
+                            String userId = clickedPost.getUserId(); // Assuming PostModel has getUserId()
 
-                    }
-                    if (item.getItemId() == R.id.blockExhibitor) {
-
+                            // Generate the dynamic link
+                            createAndRreportDynamicLink(postId, userId, v.getContext());
+                         }
                     }
                     return true;
                 }
@@ -588,6 +610,41 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
             // Show the popup menu
             popupMenu.show();
+        }
+
+        private void createAndRreportDynamicLink(String postId, String userId, Context context) {
+            // Assuming you have already set up a domain and a link format
+            // Replace "https://yourapp.page.link" with your actual domain Uri prefix
+            // Replace "https://yourdomain.com/post" with the URL pattern you intend to use
+            // String link = "https://ryca.page.link/?link=https://yourapp.com/post?postId=" + postId + "&userId=" + userId +"&apn=com.ryca" ;
+
+            String deepLink = "https://yourapp.com/post?postId=" + postId + "&userId=" + userId;
+            String recipientEmail = "rycaapp@gmail.com";
+            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                    .setLink(Uri.parse(deepLink))
+                    .setDomainUriPrefix("https://ryca.page.link") // Your dynamic link domain
+                    .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.ryca") // Your package name
+                            .build())
+                    .buildShortDynamicLink()
+                    .addOnSuccessListener(shortDynamicLink -> {
+                        // Short link created
+                        Uri dynamicLinkUri = shortDynamicLink.getShortLink();
+                        // Now, share the link
+
+                        String subject = "Feedback Regarding an Exhibit Experience ";
+
+                        String mailto = "mailto:" + recipientEmail +
+                                "?subject=" + Uri.encode(subject) +
+                                "&body=" + Uri.encode("Check out this post: " + dynamicLinkUri.toString());
+
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse(mailto));
+
+                            context.startActivity(intent);
+
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(context, "Error reporting exhibit, please try again later.", Toast.LENGTH_LONG).show());
         }
 
 

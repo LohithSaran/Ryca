@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Share this showroom"
-        android:id="@+id/shareShowroom"/>
 
-    <item android:title="Report this showroom"
+    <item android:title="Report this Exhibitor"
         android:id="@+id/reportShowroom"/>
 
-    <item android:title="Block"
-        android:id="@+id/blockShowroom" />
+<!--    <item android:title="Block"-->
+<!--        android:id="@+id/blockShowroom" />-->
 </menu>

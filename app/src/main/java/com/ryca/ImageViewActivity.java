@@ -1,6 +1,7 @@
 package com.ryca;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +16,15 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_view);
 
         ImageView imageView = findViewById(R.id.full_image_view);
+        ImageView ryca = findViewById(R.id.imageView3);
 
         // Retrieve image URL from intent
         String imageUrl = getIntent().getStringExtra("IMAGE_URL");
+        String fromWhere = getIntent().getStringExtra("fromWhere");
+
+        if ("1".equals(fromWhere)) {
+            ryca.setVisibility(View.GONE);
+        }
 
         // Load image into ImageView
         Picasso.get()

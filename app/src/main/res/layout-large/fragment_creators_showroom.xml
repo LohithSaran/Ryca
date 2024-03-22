@@ -1,0 +1,282 @@
+<!-- fragment_profile.xml -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            >
+
+            <!-- Profile Picture -->
+            <RelativeLayout
+                android:id="@+id/profileholer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profilePicturecs"
+                    android:layout_width="155dp"
+                    android:layout_height="155dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="0dp"
+                    android:padding="5dp"
+                    android:src="@drawable/profile"
+                    android:textAlignment="center"
+                    app:shapeAppearanceOverlay="@style/circular"
+                    app:strokeColor="@color/black"
+                    app:strokeWidth="1.5dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/bio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/username"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:scrollHorizontally="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profilePicturecs"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="9dp"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <RelativeLayout
+                    android:id="@+id/contactRelative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bio"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/username2cs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                         android:layout_marginTop="7dp"
+                        android:text="Contact Via : "
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/emailcs"
+                        android:layout_width="35dp"
+                        android:layout_height="34dp"
+                         android:layout_marginStart="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@id/username2cs"
+                        android:src="@drawable/baseline_email_24" />
+
+                    <ImageView
+                        android:id="@+id/whatsappcs"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"
+                         android:layout_marginStart="35dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@+id/emailcs"
+                        android:src="@drawable/baseline_call_24" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/showroomInfoRelative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/contactRelative"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/postcountcs"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toEndOf="@+id/connectcount"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/connectcount"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                         android:layout_alignParentStart="true"
+                         android:layout_marginTop="18dp"
+                        android:paddingEnd="5dp"
+                        android:paddingStart="5dp"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/connectcs"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                         android:layout_marginStart="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toEndOf="@+id/postcountcs"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/storedescriptioncs"
+                    android:layout_width="353dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/showroomInfoRelative"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="48dp"
+                    android:background="@drawable/button_background"
+                    android:hint="No Descriptons yet, add description using edit profile"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="15dp" />
+
+
+                <ImageView
+                    android:id="@+id/menucs"
+                    android:layout_width="37dp"
+                    android:layout_height="58dp"
+                    android:layout_below="@id/profilePicturecs"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="-105dp"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/verticalmenu" />
+
+
+
+            </RelativeLayout>
+
+
+            <!-- User Info -->
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        <RelativeLayout
+            android:id="@+id/sortMethods"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/profileholer"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:paddingTop="15dp">
+
+            <!-- Spinner -->
+            <Spinner
+                android:id="@+id/sortcategoryspinnercs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp" />
+
+            <!-- ImageView -->
+            <ImageView
+                android:id="@+id/sortRatecs"
+                android:layout_width="105dp"
+                android:layout_height="42dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="0dp"
+                android:src="@drawable/sortbtn" />
+
+        </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!--    &lt;!&ndash; Photo Grid (RecyclerView) &ndash;&gt;-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/sortcontent"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        app:layout_anchor="@+id/appBarLayout"-->
+    <!--        app:layout_anchorGravity="bottom|center"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/collapsingToolbar">-->
+
+    <!--        <ImageView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:background="@drawable/saved"/>-->
+
+    <!--    </RelativeLayout>-->
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/photoGrid"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="893dp"-->
+    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/sortcontent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/sortcontent"-->
+    <!--        android:paddingTop="5dp"/>-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/uploadImage"-->
+    <!--        android:layout_width="75dp"-->
+    <!--        android:layout_height="75dp"-->
+    <!--        android:layout_gravity="bottom|center_horizontal"-->
+    <!--        android:layout_marginBottom="16dp"-->
+    <!--        android:src="@drawable/uploadimg"-->
+    <!--        android:visibility="invisible" />-->
+
+    <!-- fragment_profile.xml -->
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/photoGridcs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:spanCount="3"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

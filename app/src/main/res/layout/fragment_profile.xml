@@ -69,28 +69,54 @@
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/postcountcs"
-                    android:layout_width="130dp"
-                    android:layout_height="60dp"
+
+                <RelativeLayout
+                    android:id="@+id/exhibitInfoRelative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/bio"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="59dp"
-                    android:layout_marginTop="43dp"
-                    android:background="@drawable/backgroundlook"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
+                    android:layout_marginTop="45dp"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+
+
+                    >
+
+
+                    <TextView
+                        android:id="@+id/postcountcs"
+                        android:layout_width="130dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentStart="true"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/connectcs"
+                        android:layout_width="130dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="31dp"
+                        android:layout_toEndOf="@+id/postcountcs"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:text="Connects"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
+
 
                 <TextView
                     android:id="@+id/storedescriptioncs"
                     android:layout_width="353dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/postcountcs"
+                    android:layout_below="@id/exhibitInfoRelative"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="17dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="48dp"
                     android:background="@drawable/button_background"
                     android:hint="No Descriptons yet, add description using edit profile"
@@ -101,19 +127,6 @@
                     android:textAlignment="viewStart"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/connectcs"
-                    android:layout_width="130dp"
-                    android:layout_height="60dp"
-                    android:layout_alignTop="@+id/bio"
-                    android:layout_marginStart="31dp"
-                    android:layout_marginTop="43dp"
-                    android:layout_toEndOf="@+id/postcountcs"
-                    android:background="@drawable/backgroundlook"
-                    android:gravity="center"
-                    android:text="Peoples"
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/menucs"
@@ -121,10 +134,8 @@
                     android:layout_height="58dp"
                     android:layout_below="@id/profilePicturecs"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="83dp"
                     android:layout_marginTop="-106dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toEndOf="@+id/profilePicturecs"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/verticalmenu" />
 
 
@@ -166,40 +177,40 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-<!--    &lt;!&ndash; Photo Grid (RecyclerView) &ndash;&gt;-->
+    <!--    &lt;!&ndash; Photo Grid (RecyclerView) &ndash;&gt;-->
 
-<!--    <RelativeLayout-->
-<!--        android:id="@+id/sortcontent"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        app:layout_anchor="@+id/appBarLayout"-->
-<!--        app:layout_anchorGravity="bottom|center"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/collapsingToolbar">-->
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/sortcontent"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        app:layout_anchor="@+id/appBarLayout"-->
+    <!--        app:layout_anchorGravity="bottom|center"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/collapsingToolbar">-->
 
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@drawable/saved"/>-->
+    <!--        <ImageView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:background="@drawable/saved"/>-->
 
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/photoGrid"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="893dp"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/sortcontent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/sortcontent"-->
-<!--        android:paddingTop="5dp"/>-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/photoGrid"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="893dp"-->
+    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/sortcontent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/sortcontent"-->
+    <!--        android:paddingTop="5dp"/>-->
 
-<!--    <ImageView-->
-<!--        android:id="@+id/uploadImage"-->
-<!--        android:layout_width="75dp"-->
-<!--        android:layout_height="75dp"-->
-<!--        android:layout_gravity="bottom|center_horizontal"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:src="@drawable/uploadimg"-->
-<!--        android:visibility="invisible" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/uploadImage"-->
+    <!--        android:layout_width="75dp"-->
+    <!--        android:layout_height="75dp"-->
+    <!--        android:layout_gravity="bottom|center_horizontal"-->
+    <!--        android:layout_marginBottom="16dp"-->
+    <!--        android:src="@drawable/uploadimg"-->
+    <!--        android:visibility="invisible" />-->
 
     <!-- fragment_profile.xml -->
 

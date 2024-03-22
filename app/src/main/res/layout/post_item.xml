@@ -4,14 +4,12 @@
     android:layout_height="wrap_content">
 
     <!-- Your post image view -->
-    <ImageView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/postImageView"
         android:layout_width="1080px"
         android:layout_height="350px"
-        android:scaleType="centerCrop"
         android:layout_gravity="center"
         android:layout_margin="1dp"
-        />
+        android:scaleType="centerCrop" />
 
 </RelativeLayout>

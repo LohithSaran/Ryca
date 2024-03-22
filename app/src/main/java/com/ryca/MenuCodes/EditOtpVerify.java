@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +65,7 @@ public class EditOtpVerify extends AppCompatActivity {
             }
         });
 
-        ImageView verifyOtpButton = findViewById(R.id.updatebuttonVerifyOtp);
+        TextView verifyOtpButton = findViewById(R.id.updatebuttonVerifyOtp);
 
         verifyOtpButton.setOnClickListener(new View.OnClickListener() {
             @Override

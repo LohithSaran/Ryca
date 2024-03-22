@@ -119,11 +119,18 @@ public class SearchFragment extends Fragment {
                                     // Reverse to get the latest images at the beginning
                                     Collections.reverse(imageUrls);
 
-                                    // Create and add the model to the list
-                                    SearchExhibitorList model = new SearchExhibitorList(shopName, shopDescription, profilePicture, city, location,followingUserId , imageUrls);
-                                    userList.add(model);
 
-                                    userAdapter.notifyDataSetChanged();
+                                    if (shopName != null && !shopName.isEmpty() &&
+                                            location != null && !location.isEmpty() &&
+                                            city != null && !city.isEmpty() ) {
+
+                                         SearchExhibitorList model = new SearchExhibitorList(shopName, shopDescription, profilePicture, city, location,followingUserId , imageUrls);
+                                        userList.add(model);
+
+                                        userAdapter.notifyDataSetChanged();
+
+                                    }
+
                                 }
 
                                 @Override

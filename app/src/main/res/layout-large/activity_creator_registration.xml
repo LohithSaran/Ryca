@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Profile.CreatorRegistration">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/backbtn"
+            android:text="Welcome to Exhibitor's Registration "
+            android:textSize="24dp"
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.865"
+            app:layout_constraintStart_toStartOf="@id/backbtn"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/backbtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="7dp"
+            app:layout_constraintEnd_toStartOf="@+id/textView5"
+            app:layout_constraintHorizontal_bias="0.29"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/backbtn" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/contentRelative"
+        android:layout_width="628dp"
+        android:layout_height="847dp"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="77dp"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        tools:layout_editor_absoluteX="86dp">
+
+        <EditText
+            android:id="@+id/storeaddress"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/textView9"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Your store address, street name, land mark"
+            android:inputType="textPostalAddress"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
+
+        <EditText
+            android:id="@+id/cityname"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/textView10"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="City, Town or Village"
+            android:inputType="text"
+            android:paddingLeft="15dp" />
+
+        <EditText
+            android:id="@+id/contemail"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="98dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Enter your Email id"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="15dp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contemail"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="170dp"
+            android:text="Your email address will be linked in your profile, so the customers can contact you for any inquiry."
+            android:textColor="#0040FF"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/storeaddress"
+
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/textView10"
+            app:srcCompat="@drawable/info" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/contwpnumber"
+            android:layout_marginTop="37dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@+id/textView9"
+            app:srcCompat="@drawable/info" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="266dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storeaddress"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="170dp"
+            android:text="Your store address will be displayed in your profile, so the customers can easily navigate to your store to buy or get your service. "
+            android:textColor="#0040FF"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/contemail"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@+id/textView7"
+            app:srcCompat="@drawable/info" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="267dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contwpnumber"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="170dp"
+            android:text="Your whatsapp number will be linked in your profile, so the customers can easily  contact you for any inquiry about your products."
+            android:textColor="#0040FF"
+            android:textSize="18dp" />
+
+        <EditText
+            android:id="@+id/contwpnumber"
+            android:layout_width="400dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/textView7"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Enter your Whatsapp number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingLeft="15dp" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/nextbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="144dp"
+
+        android:layout_marginEnd="144dp"
+        android:layout_marginBottom="93dp"
+        android:background="@drawable/background_button"
+        android:paddingLeft="35dp"
+        android:paddingTop="10dp"
+        android:paddingRight="35dp"
+        android:paddingBottom="12dp"
+        android:text="Next"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</RelativeLayout>

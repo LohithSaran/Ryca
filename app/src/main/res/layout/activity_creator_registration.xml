@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,184 +7,208 @@
     android:background="@color/white"
     tools:context=".Profile.CreatorRegistration">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="271dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="24dp"
-        android:text="Welcom to Creator's Registration "
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.635"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/previousbtn"
-        android:layout_width="41dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView5"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backbtn" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="131dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="48dp"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        app:srcCompat="@drawable/ryca" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/storeaddress"
-        android:layout_width="306dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:ems="10"
-        android:hint="Your store address, street name, land mark"
-        android:inputType="textPostalAddress"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/backbtn"
+            android:text="Welcome to Exhibitor's Registration "
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.865"
+            app:layout_constraintStart_toStartOf="@id/backbtn"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"/>
 
-    <EditText
-        android:id="@+id/cityname"
-        android:layout_width="306dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:ems="10"
-        android:hint="City, Town or Village"
-        android:inputType="text"
-        android:paddingLeft="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        <ImageView
+            android:id="@+id/backbtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="7dp"
+            app:layout_constraintEnd_toStartOf="@+id/textView5"
+            app:layout_constraintHorizontal_bias="0.29"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/backbtn" />
 
-    <EditText
-        android:id="@+id/contemail"
-        android:layout_width="306dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/button_background"
-        android:ems="10"
-        android:hint="Enter your Email id"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="264dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="12dp"
-        android:text="Your email address will be displayed in your profile, so the customers can contact you for any inquiry."
-        android:textColor="#0040FF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.639"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contemail" />
-
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="26dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="200dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previousbtn"
-        app:srcCompat="@drawable/info" />
-
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="26dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="128dp"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8"
-        app:srcCompat="@drawable/info" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="266dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="12dp"
-        android:text="Your store address will be displayed in your profile, so the customers can easily navigate to your store to buy or get your service. "
-        android:textColor="#0040FF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.613"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/storeaddress" />
-
-    <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="26dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="136dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9"
-        app:layout_constraintVertical_bias="0.012"
-        app:srcCompat="@drawable/info" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="267dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="12dp"
-        android:text="Your whatsapp number will be displayed in your profile, so the customers can easily  contact you for any inquiry about your products."
-        android:textColor="#0040FF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.618"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contwpnumber" />
-
-    <EditText
-        android:id="@+id/contwpnumber"
-        android:layout_width="306dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:ems="10"
-        android:hint="Enter your Whatsapp number"
-        android:inputType="number"
-        android:paddingLeft="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        android:maxLength="10"/>
-
-    <ImageView
-        android:id="@+id/nextbtn"
-        android:layout_width="185dp"
-        android:layout_height="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityname"
-        app:layout_constraintVertical_bias="0.624"
-        app:srcCompat="@drawable/next" />
+    </RelativeLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/contentRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_marginTop="60dp"
+        android:paddingBottom="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
+        <EditText
+            android:id="@+id/storeaddress"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/textView9"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Your store address, street name, land mark"
+            android:inputType="textPostalAddress"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
+
+        <EditText
+            android:id="@+id/cityname"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/textView10"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="City, Town or Village"
+            android:inputType="text"
+            android:paddingLeft="15dp" />
+
+        <EditText
+            android:id="@+id/contemail"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+             android:layout_marginEnd="40dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Enter your Email id"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="15dp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contemail"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:text="Your email address will be linked in your profile, so the customers can contact you for any inquiry."
+            android:textColor="#0040FF" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/storeaddress"
+
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/textView10"
+            app:srcCompat="@drawable/info" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/contwpnumber"
+            android:layout_marginTop="37dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@+id/textView9"
+            app:srcCompat="@drawable/info" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="266dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storeaddress"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:text="Your store address will be displayed in your profile, so the customers can easily navigate to your store to buy or get your service. "
+            android:textColor="#0040FF" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="26dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/contemail"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toStartOf="@+id/textView7"
+            app:srcCompat="@drawable/info" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="267dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contwpnumber"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:text="Your whatsapp number will be linked in your profile, so the customers can easily  contact you for any inquiry about your products."
+            android:textColor="#0040FF" />
+
+        <EditText
+            android:id="@+id/contwpnumber"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/textView7"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/button_background"
+            android:ems="10"
+            android:hint="Enter your Whatsapp number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingLeft="15dp" />
+
+        <TextView
+            android:id="@+id/nextbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cityname"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="124dp"
+             android:background="@drawable/background_button"
+            android:paddingLeft="35dp"
+            android:paddingTop="10dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="10dp"
+             android:text="Next"
+            android:textAlignment="center"
+            android:textSize="22dp"
+             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

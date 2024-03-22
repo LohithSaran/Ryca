@@ -36,42 +36,14 @@
 
     </RelativeLayout>
 
+
+
     <RelativeLayout
-        android:id="@+id/relativLayoutAboutUs"
+        android:id="@+id/relativLayoutGetHelp"
         android:layout_below="@+id/relativeLayoutTop"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="30dp">
-
-        <TextView
-            android:id="@+id/abouttext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About"
-            android:textSize="26dp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:layout_marginTop="5dp"/>
-
-        <ImageView
-            android:id="@+id/aboutgobtn"
-            android:layout_width="31dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="350dp"
-            android:layout_marginTop="9dp"
-            app:srcCompat="@drawable/goarrowpng" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativLayoutGetHelp"
-        android:layout_below="@+id/relativLayoutAboutUs"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="25dp">
 
         <TextView
             android:id="@+id/getHelp"
@@ -89,44 +61,19 @@
             android:id="@+id/gethelpbtn"
             android:layout_width="35dp"
             android:layout_height="31dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="350dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="26dp"
             app:srcCompat="@drawable/redirectarrow" />
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativLayoutTerms"
-        android:layout_below="@+id/relativLayoutGetHelp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="25dp">
 
-        <TextView
-            android:id="@+id/termstext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Terms and Conditions"
-            android:textSize="26dp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:layout_marginTop="5dp"/>
-
-        <ImageView
-            android:id="@+id/termsbtn"
-            android:layout_width="35dp"
-            android:layout_height="31dp"
-            android:layout_marginStart="350dp"
-            android:layout_marginTop="5dp"
-            app:srcCompat="@drawable/redirectarrow" />
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativAcctSettings"
-        android:layout_below="@+id/relativLayoutTerms"
+        android:layout_below="@+id/relativLayoutGetHelp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="25dp">
@@ -147,8 +94,10 @@
             android:id="@+id/accSettingsbtn"
             android:layout_width="31dp"
             android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginStart="350dp"
             android:layout_marginTop="9dp"
+            android:layout_marginEnd="30dp"
             app:srcCompat="@drawable/goarrowpng" />
 
     </RelativeLayout>

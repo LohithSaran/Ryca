@@ -1,21 +1,102 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# General Project Rules
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
+# Suppress warnings for specific classes
+-dontwarn io.grpc.internal.DnsNameResolverProvider
+-dontwarn io.grpc.internal.PickFirstLoadBalancerProvider
+
+# Keep - Applications and Activities
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends androidx.core.content.FileProvider
+
+# Firebase Rules
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+
+# Google Play Services
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+# Picasso Image Library Rules
+-keep class com.squareup.picasso.** { *; }
+-dontwarn com.squareup.picasso.**
+
+# AndroidX and Material Design
+-keep class androidx.** { *; }
+-keep class com.google.android.material.** { *; }
+-dontwarn androidx.**
+-dontwarn com.google.android.material.**
+
+# RecyclerView
+-keep public class * extends androidx.recyclerview.widget.RecyclerView
+
+# ConstraintLayout
+-keep class androidx.constraintlayout.widget.ConstraintLayout { *; }
+
+# Room Persistence Library
+-keep class androidx.room.** { *; }
+-dontwarn androidx.room.**
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.* class * extends java.lang.annotation.Annotation { *; }
+-keepclasseswithmembers class * {
+    @androidx.room.* <fields>;
+}
+-keepclasseswithmembers class * {
+    @androidx.room.* <methods>;
+}
+
+# UCrop Library
+-keep class com.yalantis.ucrop.** { *; }
+-dontwarn com.yalantis.ucrop.**
+
+# Shimmer for Facebook
+-keep class com.facebook.shimmer.** { *; }
+-dontwarn com.facebook.shimmer.**
+
+# Google Maps and Location Services
+-keep class com.google.android.gms.maps.** { *; }
+-keep class com.google.android.gms.location.** { *; }
+-dontwarn com.google.android.gms.maps.**
+-dontwarn com.google.android.gms.location.**
+
+# Dexter Runtime Permissions
+-keep class com.karumi.dexter.** { *; }
+-dontwarn com.karumi.dexter.**
+
+# Places Library
+-keep class com.google.android.libraries.places.** { *; }
+-dontwarn com.google.android.libraries.places.**
+
+# Volley Networking Library
+-keep class com.android.volley.** { *; }
+-dontwarn com.android.volley.**
+
+# Preserve all native method names
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# Keep names of classes and methods your classes use in XML layouts
+-keepclassmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+    public void set*(...);
+}
+
+# Avoid obfuscation of classes that are referenced in the manifest
+-keep public class com.ryca.** { *; }
+
+# If using custom views or methods accessed via reflection, keep them as well
+#-keep class com.ryca.views.** { *; }
+#-keepclassmembers class com.ryca.views.** { *; }
+
+# Uncomment and modify if using WebView with JavaScript
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile

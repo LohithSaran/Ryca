@@ -68,72 +68,102 @@
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/username2cs"
+                <RelativeLayout
+                    android:id="@+id/contactRelative"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/bio"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="86dp"
-                    android:layout_marginTop="17dp"
-                    android:text="Contact Via : "
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/emailcs"
-                    android:layout_width="35dp"
-                    android:layout_height="34dp"
-                    android:layout_below="@id/bio"
-                    android:layout_marginStart="43dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:layout_toEndOf="@id/username2cs"
-                    android:src="@drawable/baseline_email_24" />
+                    >
 
-                <ImageView
-                    android:id="@+id/whatsappcs"
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
-                    android:layout_below="@id/bio"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="86dp"
-                    android:src="@drawable/baseline_call_24" />
+                    <TextView
+                        android:id="@+id/username2cs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="Contact Via : "
+                        android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/postcountcs"
-                    android:layout_width="115dp"
-                    android:layout_height="60dp"
-                    android:layout_below="@id/username2cs"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_toStartOf="@+id/connectcs"
-                    android:layout_toEndOf="@+id/connectcount"
-                    android:background="@drawable/backgroundlook"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
+                    <ImageView
+                        android:id="@+id/emailcs"
+                        android:layout_width="35dp"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@id/username2cs"
+                        android:src="@drawable/baseline_email_24" />
 
-                <TextView
-                    android:id="@+id/connectcount"
-                    android:layout_width="115dp"
-                    android:layout_height="60dp"
-                    android:layout_below="@id/username2cs"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="14dp"
-                    android:layout_marginTop="29dp"
-                    android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:background="@drawable/backgroundlook"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
+                    <ImageView
+                        android:id="@+id/whatsappcs"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toEndOf="@+id/emailcs"
+                        android:src="@drawable/baseline_call_24" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/showroomInfoRelative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/contactRelative"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/postcountcs"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toEndOf="@+id/connectcount"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/connectcount"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="18dp"
+                        android:paddingEnd="5dp"
+                        android:paddingStart="5dp"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/connectcs"
+                        android:layout_width="115dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="18dp"
+                        android:layout_toEndOf="@+id/postcountcs"
+                        android:background="@drawable/backgroundlook"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/storedescriptioncs"
                     android:layout_width="353dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/postcountcs"
+                    android:layout_below="@id/showroomInfoRelative"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="10dp"
@@ -148,19 +178,6 @@
                     android:textAlignment="viewStart"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/connectcs"
-                    android:layout_width="115dp"
-                    android:layout_height="60dp"
-                    android:layout_below="@id/username2cs"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/backgroundlook"
-                    android:gravity="center"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/menucs"
@@ -168,10 +185,8 @@
                     android:layout_height="58dp"
                     android:layout_below="@id/profilePicturecs"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="83dp"
                     android:layout_marginTop="-105dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_toEndOf="@+id/profilePicturecs"
                     android:src="@drawable/verticalmenu" />
 
 

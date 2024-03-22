@@ -13,27 +13,21 @@
 
         <TextView
             android:id="@+id/textViewhead"
-            android:layout_width="329dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="59dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="23dp"
-            android:gravity="center"
+           android:layout_centerInParent="true"
             android:text="Edit category"
             android:textAlignment="center"
             android:textSize="25dp"
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="42dp"
-            android:layout_height="32dp"
+            android:id="@+id/backbtn"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="10dp"
             app:srcCompat="@drawable/backbtn" />
     </RelativeLayout>

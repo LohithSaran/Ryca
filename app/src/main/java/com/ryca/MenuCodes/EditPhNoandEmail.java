@@ -23,7 +23,8 @@ public class EditPhNoandEmail extends AppCompatActivity {
 
     EditText updateMobNo, updateEmailId;
     TextView headText;
-    ImageView nextBtn;
+    TextView nextBtn;
+    ImageView backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class EditPhNoandEmail extends AppCompatActivity {
         updateMobNo = findViewById(R.id.updatePhoneNumber);
         nextBtn = findViewById(R.id.nextBtnui);
         headText = findViewById(R.id.textViewhead);
+        backbtn = findViewById(R.id.imageView);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -74,10 +76,16 @@ public class EditPhNoandEmail extends AppCompatActivity {
                         finish();
                     }
 
-                   // Toast.makeText(EditPhNoandEmail.this, "Update Email: " + updateEmail, Toast.LENGTH_SHORT).show();
                 }
             });
         }
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
@@ -101,7 +109,7 @@ public class EditPhNoandEmail extends AppCompatActivity {
 
             }
             else {
-                Toast.makeText(this, "Fill the fucker", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill the field.", Toast.LENGTH_SHORT).show();
             }
         }
 

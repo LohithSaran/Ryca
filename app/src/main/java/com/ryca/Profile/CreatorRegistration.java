@@ -6,6 +6,7 @@ import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ public class CreatorRegistration extends AppCompatActivity {
     private EditText cityNameEditText;
     private EditText contEmailEditText;
     private EditText contWpNumberEditText;
+    private ImageView backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,16 @@ public class CreatorRegistration extends AppCompatActivity {
         cityNameEditText = findViewById(R.id.cityname);
         contEmailEditText = findViewById(R.id.contemail);
         contWpNumberEditText = findViewById(R.id.contwpnumber);
-        ImageView nextButton = findViewById(R.id.nextbtn);
+        TextView nextButton = findViewById(R.id.nextbtn);
+        backbtn = findViewById(R.id.backbtn);
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onBackPressed();
+            }
+        });
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override

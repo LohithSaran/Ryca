@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Profile.UploadImage">
+
+
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginRight="-292dp"
+        android:layout_toLeftOf="@id/backbtn"
+        android:layout_toEndOf="@+id/backbtn"
+        android:gravity="center_horizontal"
+        android:text="Upload Exhibit"
+        android:textAlignment="center"
+        android:textSize="28dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/backbtn"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/backbtn" />
+
+
+
+    <RelativeLayout
+        android:id="@+id/containerRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:layout_marginTop="36dp"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+
+
+        <TextView
+            android:id="@+id/imagechoose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/background_button"
+            android:paddingLeft="35dp"
+            android:paddingTop="14dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="14dp"
+            android:text="Select Image"
+
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/imageview"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="58dp"
+            android:background="@drawable/button_background"
+            android:hint="Enter product price"
+            android:inputType="numberDecimal"
+            android:paddingLeft="15dp" />
+
+        <EditText
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/price"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="58dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="56dp"
+            android:background="@drawable/button_background"
+            android:hint="Choose the category "
+            android:paddingLeft="15dp"
+            android:paddingRight="40dp"
+            android:maxLength="30"/>
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/category"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="58dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="53dp"
+            android:background="@drawable/button_background"
+            android:hint="Color or Discount or Offers or Details of the product"
+            android:maxLength="100"
+            android:paddingLeft="15dp"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/imagechoose"
+            />
+
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="105dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="104dp"
+            android:textAlignment="center"
+            android:src="@drawable/profimage"/>
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="47dp"
+            android:layout_height="40dp"
+            android:layout_alignTop="@id/category"
+            android:layout_alignEnd="@id/category"
+            android:layout_alignBottom="@id/category"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/expandarrow"
+            />
+
+        <TextView
+            android:id="@+id/uploadbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progress"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="100dp"
+
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/background_button"
+            android:paddingLeft="35dp"
+            android:paddingTop="14dp"
+            android:paddingRight="35dp"
+            android:paddingBottom="14dp"
+            android:text="Upload"
+            android:textAlignment="center"
+            android:textSize="22dp" />
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

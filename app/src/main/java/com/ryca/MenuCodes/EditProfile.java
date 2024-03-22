@@ -1,10 +1,13 @@
 package com.ryca.MenuCodes;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,7 +47,7 @@ import java.io.File;
 public class EditProfile extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView Updatebtn;
+    private TextView Updatebtn;
     private EditText shopdesc, shopname, shopaddress, shopcity;
     private TextView updatePhotoText;
     private ProgressBar progressBar;
@@ -53,6 +58,10 @@ public class EditProfile extends AppCompatActivity {
     private StorageReference storageRef;
     private DatabaseReference dbReference,CreatorRef;
     private StorageTask<UploadTask.TaskSnapshot> mUploadTask;
+    private String UserIdState;
+    private static final int REQUEST_CODE_PERMISSION = 100;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +92,7 @@ public class EditProfile extends AppCompatActivity {
                 if (snapshot.exists()) {
                     // Retrieve existing values
                     String Creator = snapshot.child("creator").getValue(String.class);
-
-                    Toast.makeText(EditProfile.this, "0or1 " + Creator, Toast.LENGTH_SHORT).show();
+                    UserIdState = Creator;
                     if ("0".equals(Creator)) {
 
                         shopdesc.setVisibility(View.GONE);
@@ -111,7 +119,15 @@ public class EditProfile extends AppCompatActivity {
         profimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseImage();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+                    chooseImageBelow11();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    chooseImagee();
+                }
+
             }
         });
 
@@ -161,19 +177,28 @@ public class EditProfile extends AppCompatActivity {
                         String FinalShopdesc = "";
                         String FinalShopaddress = "";
                         String FinalShopcity = "";
-
                         // Check if the fields are empty and don't overwrite existing data
                         if (!TextUtils.isEmpty(enteredShopName) ) {
                             // Update username
                             userRef.child("username").setValue(enteredShopName);
-                            creatorRef.child("Shop Name").setValue(enteredShopName);
+
+                            if (UserIdState != null) {
+                                if ("1".equals(UserIdState)) {
+                                    creatorRef.child("Shop Name").setValue(enteredShopName);
+                                }
+                            }
+
                             FinalShopname = enteredShopName;
                         }
 
                         if (TextUtils.isEmpty(enteredShopName) ) {
                             // Update username
                             userRef.child("username").setValue(existingShopName);
-                            creatorRef.child("Shop Name").setValue(existingShopName);
+                            if (UserIdState != null) {
+                                if ("1".equals(UserIdState)) {
+                                    creatorRef.child("Shop Name").setValue(existingShopName);
+                                }
+                            }
                             FinalShopname = existingShopName;
                         }
 
@@ -253,10 +278,65 @@ public class EditProfile extends AppCompatActivity {
     }
 
 
-    private void chooseImage() {
+    private void chooseImagee() {
+        // Check if permission is granted
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(EditProfile.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_CODE_PERMISSION);
+        }
+        else {
+            ActivityCompat.requestPermissions(EditProfile.this,new String[]{Manifest.permission.READ_MEDIA_IMAGES}
+                    ,REQUEST_CODE_PERMISSION);
+        }
+
+    }
+
+    private void chooseImageBelow11() {
+        // Check if permission is granted
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        } else {
+            // Permission is already granted, proceed with your logic
+            openImagePicker();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else {
+                    Toast.makeText(this, "Permission denied, can't update profile picture", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else {
+                    Toast.makeText(this, "Permission denied, can't update profile picture", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+    }
+    private void openImagePicker() {
+
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
+
     }
 
     @Override
@@ -311,12 +391,16 @@ public class EditProfile extends AppCompatActivity {
                                     userRef.child("shop description").setValue(shopDescription);
                                     userRef.child("Location").setValue(finalShopaddress);
                                     userRef.child("City").setValue(finalShopcity);
-                                    creatorRef.child("Shop Name").setValue(shopName);
                                     creatorRef.child("Shop Description").setValue(shopDescription);
                                     creatorRef.child("Location").setValue(finalShopaddress);
                                     creatorRef.child("City").setValue(finalShopcity);
-                                    creatorRef.child("Profile picture").setValue(downloadUri.toString());
+                                    if (UserIdState != null) {
+                                        if ("1".equals(UserIdState)) {
+                                            creatorRef.child("Shop Name").setValue(shopName);
+                                            creatorRef.child("Profile picture").setValue(downloadUri.toString());
 
+                                        }
+                                    }
                                     // Additional actions after updating the user's data
                                 }
                             });

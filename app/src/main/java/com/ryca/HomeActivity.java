@@ -106,8 +106,6 @@ public class HomeActivity extends AppCompatActivity {
     public Bundle getMyData(String userId) {
         Bundle hm = new Bundle();
         hm.putString("userId",userId);
-       // Toast.makeText(this, "HI :"+userId , Toast.LENGTH_SHORT).show();
-
         return hm;
     }
 

@@ -1,6 +1,8 @@
 package com.ryca.MenuCodes;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import java.util.List;
 public class EditCategory extends AppCompatActivity {
 
     List<EditCategoryModel> dataList;
+    ImageView backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class EditCategory extends AppCompatActivity {
         // Initialize dataList before using it
         dataList = new ArrayList<>();
 
+        backbtn = findViewById(R.id.backbtn);
         RecyclerView recyclerView = findViewById(R.id.recyclerEditCategory);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -67,5 +71,13 @@ public class EditCategory extends AppCompatActivity {
                 }
             });
         }
+
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onBackPressed();
+            }
+        });
     }
 }

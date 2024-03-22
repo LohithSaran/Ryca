@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ryca.ProfileFragment;
 import com.ryca.R;
 import com.ryca.User;
 import com.ryca.UserAdapter;
@@ -83,18 +84,16 @@ public class CircleFragment extends Fragment {
                 bundle.putString("userId", userID);
                 bundle.putString("fragment", "creatorsShowroom");
 
-//                String firebaseUserID = firebaseUser != null ? firebaseUser.getUid() : "";
-//
-//                if (firebaseUserID.equals(userID)) {
-//                    // If the clicked user is the current user, replace the fragment with ProfileFragment
-//                    ProfileFragment profileFragment = new ProfileFragment();
-//                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                    fragmentTransaction.replace(R.id.framelayout, profileFragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                    Toast.makeText(requireContext(), "This is not a joke, brother", Toast.LENGTH_SHORT).show();
-//
-//                } else {
+                String firebaseUserID = firebaseUser != null ? firebaseUser.getUid() : "";
+
+                if (firebaseUserID.equals(userID)) {
+                    // If the clicked user is the current user, replace the fragment with ProfileFragment
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.framelayout, profileFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                } else {
                     // If not, proceed with the current method
                     CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
                     creatorsShowroomFragment.setArguments(bundle);
@@ -105,7 +104,7 @@ public class CircleFragment extends Fragment {
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
-//            }
+            }
 
     });
 
@@ -131,55 +130,73 @@ public class CircleFragment extends Fragment {
     }
 
     private void performSearch(String query) {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Creators");
+        // Only perform the search if the query is not empty
+        if (!query.isEmpty()) {
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Creators");
 
-        String lowerCaseQuery = query.toLowerCase();
-        usersRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userList.clear();
+            String lowerCaseQuery = query.toLowerCase();
+            usersRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    userList.clear();
 
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    String userId = userSnapshot.getKey();
-                    boolean isMatch = false;
+                    int count = 0; // Variable to count the number of items added to userList
 
-                    // Check if the search query matches any field inside the user data
-                    for (DataSnapshot fieldSnapshot : userSnapshot.getChildren()) {
-                        Object fieldValue = fieldSnapshot.getValue(); // Use Object type to handle different types
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String userId = userSnapshot.getKey();
+                        boolean isMatch = false;
 
-                        if (fieldValue != null && isMatch(fieldValue.toString(), lowerCaseQuery)) {
-                            isMatch = true;
-                            break;
+                        // Check if the search query matches any field inside the user data
+                        for (DataSnapshot fieldSnapshot : userSnapshot.getChildren()) {
+                            Object fieldValue = fieldSnapshot.getValue(); // Use Object type to handle different types
+
+                            if (fieldValue != null && isMatch(fieldValue.toString(), lowerCaseQuery)) {
+                                isMatch = true;
+                                break;
+                            }
+                        }
+
+                        // Optionally, you can also check other nested fields like categories
+                        if (isMatch) {
+                            String shopName = userSnapshot.child("Shop Name").getValue(String.class);
+
+                            User user = new User();
+                            user.setId(userId);
+                            user.setUsername(shopName);
+                            user.setAdd(userSnapshot.child("Location").getValue(String.class));
+                            user.setCity(userSnapshot.child("City").getValue(String.class));
+                            user.setImageurl(userSnapshot.child("Profile picture").getValue(String.class));
+
+                            userList.add(user);
+                            count++;
+
+                            Log.d("UserResult", "Username: " + query + ", Location: " + user.getAdd() + ", Profile Picture: " + user.getImageurl());
+
+                            // Check if 50 items have been added, and stop adding more items
+                            if (count >= 30) {
+                                break;
+                            }
                         }
                     }
 
-                    // Optionally, you can also check other nested fields like categories
-                    if (isMatch) {
-                        String shopName = userSnapshot.child("Shop Name").getValue(String.class);
-
-                        User user = new User();
-                        user.setId(userId);
-                        user.setUsername(shopName);
-                        user.setAdd(userSnapshot.child("Location").getValue(String.class));
-                        user.setCity(userSnapshot.child("City").getValue(String.class));
-                        user.setImageurl(userSnapshot.child("Profile picture").getValue(String.class));
-
-                        userList.add(user);
-
-                        Log.d("UserResult", "Username: " + query + ", Location: " + user.getAdd() + ", Profile Picture: " + user.getImageurl());
-                    }
+                    userAdapter.notifyDataSetChanged();
+                    searchedUserList.setVisibility(userList.isEmpty() ? View.GONE : View.VISIBLE);
                 }
 
-                userAdapter.notifyDataSetChanged();
-                searchedUserList.setVisibility(userList.isEmpty() ? View.GONE : View.VISIBLE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("DatabaseError", "Error: " + databaseError.getMessage());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("DatabaseError", "Error: " + databaseError.getMessage());
+                }
+            });
+        } else {
+            // Clear the user list and hide the search result list when the query is empty
+            userList.clear();
+            userAdapter.notifyDataSetChanged();
+            searchedUserList.setVisibility(View.GONE);
+        }
     }
+
+
 
     private boolean isMatch(String fieldValue, String query) {
         return fieldValue != null && fieldValue.toLowerCase().replaceAll("\\s+", "").contains(query.toLowerCase().replaceAll("\\s+", ""));

@@ -8,28 +8,27 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="412dp"
+        android:layout_width="match_parent"
         android:layout_height="46dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <TextView
             android:id="@+id/topText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center"
             android:text="Saved Exhibits"
             android:textAlignment="center"
             android:textSize="24dp"
             android:textStyle="bold" />
 
-
         <ImageView
             android:id="@+id/backbtn"
-            android:layout_width="33dp"
-            android:layout_height="26dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="8dp"
             app:srcCompat="@drawable/backbtn" />
@@ -38,7 +37,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/singleviewpost"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="45dp"
         app:layout_constraintEnd_toEndOf="parent"
