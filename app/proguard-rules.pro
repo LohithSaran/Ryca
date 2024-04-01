@@ -59,12 +59,6 @@
 -keep class com.facebook.shimmer.** { *; }
 -dontwarn com.facebook.shimmer.**
 
-# Google Maps and Location Services
--keep class com.google.android.gms.maps.** { *; }
--keep class com.google.android.gms.location.** { *; }
--dontwarn com.google.android.gms.maps.**
--dontwarn com.google.android.gms.location.**
-
 # Dexter Runtime Permissions
 -keep class com.karumi.dexter.** { *; }
 -dontwarn com.karumi.dexter.**

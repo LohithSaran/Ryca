@@ -111,21 +111,34 @@ public class AccountSettings extends AppCompatActivity {
 
                 // Use Firebase Authentication's updatePassword method to change the password
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    user.updatePassword(newPassword)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        // Password updated successfully
-                                        Toast.makeText(AccountSettings.this, "Password updated successfully", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        // Password update failed
-                                        Toast.makeText(AccountSettings.this, "Failed to update password. Please try again later.", Toast.LENGTH_LONG).show();
-                                    }
+                // Reauthenticate user
+                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // User successfully reauthenticated, proceed with password update
+                                    user.updatePassword(newPassword)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        // Password updated successfully
+                                                        Toast.makeText(AccountSettings.this, "Password updated successfully", Toast.LENGTH_LONG).show();
+                                                    } else {
+                                                        // Password update failed
+                                                        Toast.makeText(AccountSettings.this, "Failed to update password. Please try again later.", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                } else {
+                                    // Reauthentication failed, display error message
+                                    Toast.makeText(AccountSettings.this, "Authentication failed. Please enter the correct current password.", Toast.LENGTH_LONG).show();
                                 }
-                            });
-                }
+                            }
+                        });
+
             }
         });
 
@@ -270,6 +283,7 @@ public class AccountSettings extends AppCompatActivity {
                         Log.e("Firebase", "Error reauthenticating user: " + e.getMessage());
                         // Display error message to the user (optional)
                         // You can show a toast or dialog to inform the user about the authentication failure
+                        Toast.makeText(AccountSettings.this, "You entered a wrong password, please try again", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

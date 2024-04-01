@@ -107,6 +107,7 @@
             android:layout_below="@id/loginbtn"
             android:layout_marginTop="45dp"
             android:textAlignment="center"
+            android:textSize="20dp"
              />
 
         <ImageView

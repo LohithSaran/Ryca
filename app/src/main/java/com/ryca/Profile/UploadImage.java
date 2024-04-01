@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -75,6 +76,7 @@ public class UploadImage extends AppCompatActivity {
     private boolean isUploading = false;
     private ProgressDialog progressDialog;
     private static final int REQUEST_CODE_PERMISSION = 101;
+    private Context context;
 
 
 
@@ -107,6 +109,8 @@ public class UploadImage extends AppCompatActivity {
         progressDialog.setMessage("Please wait...");
         progressDialog.setCancelable(false);
 
+
+        CheckDevice();
 
         category.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -150,15 +154,8 @@ public class UploadImage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-
-                    chooseImageBelow11();
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    chooseImagee();
-                    }
-                }
+                CheckDevice();
+            }
 
         });
 
@@ -171,8 +168,6 @@ public class UploadImage extends AppCompatActivity {
                     Toast.makeText(UploadImage.this, "Upload is in progress, please wait...", Toast.LENGTH_SHORT).show();
                 } else {
                     // Set isUploading to true to indicate that an upload is starting
-                    isUploading = true;
-
                     if (mUploadTask != null && mUploadTask.isInProgress()) {
                         Toast.makeText(UploadImage.this, "Upload is in progress", Toast.LENGTH_SHORT).show();
                         // Set isUploading to false to allow future uploads
@@ -192,6 +187,19 @@ public class UploadImage extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void CheckDevice() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+
+            chooseImageBelow11();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            chooseImagee();
+        }
 
     }
 
@@ -401,6 +409,7 @@ public class UploadImage extends AppCompatActivity {
                 && !prodprice.getText().toString().trim().isEmpty()
                 && !category.getText().toString().trim().isEmpty())
         {
+            isUploading = true;
             StorageReference fileReference = storageRef.child(System.currentTimeMillis() + "." +
                     getFileExtension(imageuri));
             progressDialog.show();

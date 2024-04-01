@@ -90,7 +90,7 @@ public class SinglePostView extends AppCompatActivity {
 
             if (fromFragment) {
 
-                toptext.setText("Exhibition");
+                toptext.setText("Exhibits");
                 for (int i = 0; i < postKeyArray.size(); i++) {
                     String postKey = postKeyArray.get(i);
 
