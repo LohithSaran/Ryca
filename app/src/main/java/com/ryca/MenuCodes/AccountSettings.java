@@ -1,5 +1,8 @@
 package com.ryca.MenuCodes;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -509,6 +512,87 @@ public class AccountSettings extends AppCompatActivity {
         DatabaseReference CreatorRef = mDatabase.child("Creators").child(currentUserId);
         DatabaseReference postRef = mDatabase.child("Post").child(currentUserId);
 
+
+        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                ProgressDialog progressDialog = new ProgressDialog(AccountSettings.this);
+                progressDialog.setMessage("Please wait, don't close the app...");
+                progressDialog.setCancelable(false); // Prevent the dialog from being dismissed by tapping outside
+                progressDialog.show();
+
+                // Iterate through each post ID
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String postId = postSnapshot.getKey();
+                    // Delete image from Firebase Storage
+                    DatabaseReference postImageRef = mDatabase.child("Post").child(currentUserId).child(postId);
+                    postImageRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+
+                                // Delete image from Firebase Storage
+                                for (DataSnapshot imageUrlSnapshot : dataSnapshot.child("itemUrls").getChildren()) {
+                                    String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                    if (imageUrl != null) {
+                                        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+
+                                        // Delete the file
+                                        storageRef.delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        // Image deleted successfully
+                                                        // Handle any additional actions, if needed
+                                                        Log.d(TAG, "Image deleted successfully");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // Failed to delete image
+                                                        Log.e(TAG, "Failed to delete image: " + e.getMessage());
+                                                    }
+                                                });
+                                    }
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle errors fetching image URL
+                            Log.e("Firebase", "Error fetching image URL: " + databaseError.getMessage());
+                        }
+                    });
+
+                }
+                // Remove the currentUserId node from the Post field
+                postRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Dismiss loading dialog
+                        progressDialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@androidx.annotation.NonNull Exception e) {
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors fetching post data
+                Log.e("Firebase", "Error fetching post data: " + databaseError.getMessage());
+            }
+        });
+
+
+
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -655,63 +739,6 @@ public class AccountSettings extends AppCompatActivity {
         });
 
 
-
-        postRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Iterate through each post ID
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    String postId = postSnapshot.getKey();
-                    // Delete image from Firebase Storage
-                    DatabaseReference postImageRef = mDatabase.child("Post").child(currentUserId).child(postId).child("imageURL");
-                    postImageRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                String imageUrl = dataSnapshot.getValue(String.class);
-                                // Delete image from Firebase Storage
-                                if (imageUrl != null) {
-                                    StorageReference imageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
-                                    imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                             Log.d("Firebase", "Image deleted successfully");
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // Handle failure to delete image
-                                            Log.e("Firebase", "Error deleting image: " + e.getMessage());
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            // Handle errors fetching image URL
-                            Log.e("Firebase", "Error fetching image URL: " + databaseError.getMessage());
-                        }
-                    });
-
-                }
-                // Remove the currentUserId node from the Post field
-                postRef.removeValue();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors fetching post data
-                Log.e("Firebase", "Error fetching post data: " + databaseError.getMessage());
-            }
-        });
-
-
-
-
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             currentUser.delete()
@@ -811,6 +838,29 @@ public class AccountSettings extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteImageFromStorage(String imageURL) {
+        // Get reference to the image file in Firebase Storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL);
+
+        // Delete the file
+        storageRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Image deleted successfully
+                        // Handle any additional actions, if needed
+                        Log.d(TAG, "Image deleted successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to delete image
+                        Log.e(TAG, "Failed to delete image: " + e.getMessage());
+                    }
+                });
     }
 
 }

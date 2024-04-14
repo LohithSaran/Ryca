@@ -418,8 +418,21 @@ public class ProfileFragment extends Fragment {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     // Assuming each post has an "imageUrl" field
-                    String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                    String imageUrl = null;
                     String postKey = postSnapshot.getKey();
+
+
+                    int breakLoop = 0;
+
+                    for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                        imageUrl = imageUrlSnapshot.getValue(String.class);
+                        if (imageUrl != null) {
+                            breakLoop++;
+                            if (breakLoop == 1) {
+                                break;
+                            }
+                        }
+                    }
 
 
                     if (imageUrl != null) {
@@ -598,8 +611,21 @@ public class ProfileFragment extends Fragment {
 
                     if ("All".equalsIgnoreCase(selectedCategory) || selectedCategory.equalsIgnoreCase(postCategory)) {
                         // If "All" is selected or the post's category matches the selected category
-                        String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                        String imageUrl = null;
                         String postKey = postSnapshot.getKey();
+
+
+                        int breakLoop = 0;
+
+                        for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                            imageUrl = imageUrlSnapshot.getValue(String.class);
+                            if (imageUrl != null) {
+                                breakLoop++;
+                                if (breakLoop == 1) {
+                                    break;
+                                }
+                            }
+                        }
 
 
                         if (imageUrl != null) {
@@ -733,8 +759,20 @@ public class ProfileFragment extends Fragment {
 
                         if (prodPrice != null && isWithinRateRange(prodPrice, minRate, maxRate)) {
                             // Post falls within the rate range, add its URL to the list
-                            String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                            String imageUrl = null;
                             String postKey = postSnapshot.getKey();
+
+                            int breakLoop = 0;
+
+                            for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                                imageUrl = imageUrlSnapshot.getValue(String.class);
+                                if (imageUrl != null) {
+                                    breakLoop++;
+                                    if (breakLoop == 1) {
+                                        break;
+                                    }
+                                }
+                            }
 
 
                             if (imageUrl != null) {

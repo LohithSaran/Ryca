@@ -8,13 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +32,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,10 +46,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.ryca.R;
-import com.yalantis.ucrop.UCrop;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +61,8 @@ public class UploadImage extends AppCompatActivity {
     //    private TextView showuploadimg;
     private EditText imgdesc, prodprice, category;
     private ProgressBar progressBar;
-    private ImageView imageView, backbtn;
+    private ImageView backbtn;
+    ViewPager viewPager;
 
     private Uri imageuri;
 
@@ -77,6 +75,8 @@ public class UploadImage extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private static final int REQUEST_CODE_PERMISSION = 101;
     private Context context;
+    private Uri ImageUri;
+    private ArrayList<Uri> ChoseImageList;
 
 
 
@@ -93,8 +93,9 @@ public class UploadImage extends AppCompatActivity {
         category = findViewById(R.id.category);
         imgdesc = findViewById(R.id.description);
         progressBar = findViewById(R.id.progress);
-        imageView = findViewById(R.id.imageview);
+        viewPager = findViewById(R.id.viewPager);
         backbtn = findViewById(R.id.backbtn);
+        ChoseImageList = new ArrayList<>();
         final boolean[] isInitialSelection = {true};
 
         storageRef = FirebaseStorage.getInstance().getReference("uploads");
@@ -324,68 +325,115 @@ public class UploadImage extends AppCompatActivity {
 
     private void openImagePicker() {
 
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, 1);
 
     }
 
-    @Override
+
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            // Launch the image cropping activity
-            Uri sourceUri = data.getData();
-            Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "cropped"));
-
-            UCrop.Options options = new UCrop.Options();
-
-
-            options.setToolbarTitle("Crop Photo");
-            //options.setToolbarWidgetColor(getResources().getColor(R.color.app_color));
-
-
-            // Set the maximum width and height based on image orientation
-            if (isPortraitOrientation(sourceUri)) {
-                options.withMaxResultSize(1080, 1920); // Portrait
-            } else {
-                options.withMaxResultSize(1920, 1080); // Landscape
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            try {
+                if (data.getData() != null) {
+                    // Single image selected
+                    if (ChoseImageList.size() < 5) {
+                        ImageUri = data.getData();
+                        ChoseImageList.add(ImageUri);
+                        showToast("Image selected successfully!");
+                        SetAdapter();
+                        //uploadImagesToStorage(); // Upload the selected image
+                    } else {
+                        showToast("Maximum limit reached (5 images).");
+                    }
+                } else if (data.getClipData() != null) {
+                    // Multiple images selected
+                    int count = data.getClipData().getItemCount();
+                    int currentSize = ChoseImageList.size();
+                    for (int i = 0; i < count && currentSize < 5; i++) {
+                        ImageUri = data.getClipData().getItemAt(i).getUri();
+                        ChoseImageList.add(ImageUri);
+                        currentSize++;
+                        // uploadImagesToStorage(); // Upload each selected image
+                    }
+                    if (currentSize > 0) {
+                        showToast("Selected " + currentSize + " images successfully!");
+                        SetAdapter();
+                    } else {
+                        showToast("No images selected.");
+                    }
+                } else {
+                    showToast("Image selection canceled or failed. No data received.");
+                }
+            } catch (Exception e) {
+                showToast("!" + e.getMessage());
+                e.printStackTrace();
             }
-
-            UCrop.of(sourceUri, destinationUri)
-                    .withOptions(options)
-                    .start(this);
-        }
-
-        // Handle result from UCrop activity
-        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
-            Uri resultUri = UCrop.getOutput(data);
-            if (resultUri != null) {
-                // Update the imageuri variable
-                imageuri = resultUri;
-
-                // Load the image using a Bitmap
-                Bitmap bitmap = BitmapFactory.decodeFile(imageuri.getPath());
-                imageView.setImageBitmap(bitmap);
-            }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            Throwable error = UCrop.getError(data);
-            Toast.makeText(this, "Error cropping image: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        } else {
+            showToast("Image selection canceled or failed.");
         }
     }
 
-    // Helper method to check if the image is in portrait orientation
-    private boolean isPortraitOrientation(Uri imageUri) {
-        try {
-            ExifInterface exif = new ExifInterface(imageUri.getPath());
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            return orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Default to false if unable to determine orientation
-        }
-    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            // Launch the image cropping activity
+//            Uri sourceUri = data.getData();
+//            Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "cropped"));
+//
+//            UCrop.Options options = new UCrop.Options();
+//
+//
+//            options.setToolbarTitle("Crop Photo");
+//            //options.setToolbarWidgetColor(getResources().getColor(R.color.app_color));
+//
+//
+//            // Set the maximum width and height based on image orientation
+//            if (isPortraitOrientation(sourceUri)) {
+//                options.withMaxResultSize(1080, 1920); // Portrait
+//            } else {
+//                options.withMaxResultSize(1920, 1080); // Landscape
+//            }
+//
+//            UCrop.of(sourceUri, destinationUri)
+//                    .withOptions(options)
+//                    .start(this);
+//        }
+//
+//        // Handle result from UCrop activity
+//        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+//            Uri resultUri = UCrop.getOutput(data);
+//            if (resultUri != null) {
+//                // Update the imageuri variable
+//                imageuri = resultUri;
+//
+//                // Load the image using a Bitmap
+//                Bitmap bitmap = BitmapFactory.decodeFile(imageuri.getPath());
+//               // imageView.setImageBitmap(bitmap);
+//            }
+//        } else if (resultCode == UCrop.RESULT_ERROR) {
+//            Throwable error = UCrop.getError(data);
+//            Toast.makeText(this, "Error cropping image: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//    }
+//
+//    // Helper method to check if the image is in portrait orientation
+//    private boolean isPortraitOrientation(Uri imageUri) {
+//        try {
+//            ExifInterface exif = new ExifInterface(imageUri.getPath());
+//            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+//            return orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false; // Default to false if unable to determine orientation
+//        }
+//    }
 
 
     private String getFileExtension(Uri uri) {
@@ -405,119 +453,123 @@ public class UploadImage extends AppCompatActivity {
 
 
     private void uploadFile() {
-        if (imageuri != null && !imgdesc.getText().toString().trim().isEmpty()
+        if (ChoseImageList != null && !imgdesc.getText().toString().trim().isEmpty()
                 && !prodprice.getText().toString().trim().isEmpty()
                 && !category.getText().toString().trim().isEmpty())
         {
             isUploading = true;
-            StorageReference fileReference = storageRef.child(System.currentTimeMillis() + "." +
-                    getFileExtension(imageuri));
-            progressDialog.show();
 
-            mUploadTask = fileReference.putFile(imageuri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        Handler handler = new Handler();
-                        handler.postDelayed(() -> progressBar.setProgress(0), 500);
-                        progressDialog.dismiss();
+            ArrayList<String> imageUrls = new ArrayList<>();
 
-                        Toast.makeText(UploadImage.this, "Upload successful", Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < ChoseImageList.size(); i++) {
+                Uri imageUri = ChoseImageList.get(i);
+                StorageReference fileReference = storageRef.child(System.currentTimeMillis() + "." +
+                        getFileExtension(imageUri));
+                progressDialog.show();
 
-                        fileReference.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                            String postId = dbreference.push().getKey();
+                final int finalI = i;
 
-                            // Get the current date
-                            String currentDate = getCurrentDate();
+                fileReference.putFile(imageUri)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                imageUrls.add(uri.toString());
 
-                            // Create an Upload object with the required data
-                            Upload upload = new Upload(
-                                    imgdesc.getText().toString().trim(),
-                                    prodprice.getText().toString().trim(),
-                                    category.getText().toString().trim(),
-                                    downloadUri.toString(),
-                                    currentDate
-                            );
+                                if (imageUrls.size() == ChoseImageList.size()) {
 
-                            // Get the current user ID
-                            if (user != null) {
-                                String userId = user.getUid();
+                                    fileReference.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                                        String postId = dbreference.push().getKey();
 
-                                // Reference to the "Creators" field
-                                DatabaseReference creatorsRef = creatorRef.child(userId).child("Category");
+                                        // Get the current date
+                                        String currentDate = getCurrentDate();
 
-                                // Check if the category already exists (case-insensitive)
-                                String newCategory = category.getText().toString().trim().toLowerCase();
+                                        // Create an Upload object with the required data
+                                        Upload upload = new Upload(
+                                                imgdesc.getText().toString().trim(),
+                                                prodprice.getText().toString().trim(),
+                                                category.getText().toString().trim(),
+                                                currentDate
+                                        );
 
-                                creatorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        boolean categoryExists = false;
-
-                                        for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-                                            String existingCategory = categorySnapshot.getValue(String.class);
-                                            if (existingCategory != null && existingCategory.toLowerCase().equals(newCategory)) {
-                                                // Category already exists, set the flag to true
-                                                categoryExists = true;
-                                                break;
-                                            }
-                                        }
-//
-//                                        if (!categoryExists) {
-//                                            // Category does not exist, proceed with adding it
-//                                            long categoryCounter = dataSnapshot.getChildrenCount();
-//
-//                                            // Increment the counter
-//                                            categoryCounter++;
-//                                            creatorsRef.child("category" + categoryCounter).setValue(category.getText().toString().trim());
-//                                        }
-
-                                        if (!categoryExists) {
-
-                                            long categoryCounter = dataSnapshot.getChildrenCount();
-
-                                            categoryCounter++;
-
-                                            long timestamp = System.currentTimeMillis();
-
-                                            String key = "category" + categoryCounter + "_" + timestamp;
-
-                                            creatorsRef.child(key).setValue(category.getText().toString().trim());
+                                        for (int j = 0; j < imageUrls.size(); j++) {
+                                            String imageUrl = imageUrls.get(j);
+                                            upload.addImageUrl("imageUrl" + (j + 1), imageUrl);
                                         }
 
+                                        // Get the current user ID
+                                        if (user != null) {
+                                            String userId = user.getUid();
 
-                                        // Update the database with the new Upload object
-                                        dbreference.child(userId).child(postId).setValue(upload);
+                                            // Reference to the "Creators" field
+                                            DatabaseReference creatorsRef = creatorRef.child(userId).child("Category");
 
-                                        updateUserPostCount();
+                                            // Check if the category already exists (case-insensitive)
+                                            String newCategory = category.getText().toString().trim().toLowerCase();
 
-                                        imageView.setImageResource(R.drawable.profimage); // Set your default image resource
+                                            creatorsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    boolean categoryExists = false;
 
-                                        // Clear EditText fields
-                                        imgdesc.getText().clear();
-                                        imgdesc.clearFocus();
-                                        prodprice.getText().clear();
-                                        category.getText().clear();
-                                    }
+                                                    for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                                                        String existingCategory = categorySnapshot.getValue(String.class);
+                                                        if (existingCategory != null && existingCategory.toLowerCase().equals(newCategory)) {
+                                                            // Category already exists, set the flag to true
+                                                            categoryExists = true;
+                                                            break;
+                                                        }
+                                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        // Handle the error
-                                        Toast.makeText(UploadImage.this, "Error checking category existence: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                                                    if (!categoryExists) {
+
+                                                        long categoryCounter = dataSnapshot.getChildrenCount();
+
+                                                        categoryCounter++;
+
+                                                        long timestamp = System.currentTimeMillis();
+
+                                                        String key = "category" + categoryCounter + "_" + timestamp;
+
+                                                        creatorsRef.child(key).setValue(category.getText().toString().trim());
+                                                    }
+
+
+                                                    // Update the database with the new Upload object
+                                                    dbreference.child(userId).child(postId).setValue(upload).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            progressDialog.dismiss();
+                                                            updateUserPostCount();
+                                                            clearInputFields();
+                                                            Handler handler = new Handler();
+                                                            handler.postDelayed(() -> progressBar.setProgress(0), 500);
+                                                        }
+                                                    });
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    // Handle the error
+                                                    Toast.makeText(UploadImage.this, "Error checking category existence: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+                                    });
+                                    isUploading = false;
+                                }
+                            });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(UploadImage.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            // Additional error handling if needed
+                            isUploading = false;
+                            progressDialog.dismiss();
+                        }).addOnProgressListener(snapshot -> {
+                            double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                            progressBar.setProgress((int) progress);
                         });
-                        isUploading = false;
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(UploadImage.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        // Additional error handling if needed
-                        isUploading = false;
-                        progressDialog.dismiss();
-                    })
-                    .addOnProgressListener(snapshot -> {
-                        double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        progressBar.setProgress((int) progress);
-                    });
+            }
+
         } else {
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
@@ -601,6 +653,15 @@ public class UploadImage extends AppCompatActivity {
     }
 
 
+    private void showToast (String message){
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+    private void SetAdapter () {
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, ChoseImageList);
+        viewPager.setAdapter(adapter);
+
+    }
 
     private void updateUserPostCount() {
 
@@ -637,5 +698,15 @@ public class UploadImage extends AppCompatActivity {
                 Toast.makeText(UploadImage.this, "Error updating post count: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void clearInputFields() {
+        // Clear EditText fields
+        imgdesc.getText().clear();
+        imgdesc.clearFocus();
+        prodprice.getText().clear();
+        category.getText().clear();
+        ChoseImageList.clear();
+        SetAdapter();
     }
 }

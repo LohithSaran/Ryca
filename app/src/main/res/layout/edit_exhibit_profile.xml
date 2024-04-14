@@ -9,7 +9,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit the exhibit informations"
+        android:text="Edit exhibit information"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"

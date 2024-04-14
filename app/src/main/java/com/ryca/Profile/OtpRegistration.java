@@ -141,8 +141,7 @@ import java.util.concurrent.TimeUnit;
                 // Update information under "Creators" field
                 DatabaseReference creatorsRef = FirebaseDatabase.getInstance().getReference("Creators").child(uid);
                 creatorsRef.child("City").setValue(getIntent().getStringExtra("cityName"));
-                creatorsRef.child("Location").setValue(getIntent().getStringExtra("storeAddress") + " " +
-                        getIntent().getStringExtra("cityName"));
+                creatorsRef.child("Location").setValue(getIntent().getStringExtra("storeAddress"));
                 creatorsRef.child("Shop Name").setValue(""); // Leave the value empty
                 creatorsRef.child("Shop Description").setValue(""); // Leave the value empty
                 creatorsRef.child("Category").setValue(""); // Leave the value empty

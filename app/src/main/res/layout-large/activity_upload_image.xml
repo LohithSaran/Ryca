@@ -42,7 +42,7 @@
         android:id="@+id/containerRelative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         android:layout_marginTop="36dp"
+        android:layout_marginTop="36dp"
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
@@ -125,17 +125,27 @@
             android:layout_below="@id/imagechoose"
             />
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/imageview"
-            android:layout_width="210dp"
-            android:layout_height="210dp"
+            android:layout_width="match_parent"
+            android:layout_height="310dp"
+            android:gravity="center_vertical"
+            android:background="@color/white"
+            android:orientation="horizontal"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="105dp"
+            android:layout_marginStart="175dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="104dp"
-            android:textAlignment="center"
-            android:src="@drawable/profimage"/>
+            android:layout_marginEnd="175dp"
+            >
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </LinearLayout>
 
 
         <Spinner

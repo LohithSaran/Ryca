@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
         recyclerView = view.findViewById(R.id.postRecycler); // Make sure to replace with your actual RecyclerView ID
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(postList,requireContext());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(postAdapter);
@@ -176,8 +176,8 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 if (postUserMap.isEmpty()) {
                     if (isAdded()) {
                         if (postAdapter.getItemCount() > 0) {
-                            Toast.makeText(getContext(), "No more Exhibits to display, Add another category to see more exhibits.", Toast.LENGTH_LONG).show();
-                        }
+
+                         }
                     }
                     hideLoading();
                 } else {
@@ -210,29 +210,40 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 postRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        List<String> imageUrls = new ArrayList<>();
+                        for (DataSnapshot imageUrlSnapshot : dataSnapshot.child("itemUrls").getChildren()) {
+                            String imageUrl = imageUrlSnapshot.getValue(String.class);
+                            if (imageUrl != null) {
+                                imageUrls.add(imageUrl);
+                            }
+                        }
+
                         String prodPrice = dataSnapshot.child("prodprice").getValue(String.class);
                         String imgDesc = dataSnapshot.child("imgdesc").getValue(String.class);
-                        String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
                         String category = dataSnapshot.child("category").getValue(String.class);
 
                         creatorRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot creatorSnapshot) {
+
                                 String shopName = creatorSnapshot.child("Shop Name").getValue(String.class);
                                 String profilePicture = creatorSnapshot.child("Profile picture").getValue(String.class);
                                 String location = creatorSnapshot.child("Location").getValue(String.class);
                                 String city = creatorSnapshot.child("City").getValue(String.class);
 
-                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
+                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
 
                                     checkThePostId(postId, isSaved -> {
-                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
+                                        PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                         postList.add(post); // Assuming postList is accessible here
                                         postAdapter.notifyDataSetChanged(); // Assuming postAdapter is accessible and set up
                                     });
                                     hideLoading();
 
                                 }
+                                Log.d("PostDetails", "details from display "+"postId: " + postId + ", prodPrice: " + prodPrice + ", imgDesc: " + imgDesc + ", imageURL: " + imageUrls + ", category: " + category + ", shopName: " + shopName + ", profilePicture: " + profilePicture);
+
                             }
 
                             @Override
@@ -465,9 +476,17 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                        List<String> imageUrls = new ArrayList<>();
+                                        for (DataSnapshot imageUrlSnapshot : dataSnapshot.child("itemUrls").getChildren()) {
+                                            String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                            if (imageUrl != null) {
+                                                imageUrls.add(imageUrl);
+                                            }
+                                        }
+
+
                                         String prodPrice = (String) dataSnapshot.child("prodprice").getValue();
                                         String imgDesc = (String) dataSnapshot.child("imgdesc").getValue();
-                                        String imageURL = (String) dataSnapshot.child("imageURL").getValue();
                                         String category = (String) dataSnapshot.child("category").getValue();
 
 
@@ -481,10 +500,10 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
                                                 String city = (String) creatorSnapshot.child("City").getValue();
                                                 // Assuming PostModel and postAdapter are previously defined and set up
-                                                if (profilePicture != null && shopName!= null && location != null && city != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null ) {
+                                                if (shopName!= null && location != null && city != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null ) {
 
                                                     checkThePostId(postId, isSaved -> {
-                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
+                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                                         postList.add(post);
                                                         postAdapter.notifyDataSetChanged();
                                                         // Any additional logic that depends on the isSaved value
@@ -492,7 +511,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
                                                 }
                                                 // Log the details for debugging purposes
-                                                Log.d("PostDetails", "postId: " + postId + ", prodPrice: " + prodPrice + ", imgDesc: " + imgDesc + ", imageURL: " + imageURL + ", category: " + category + ", shopName: " + shopName + ", profilePicture: " + profilePicture);
+                                                Log.d("PostDetails", "details from more 5 "+"postId: " + postId + ", prodPrice: " + prodPrice + ", imgDesc: " + imgDesc + ", imageURL: " + imageUrls + ", category: " + category + ", shopName: " + shopName + ", profilePicture: " + profilePicture);
                                             }
 
                                             @Override
@@ -520,9 +539,17 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                        List<String> imageUrls = new ArrayList<>();
+                                        for (DataSnapshot imageUrlSnapshot : dataSnapshot.child("itemUrls").getChildren()) {
+                                            String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                            if (imageUrl != null) {
+                                                imageUrls.add(imageUrl);
+                                            }
+                                        }
+
+
                                         String prodPrice = (String) dataSnapshot.child("prodprice").getValue();
                                         String imgDesc = (String) dataSnapshot.child("imgdesc").getValue();
-                                        String imageURL = (String) dataSnapshot.child("imageURL").getValue();
                                         String category = (String) dataSnapshot.child("category").getValue();
 
                                         DatabaseReference creatorRef = FirebaseDatabase.getInstance().getReference().child("Creators").child(userId);
@@ -535,10 +562,10 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
                                                 String city = (String) creatorSnapshot.child("City").getValue();
                                                 // Assuming PostModel and postAdapter are previously defined and set up
-                                                if (profilePicture != null && shopName!= null && location != null && imageURL != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
+                                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
 
                                                     checkThePostId(postId, isSaved -> {
-                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageURL, prodPrice, category, imgDesc, userId, postId, city, isSaved);
+                                                        PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);
                                                         postList.add(post);
                                                         postAdapter.notifyDataSetChanged();
                                                         // Any additional logic that depends on the isSaved value
@@ -546,7 +573,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 }
 
                                                 // Log the details for debugging purposes
-                                                Log.d("PostDetails", "postId: " + postId + ", prodPrice: " + prodPrice + ", imgDesc: " + imgDesc + ", imageURL: " + imageURL + ", category: " + category + ", shopName: " + shopName + ", profilePicture: " + profilePicture);
+                                                Log.d("PostDetails", "details from below 5 "+"postId: " + postId + ", prodPrice: " + prodPrice + ", imgDesc: " + imgDesc + ", imageURL: " + imageUrls + ", category: " + category + ", shopName: " + shopName + ", profilePicture: " + profilePicture);
                                             }
 
                                             @Override

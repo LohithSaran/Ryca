@@ -1,10 +1,12 @@
 package com.ryca.Profile;
 
+import java.util.List;
+
 public class SinglePostModel {
     private String profilePictureUrl;
     private String username;
     private String address;
-    private String postImageUrl;
+    private List<String> postImageUrl;
     private String rating;
     private String category;
     private String description;
@@ -15,10 +17,10 @@ public class SinglePostModel {
     private boolean menu;
     private boolean NavigationToProfile;
 
-    public SinglePostModel(String postImageUrl, String username, String address, String city, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
+    public SinglePostModel(List<String> postImageUrl, String username, String address, String city, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
     }
 
-    public SinglePostModel(String profilePictureUrl, String username, String address, String city, String postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
+    public SinglePostModel(String profilePictureUrl, String username, String address, String city, List<String> postImageUrl, String rating, String category, String description, String userId, String PostId, boolean isSaved, boolean menu, boolean NavigationToProfile) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -32,6 +34,15 @@ public class SinglePostModel {
         this.isSaved = isSaved;
         this.menu = menu;
         this.NavigationToProfile = NavigationToProfile;
+    }
+
+
+    public List<String> getPostImageUrl() {
+        return postImageUrl;
+    }
+
+    public void setPostImageUrl(List<String> postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 
     public String getCity() {
@@ -104,14 +115,6 @@ public class SinglePostModel {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getPostImageUrl() {
-        return postImageUrl;
-    }
-
-    public void setPostImageUrl(String postImageUrl) {
-        this.postImageUrl = postImageUrl;
     }
 
     public String getRating() {

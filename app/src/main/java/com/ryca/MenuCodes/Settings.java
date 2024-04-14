@@ -156,7 +156,7 @@ public class Settings extends AppCompatActivity {
         clearCachedData();
 
         // Clear app data (including databases, files, etc.)
-        clearAppData();
+        //clearAppData();
 
         // After logout, navigate to the login screen
         Intent intent = new Intent(Settings.this, LoginActivity.class);

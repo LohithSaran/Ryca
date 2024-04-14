@@ -65,6 +65,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                         .fit()
                         .centerCrop(Gravity.TOP)
                         .into(holder.userProfile);
+            }else {
+                holder.userProfile.setImageResource(R.drawable.profile);
             }
 
         }

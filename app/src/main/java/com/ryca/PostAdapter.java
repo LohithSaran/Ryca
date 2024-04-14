@@ -18,10 +18,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,22 +30,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.ryca.Fragments.CreatorsShowroom;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private static List<PostModel> posts;
     private List<String> postIds;
+    private Context context;
 
     public void setData(List<String> newPostIds) {
         this.postIds = newPostIds;
     }
 
-    public PostAdapter(List<PostModel> posts) {
+    public PostAdapter(List<PostModel> posts, Context context) {
         this.posts = posts;
+        this.context = context;
     }
 
     @NonNull
@@ -69,17 +69,26 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             holder.savedImageView.setImageResource(R.drawable.save);
         }
 
-        Picasso.get()
-                .load(post.getPostImageUrl())
-                .fit()
-                .centerCrop(Gravity.TOP)
-                .into(holder.postImageView);
-        // Example: Set profile picture using an image loading library like Glide
-        Picasso.get()
-                .load(post.getProfilePictureUrl())
-                .fit()
-                .centerCrop(Gravity.TOP)
-                .into(holder.profilePictureImageView);
+
+        PostAdapterImage viewPagerAdapter = new PostAdapterImage(context, new ArrayList<>(post.getPostImageUrl()), Uri.class);
+        holder.viewPager.setAdapter(viewPagerAdapter);
+
+//        Picasso.get()
+//                .load(post.getProfilePictureUrl())
+//                .fit()
+//                .centerCrop(Gravity.TOP)
+//                .into(holder.profilePictureImageView);
+
+        String profilePictureUrl = post.getProfilePictureUrl();
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            Picasso.get()
+                    .load(profilePictureUrl)
+                    .fit()
+                    .centerCrop(Gravity.TOP)
+                    .into(holder.profilePictureImageView);
+        } else {
+            holder.profilePictureImageView.setImageResource(R.drawable.profile);
+        }
 
         //      Set other data similarly
         holder.usernameTextView.setText(post.getUsername());
@@ -96,7 +105,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView profilePictureImageView, postImageView;
+        ImageView profilePictureImageView;
+        public ViewPager viewPager;
         TextView usernameTextView;
         TextView addressTextView, rate, category, description, interaction1, interaction2;
         ImageView savedImageView, sharePost, Menu;
@@ -110,7 +120,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             rate = itemView.findViewById(R.id.ratedp);
             category = itemView.findViewById(R.id.categorydp);
             description = itemView.findViewById(R.id.descriptiondp);
-            postImageView = itemView.findViewById(R.id.dppost);
+            viewPager = itemView.findViewById(R.id.dppost);
             savedImageView = itemView.findViewById(R.id.savedp);
             sharePost = itemView.findViewById(R.id.sharedp);
             Menu = itemView.findViewById(R.id.dpmenu);
@@ -130,40 +140,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                     String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    if (currentUserId.equals(userID)) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("userId", userID);
-                        bundle.putString("fragment", "profile");
-
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-
-                        // Use itemView as the context to get the FragmentManager
-                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-
-                        // Add the transaction to the back stack before committing
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.framelayout, profileFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }else {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("userId", userID);
-                        bundle.putString("fragment", "creatorsShowroom");
-
-                        CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
-                        creatorsShowroomFragment.setArguments(bundle);
-
-                        // Use itemView as the context to get the FragmentManager
-                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-
-                        // Add the transaction to the back stack before committing
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }
+                    Intent intent = new Intent(itemView.getContext(), ShowroomViewFromHome.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userId", userID);
+                    bundle.putString("fragment", currentUserId.equals(userID) ? "profile" : "creatorsShowroom");
+                    intent.putExtras(bundle);
+                    itemView.getContext().startActivity(intent);
 
                 }
             });
@@ -199,40 +181,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                     String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                    if (currentUserId.equals(userID)) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("userId", userID);
-                        bundle.putString("fragment", "profile");
-
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
-
-                        // Use itemView as the context to get the FragmentManager
-                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-
-                        // Add the transaction to the back stack before committing
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.framelayout, profileFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }else {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("userId", userID);
-                        bundle.putString("fragment", "creatorsShowroom");
-
-                        CreatorsShowroom creatorsShowroomFragment = new CreatorsShowroom();
-                        creatorsShowroomFragment.setArguments(bundle);
-
-                        // Use itemView as the context to get the FragmentManager
-                        FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-
-                        // Add the transaction to the back stack before committing
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.framelayout, creatorsShowroomFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }
+                    Intent intent = new Intent(itemView.getContext(), ShowroomViewFromHome.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userId", userID);
+                    bundle.putString("fragment", currentUserId.equals(userID) ? "profile" : "creatorsShowroom");
+                    intent.putExtras(bundle);
+                    itemView.getContext().startActivity(intent);
 
                 }
             });
@@ -251,25 +205,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             });
 
 
-            postImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Get the post at the clicked position
-                    PostModel clickedPost = posts.get(getAdapterPosition());
-
-                    // Get the image URL of the post
-                    String imageUrl = clickedPost.getPostImageUrl();
-
-                    // Create an intent to start ImageViewActivity
-                    Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
-
-                    // Put the image URL in the intent
-                    intent.putExtra("IMAGE_URL", imageUrl);
-
-                    // Start the activity
-                    itemView.getContext().startActivity(intent);
-                }
-            });
+//            viewPager.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // Get the post at the clicked position
+//                    PostModel clickedPost = posts.get(getAdapterPosition());
+//
+//                    // Get the image URL of the post
+//                    String imageUrl = clickedPost.getPostImageUrl();
+//
+//                    // Create an intent to start ImageViewActivity
+//                    Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+//
+//                    // Put the image URL in the intent
+//                    intent.putExtra("IMAGE_URL", imageUrl);
+//
+//                    // Start the activity
+//                    itemView.getContext().startActivity(intent);
+//                }
+//            });
 
 
             Menu.setOnClickListener(new View.OnClickListener() {
@@ -277,7 +231,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 public void onClick(View v) {
                     PostModel clickedPost = posts.get(getAdapterPosition());
 
-                        ExhibitorsMenu(v);
+                    ExhibitorsMenu(v);
 
                 }
             });
@@ -355,7 +309,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             // Assuming you have already set up a domain and a link format
             // Replace "https://yourapp.page.link" with your actual domain Uri prefix
             // Replace "https://yourdomain.com/post" with the URL pattern you intend to use
-           // String link = "https://ryca.page.link/?link=https://yourapp.com/post?postId=" + postId + "&userId=" + userId +"&apn=com.ryca" ;
+            // String link = "https://ryca.page.link/?link=https://yourapp.com/post?postId=" + postId + "&userId=" + userId +"&apn=com.ryca" ;
 
             String deepLink = "https://yourapp.com/post?postId=" + postId + "&userId=" + userId;
             FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -409,26 +363,35 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 if (!saveCheck) {
 
 
-                    savedReference.child(combinedKey).setValue(new HashMap<String, Object>() {{
-                        put("userId", PostUser);
-                        put("PostId", postID);
-                        put("postImage", post.getPostImageUrl());
-                    }}, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if (error == null) {
-                                // Firebase operation successful, update the UI
+                    List<String> postImageUrls = post.getPostImageUrl();
+
+                    if (!postImageUrls.isEmpty()) {
+                        // Get the first element from the list and store it in a string
+                        String firstImageUrl = postImageUrls.get(0);
+
+                        savedReference.child(combinedKey).setValue(new HashMap<String, Object>() {{
+                            put("userId", PostUser);
+                            put("PostId", postID);
+                            put("postImage", firstImageUrl);
+                        }}, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                if (error == null) {
+                                    // Firebase operation successful, update the UI
 
 
-                                savedImageView.setImageResource(R.drawable.saved);
-                                // Update the isSaved field in the post model
-                                post.setSaved(true);
+                                    savedImageView.setImageResource(R.drawable.saved);
+                                    // Update the isSaved field in the post model
+                                    post.setSaved(true);
 
-                            } else {
-                                Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                                } else {
+                                    Log.e("Firebase", "Error updating save status: " + error.getMessage());
+                                }
                             }
-                        }
-                    });
+                        });
+
+                    }
+
                     // ...
                 } else {
 

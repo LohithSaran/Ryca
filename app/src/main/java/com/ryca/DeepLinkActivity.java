@@ -41,7 +41,7 @@ public class DeepLinkActivity extends AppCompatActivity {
         setContentView(R.layout.activity_deep_link); // Make sure you have a layout file named activity_deep_link.xml
 
         SinglepostList = new ArrayList<>();
-        singlePostAdapter = new SinglePostAdapter(SinglepostList);
+        singlePostAdapter = new SinglePostAdapter(SinglepostList, this);
         backbtn = findViewById(R.id.backbtn);
 
         RecyclerView recyclerView = findViewById(R.id.DeepLinkRecycler);
@@ -142,16 +142,22 @@ public class DeepLinkActivity extends AppCompatActivity {
                     checkThePostId(postKey, userId, new DeepLinkActivity.OnCheckPostIdCallback() {
                         @Override
                         public void onCallback(boolean isSaved) {
-                            String postImageUrl = snapshot.child("imageURL").getValue(String.class);
+                            List<String> imageUrls = new ArrayList<>();
+                            for (DataSnapshot imageUrlSnapshot : snapshot.child("itemUrls").getChildren()) {
+                                String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                if (imageUrl != null) {
+                                    imageUrls.add(imageUrl);
+                                }
+                            }
                             String rating = snapshot.child("prodprice").getValue(String.class);
                             String category = snapshot.child("category").getValue(String.class);
                             String description = snapshot.child("imgdesc").getValue(String.class);
 
                             Log.d("TrueOrFalse", "statusBS :" + isSaved + " ~ " + postKey);
-                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, city, postImageUrl, rating, category, description, userId, postKey, isSaved, fromMenu, true);
+                            SinglePostModel Singlepost = new SinglePostModel(userProfileImage, username, userAddress, city, imageUrls, rating, category, description, userId, postKey, isSaved, fromMenu, true);
 
                             SinglepostList.add(Singlepost);
-                            Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + postImageUrl + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);
+                            Log.d("SinglePostViewwww", "values :" + userProfileImage + " : " + username + " : " + userAddress + " : " + imageUrls + " : " + rating + category + " : " + description + " : " + userId + " : " + postKey + " : " + isSaved);
                             singlePostAdapter.notifyDataSetChanged();
                         }
                     });

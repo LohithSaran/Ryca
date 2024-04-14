@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +41,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ryca.HomeActivity;
-import com.ryca.ImageViewActivity;
+import com.ryca.PostAdapterImage;
 import com.ryca.R;
 import com.squareup.picasso.Picasso;
 
@@ -51,9 +52,11 @@ import java.util.Map;
 
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ViewHolder> {
     private  List<SinglePostModel> posts;
+    private Context context;
 
-    public SinglePostAdapter(List<SinglePostModel> posts) {
+    public SinglePostAdapter(List<SinglePostModel> posts, Context context) {
         this.posts = posts;
+        this.context = context;
     }
 
     @NonNull
@@ -80,17 +83,21 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
         }
 
-        Picasso.get()
-                .load(post.getPostImageUrl())
-                .fit()
-                .centerCrop(Gravity.TOP)
-                .into(holder.postImageView);
+        PostAdapterImage viewPagerAdapter = new PostAdapterImage(context, new ArrayList<>(post.getPostImageUrl()), Uri.class);
+        holder.viewPager.setAdapter(viewPagerAdapter);
+
         // Example: Set profile picture using an image loading library like Glide
-        Picasso.get()
-                .load(post.getProfilePictureUrl())
-                .fit()
-                .centerCrop(Gravity.TOP)
-                .into(holder.profilePictureImageView);
+        String profilePictureUrl = post.getProfilePictureUrl();
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            Picasso.get()
+                    .load(profilePictureUrl)
+                    .fit()
+                    .centerCrop(Gravity.TOP)
+                    .into(holder.profilePictureImageView);
+        } else {
+            holder.profilePictureImageView.setImageResource(R.drawable.profile);
+        }
+
 
         //      Set other data similarly
         holder.usernameTextView.setText(post.getUsername());
@@ -109,10 +116,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView profilePictureImageView, postImageView;
+        ImageView profilePictureImageView;
+
         TextView usernameTextView;
         TextView addressTextView, rate, category, description, interaction1,interaction2;
         ImageView savedImageView, Menu, sharePost;
+        public ViewPager viewPager;
         // Add other views
 
         public ViewHolder(@NonNull View itemView) {
@@ -123,7 +132,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
             rate = itemView.findViewById(R.id.ratedp);
             category = itemView.findViewById(R.id.categorydp);
             description = itemView.findViewById(R.id.descriptiondp);
-            postImageView = itemView.findViewById(R.id.dppost);
+            viewPager = itemView.findViewById(R.id.dppost);
             savedImageView = itemView.findViewById(R.id.savedp);
             Menu = itemView.findViewById(R.id.dpmenu);
             sharePost = itemView.findViewById(R.id.sharedp);
@@ -224,25 +233,26 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
             });
 
 
-            postImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Get the post at the clicked position
-                    SinglePostModel clickedPost = posts.get(getAdapterPosition());
-
-                    // Get the image URL of the post
-                    String imageUrl = clickedPost.getPostImageUrl();
-
-                    // Create an intent to start ImageViewActivity
-                    Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
-
-                    // Put the image URL in the intent
-                    intent.putExtra("IMAGE_URL", imageUrl);
-
-                    // Start the activity
-                    itemView.getContext().startActivity(intent);
-                }
-            });
+//            postImageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // Get the post at the clicked position
+//                    SinglePostModel clickedPost = posts.get(getAdapterPosition());
+//
+//                    // Get the image URL of the post
+//                    String imageUrl = clickedPost.getPostImageUrl();
+//
+//                    // Create an intent to start ImageViewActivity
+//                    Intent intent = new Intent(itemView.getContext(), ImageViewActivity.class);
+//
+//                    // Put the image URL in the intent
+//                    intent.putExtra("IMAGE_URL", imageUrl);
+//
+//                    // Start the activity
+//                    itemView.getContext().startActivity(intent);
+//                }
+//            });
+//
 
 
             Menu.setOnClickListener(new View.OnClickListener() {
@@ -479,8 +489,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get the imageURL
-                        String imageURL = dataSnapshot.child("imageURL").getValue(String.class);
-
                         // Delete the post data
                         postRef.removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -488,7 +496,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                                     public void onSuccess(Void aVoid) {
                                         // Post data deleted successfully
                                         // Now delete the image from Firebase Storage
-                                        deleteImageFromStorage(imageURL);
+                                        for (DataSnapshot imageUrlSnapshot : dataSnapshot.child("itemUrls").getChildren()) {
+                                            String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                            if (imageUrl != null) {
+                                                deleteImageFromStorage(imageUrl);
+                                            }
+                                        }
 
                                         // Decrease post count after deleting the post
                                         decreasePostCount(userId);
@@ -678,11 +691,15 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
                 if (!saveCheck) {
 
+                    List<String> postImageUrls = post.getPostImageUrl();
+                    if (!postImageUrls.isEmpty()) {
+                        // Get the first element from the list and store it in a string
+                        String firstImageUrl = postImageUrls.get(0);
 
                     savedReference.child(combinedKey).setValue(new HashMap<String, Object>() {{
                         put("userId", PostUser);
                         put("PostId", postID);
-                        put("postImage", post.getPostImageUrl());
+                        put("postImage", firstImageUrl);
                     }}, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
@@ -699,6 +716,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                             }
                         }
                     });
+                }
                     // ...
                 } else {
 

@@ -3,6 +3,7 @@ package com.ryca;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,9 +28,14 @@ public class ImageViewActivity extends AppCompatActivity {
         }
 
         // Load image into ImageView
-        Picasso.get()
-                .load(imageUrl)
-                .into(imageView);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl).into(imageView);
+        } else {
+            // Handle empty or null imageUrl, e.g., display a placeholder image
+            imageView.setImageResource(R.drawable.profimage);
+            Toast.makeText(this, "No image to show!", Toast.LENGTH_SHORT).show();
+        }
+
 
 //
 //        GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {

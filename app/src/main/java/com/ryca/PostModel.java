@@ -1,10 +1,12 @@
 package com.ryca;
 
+import java.util.List;
+
 public class PostModel {
     private String profilePictureUrl;
     private String username;
     private String address;
-    private String postImageUrl;
+    private List<String> postImageUrl;
     private String rating;
     private String category;
     private String description;
@@ -13,10 +15,10 @@ public class PostModel {
     private String city;
     private boolean isSaved;
 
-    public PostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId,String city , boolean isSaved) {
-    }
+//    public PostModel(String postImageUrl, String username, String address, String rating, String category, String description, String userId, String PostId,String city , boolean isSaved) {
+//    }
 
-    public PostModel(String profilePictureUrl, String username, String address, String postImageUrl, String rating, String category, String description, String userId, String PostId, String city, boolean isSaved) {
+    public PostModel(String profilePictureUrl, String username, String address, List<String> postImageUrl, String rating, String category, String description, String userId, String PostId, String city, boolean isSaved) {
         this.profilePictureUrl = profilePictureUrl;
         this.username = username;
         this.address = address;
@@ -28,6 +30,14 @@ public class PostModel {
         this.PostId = PostId;
         this.isSaved = isSaved;
         this.city = city;
+    }
+
+    public List<String> getPostImageUrl() {
+        return postImageUrl;
+    }
+
+    public void setPostImageUrl(List<String> postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 
     public String getCity() {
@@ -86,13 +96,13 @@ public class PostModel {
         this.address = address;
     }
 
-    public String getPostImageUrl() {
-        return postImageUrl;
-    }
-
-    public void setPostImageUrl(String postImageUrl) {
-        this.postImageUrl = postImageUrl;
-    }
+//    public String getPostImageUrl() {
+//        return postImageUrl;
+//    }
+//
+//    public void setPostImageUrl(String postImageUrl) {
+//        this.postImageUrl = postImageUrl;
+//    }
 
     public String getRating() {
         return rating;

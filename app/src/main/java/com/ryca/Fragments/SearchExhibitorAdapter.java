@@ -44,7 +44,14 @@ public class SearchExhibitorAdapter extends RecyclerView.Adapter<SearchExhibitor
         holder.location.setText(exhibitor.getLocation()  + ", " + exhibitor.getCity());
 
         // Use Picasso or another library to load images
-        Picasso.get().load(exhibitor.getProfilePicture()).into(holder.profilePicture);
+       // Picasso.get().load(exhibitor.getProfilePicture()).into(holder.profilePicture);
+
+        String profilePictureUrl = exhibitor.getProfilePicture();
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            Picasso.get().load(profilePictureUrl).into(holder.profilePicture);
+        } else {
+            holder.profilePicture.setImageResource(R.drawable.profile);
+        }
 
         // Assuming you have an ImageView for each of the latest 3 post images
         holder.postImage1.setVisibility(View.GONE); // Initially set to GONE

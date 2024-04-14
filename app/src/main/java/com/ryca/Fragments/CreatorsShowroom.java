@@ -43,6 +43,7 @@ import com.ryca.HomeActivity;
 import com.ryca.ImageViewActivity;
 import com.ryca.Profile.ProfileGridAdapter;
 import com.ryca.R;
+import com.ryca.ShowroomViewFromHome;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -105,12 +106,21 @@ public class CreatorsShowroom extends Fragment {
 
         if (args != null) {
 
-            String USERid = args.getString(ARG_USER_ID);
+           try {
+               String USERid = args.getString(ARG_USER_ID);
 
-            HomeActivity activity = (HomeActivity) getActivity();
+
+            ShowroomViewFromHome activity = (ShowroomViewFromHome) getActivity();
 
             Bundle result = activity.getMyData(USERid);
             userId = result.getString("userId").toString().trim();
+           } catch (Exception e) {
+
+               String USERid = args.getString(ARG_USER_ID);
+               HomeActivity activity = (HomeActivity) getActivity();
+               Bundle result = activity.getMyData(USERid);
+               userId = result.getString("userId").toString().trim();
+           }
 
 
         } else {
@@ -195,14 +205,17 @@ public class CreatorsShowroom extends Fragment {
                                     public void onClick(View v) {
                                         String imageUrl = profilePictureUrl;
 
-                                        // Create an intent to start ImageViewActivity
-                                        Intent intent = new Intent(getContext(), ImageViewActivity.class);
+                                        if (imageUrl != null) {
+                                            // Create an intent to start ImageViewActivity
+                                            Intent intent = new Intent(getContext(), ImageViewActivity.class);
 
-                                        // Put the image URL in the intent
-                                        intent.putExtra("IMAGE_URL", imageUrl);
-                                        intent.putExtra("fromWhere", "1");
+                                            // Put the image URL in the intent
+                                            intent.putExtra("IMAGE_URL", imageUrl);
+                                            intent.putExtra("fromWhere", "1");
 
-                                        startActivity(intent);
+                                            startActivity(intent);
+                                        }
+
                                     }
                                 });
 
@@ -361,9 +374,20 @@ public class CreatorsShowroom extends Fragment {
 
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         // Assuming each post has an "imageUrl" field
-                        String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                        String imageUrl = null;
                         String postKey = postSnapshot.getKey();
 
+                        int breakLoop = 0;
+
+                        for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                            imageUrl = imageUrlSnapshot.getValue(String.class);
+                            if (imageUrl != null) {
+                                breakLoop++;
+                                if (breakLoop == 1) {
+                                    break;
+                                }
+                            }
+                        }
 
                         if (imageUrl != null) {
                             postUrls.add(imageUrl);
@@ -716,9 +740,20 @@ public class CreatorsShowroom extends Fragment {
 
                     if ("All".equalsIgnoreCase(selectedCategory) || selectedCategory.equalsIgnoreCase(postCategory)) {
                         // If "All" is selected or the post's category matches the selected category
-                        String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                        String imageUrl = null;
                         String postKey = postSnapshot.getKey();
 
+                        int breakLoop = 0;
+
+                        for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                            imageUrl = imageUrlSnapshot.getValue(String.class);
+                            if (imageUrl != null) {
+                                breakLoop++;
+                                if (breakLoop == 1) {
+                                    break;
+                                }
+                            }
+                        }
 
                         if (imageUrl != null) {
                             postUrls.add(imageUrl);
@@ -851,9 +886,21 @@ public class CreatorsShowroom extends Fragment {
 
                         if (prodPrice != null && isWithinRateRange(prodPrice, minRate, maxRate)) {
                             // Post falls within the rate range, add its URL to the list
-                            String imageUrl = postSnapshot.child("imageURL").getValue(String.class);
+                            String imageUrl = null;
                             String postKey = postSnapshot.getKey();
 
+
+                            int breakLoop = 0;
+
+                            for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                                imageUrl = imageUrlSnapshot.getValue(String.class);
+                                if (imageUrl != null) {
+                                    breakLoop++;
+                                    if (breakLoop == 1) {
+                                        break;
+                                    }
+                                }
+                            }
 
                             if (imageUrl != null) {
                                 postUrls.add(imageUrl);

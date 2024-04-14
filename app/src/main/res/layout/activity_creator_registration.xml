@@ -51,9 +51,8 @@
         android:id="@+id/contentRelative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout"
-        android:layout_marginTop="60dp"
-        android:paddingBottom="15dp"
+         android:paddingBottom="15dp"
+        android:layout_centerVertical="true"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
         <EditText

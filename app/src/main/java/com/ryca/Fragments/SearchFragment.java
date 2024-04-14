@@ -113,7 +113,20 @@ public class SearchFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot postSnapshot) {
                                     ArrayList<String> imageUrls = new ArrayList<>();
                                     for (DataSnapshot post : postSnapshot.getChildren()) {
-                                        String imageUrl = post.child("imageURL").getValue(String.class);
+                                        String imageUrl = null;
+                                        int breakLoop = 0;
+
+                                        for (DataSnapshot imageUrlSnapshot : post.child("itemUrls").getChildren()) {
+                                            imageUrl = imageUrlSnapshot.getValue(String.class);
+                                            if (imageUrl != null) {
+                                                breakLoop++;
+                                                if (breakLoop == 1) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+
                                         imageUrls.add(imageUrl);
                                     }
                                     // Reverse to get the latest images at the beginning

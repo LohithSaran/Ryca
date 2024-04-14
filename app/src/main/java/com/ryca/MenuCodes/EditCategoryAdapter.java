@@ -1,5 +1,7 @@
 package com.ryca.MenuCodes;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -304,26 +306,16 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
                                                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                                                     String postId = postSnapshot.getKey();
                                                     String postCategory = postSnapshot.child("category").getValue(String.class);
-                                                    String imageUrl = postSnapshot.child("imageURL").getValue(String.class); // Retrieve the image URL
-
 
                                                     if (postCategory != null && postCategory.equalsIgnoreCase(categoryModel.getCategoryName())) {
 
-                                                        if (imageUrl != null && !imageUrl.isEmpty()) {
-                                                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                                                            StorageReference imageRef = storage.getReferenceFromUrl(imageUrl);
 
-                                                            imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void unused) {
-                                                                    Log.d("Storage", "Image successfully deleted");
-                                                                }
-                                                            }).addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Log.e("Storage", "Failed to delete image", e);
-                                                                }
-                                                            });
+                                                        for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
+                                                            String imageUrl = imageUrlSnapshot.getValue(String.class);
+                                                            if (imageUrl != null) {
+                                                                deleteImageFromStorage(imageUrl);
+
+                                                            }
                                                         }
 
                                                         // Delete the post
@@ -398,6 +390,29 @@ public class EditCategoryAdapter extends RecyclerView.Adapter<EditCategoryAdapte
         });
 
         builder.create().show();
+    }
+
+    private void deleteImageFromStorage(String imageURL) {
+        // Get reference to the image file in Firebase Storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL);
+
+        // Delete the file
+        storageRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Image deleted successfully
+                        // Handle any additional actions, if needed
+                        Log.d(TAG, "Image deleted successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@android.support.annotation.NonNull Exception e) {
+                        // Failed to delete image
+                        Log.e(TAG, "Failed to delete image: " + e.getMessage());
+                    }
+                });
     }
 
 }

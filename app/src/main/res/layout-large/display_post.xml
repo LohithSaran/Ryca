@@ -59,7 +59,7 @@
         android:layout_marginEnd="10dp"
         app:srcCompat="@drawable/verticalmenu" />
 
-    <ImageView
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/dppost"
         android:layout_width="match_parent"
         android:layout_height="800dp"
@@ -71,19 +71,40 @@
         android:layout_marginEnd="0dp"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <com.rd.PageIndicatorView
+        android:id="@+id/pageIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dppost"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="190dp"
+        android:layout_toStartOf="@+id/sharedp"
+        android:textAlignment="center"
+        app:piv_animationType="drop"
+        app:piv_dynamicCount="true"
+        app:piv_interactiveAnimation="true"
+        app:piv_padding="6dp"
+        app:piv_radius="4dp"
+        app:piv_selectedColor="@color/colorPrimary"
+        app:piv_unselectedColor="#676767"
+        app:piv_viewPager="@id/dppost" />
+
     <TextView
         android:id="@+id/ratedp"
-        android:layout_width="300dp"
+        android:layout_width="200dp"
         android:layout_height="37dp"
         android:layout_below="@+id/dppost"
         android:layout_alignParentStart="true"
         android:layout_marginStart="17dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="13dp"
+        android:layout_marginEnd="50dp"
+        android:layout_toStartOf="@+id/pageIndicatorView"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
+
         android:scrollHorizontally="true"
         android:singleLine="true"
-
         android:text="TextView"
         android:textColor="#FF0000"
         android:textSize="26dp"
@@ -104,8 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="55dp"
         android:layout_below="@+id/dppost"
-        android:layout_marginStart="390dp"
-        android:layout_marginTop="5dp"
+         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/savedp"
         app:srcCompat="@drawable/share" />
