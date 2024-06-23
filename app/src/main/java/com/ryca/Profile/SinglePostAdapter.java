@@ -104,8 +104,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
         holder.addressTextView.setText(post.getAddress() + ", "+ post.getCity());
         holder.rate.setText("₹ " + post.getRating());
         holder.category.setText(post.getCategory());
-        holder.description.setText(post.getDescription());
-        // Inside onBindViewHolder method
+        if (post.getDescription() != null && !post.getDescription().isEmpty()) {
+            holder.description.setText(post.getDescription());
+        }
+        else {
+            holder.description.setVisibility(View.GONE);
+        }
 
 
     }
@@ -291,7 +295,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
                         // Now, share the link
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this post: " + dynamicLinkUri.toString());
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this exhibit: " + dynamicLinkUri.toString());
                         context.startActivity(Intent.createChooser(shareIntent, "Share Post"));
                     })
                     .addOnFailureListener(e -> Log.w("DynamicLink", "Error creating dynamic link", e));
@@ -648,7 +652,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.Vi
 
                         String mailto = "mailto:" + recipientEmail +
                                 "?subject=" + Uri.encode(subject) +
-                                "&body=" + Uri.encode("Check out this post: " + dynamicLinkUri.toString());
+                                "&body=" + Uri.encode("Check out this exhibit: " + dynamicLinkUri.toString());
 
 
                         Intent intent = new Intent(Intent.ACTION_SENDTO);

@@ -78,7 +78,7 @@
         android:layout_below="@+id/dppost"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="76dp"
+        android:layout_marginEnd="80dp"
         android:layout_toStartOf="@+id/sharedp"
         android:textAlignment="center"
         app:piv_animationType="worm"

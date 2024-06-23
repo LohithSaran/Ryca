@@ -95,7 +95,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.addressTextView.setText(post.getAddress() +", " + post.getCity());
         holder.rate.setText("₹ " + post.getRating());
         holder.category.setText(post.getCategory());
-        holder.description.setText(post.getDescription());
+        if (post.getDescription() != null && !post.getDescription().isEmpty()) {
+            holder.description.setText(post.getDescription());
+        }
+        else {
+            holder.description.setVisibility(View.GONE);
+        }
 
     }
 
@@ -324,8 +329,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         // Now, share the link
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this post: " + dynamicLinkUri.toString());
-                        context.startActivity(Intent.createChooser(shareIntent, "Share Post"));
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this exhibit: " + dynamicLinkUri.toString());
+                        context.startActivity(Intent.createChooser(shareIntent, "Share Exhibit"));
                     })
                     .addOnFailureListener(e -> Log.w("DynamicLink", "Error creating dynamic link", e));
         }

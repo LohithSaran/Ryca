@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -39,6 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.ryca.HomeActivity;
 import com.ryca.ImageViewActivity;
 import com.ryca.Profile.ProfileGridAdapter;
@@ -246,8 +249,30 @@ public class CreatorsShowroom extends Fragment {
 
                                 // Set profile picture
                                 if (TextUtils.isEmpty(profilePictureUrl)) {
-                                    // If Profile Picture field is empty, set user's Google account image
-                                    setGoogleAccountImage(profilePictureImageView);
+                                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Creators").child(userId);
+
+                                    userRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String profilePicture = snapshot.child("Profile picture").getValue(String.class);
+
+                                            if (profilePicture != null) {
+
+                                                Picasso.get()
+                                                        .load(profilePicture)
+                                                        .fit()
+                                                        .centerCrop(Gravity.TOP)
+                                                        .into(profilePictureImageView);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+
                                 } else {
                                     // If Profile Picture field is not empty, load and set the image using a library like Picasso or Glide
                                     // Example using Glide:
@@ -510,6 +535,31 @@ public class CreatorsShowroom extends Fragment {
 
                             return true;
                         }
+
+                        if (item.getItemId() == R.id.shareProfile) {
+
+                            Context context = getContext();
+
+                            String deepLink = "https://yourapp.com/post?userId=" + userId ;
+                            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                                    .setLink(Uri.parse(deepLink))
+                                    .setDomainUriPrefix("https://ryca.page.link") // Your dynamic link domain
+                                    .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.ryca") // Your package name
+                                            .build())
+                                    .buildShortDynamicLink()
+                                    .addOnSuccessListener(shortDynamicLink -> {
+                                        // Short link created
+                                        Uri dynamicLinkUri = shortDynamicLink.getShortLink();
+                                        // Now, share the link
+                                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                        shareIntent.setType("text/plain");
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this exhibitor: " + dynamicLinkUri.toString());
+                                        context.startActivity(Intent.createChooser(shareIntent, "Share Exhibitor"));
+                                    })
+                                    .addOnFailureListener(e -> Log.w("DynamicLink", "Error creating dynamic link", e));
+                            return true;
+                        }
+
                         return true;
                     }
                 });

@@ -75,9 +75,25 @@ public class DeepLinkActivity extends AppCompatActivity {
                             // Extract the postId and userId from the deep link
                             String postId = deepLink.getQueryParameter("postId");
                             String userId = deepLink.getQueryParameter("userId");
-                            Log.d("DynamicLink", "Received deep link: " + deepLink.toString() + " userID :" + userId + " PostId" +postId);
-                            // Use postId and userId to load and display the appropriate content
-                            PassDataToDisplaySinglePost(userId, postId,false);
+
+                            if (postId != null && userId != null) {
+
+                                Log.d("DynamicLink", "Received deep link: " + deepLink.toString() + " userID :" + userId + " PostId" +postId);
+                                // Use postId and userId to load and display the appropriate content
+                                PassDataToDisplaySinglePost(userId, postId,false);
+                            }
+                            if (postId == null && userId != null) {
+
+                                String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                Intent intent = new Intent(DeepLinkActivity.this, ShowroomViewFromHome.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("userId", userId);
+                                bundle.putString("fragment", currentUserId.equals(userId) ? "profile" : "creatorsShowroom");
+                                intent.putExtras(bundle);
+                                DeepLinkActivity.this.startActivity(intent);
+                                finish();
+                            }
+
                         }
                     }
                 })

@@ -7,34 +7,45 @@
     tools:context=".Profile.UploadImage">
 
 
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutTop"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginRight="-292dp"
-        android:layout_toLeftOf="@id/backbtn"
-        android:layout_toEndOf="@+id/backbtn"
-        android:gravity="center_horizontal"
-        android:text="Upload Exhibit"
-        android:textAlignment="center"
-        android:textSize="28dp"
-        android:textStyle="bold" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/backbtn"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/backbtn" />
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="115dp"
+            android:layout_marginRight="-292dp"
+            android:layout_toLeftOf="@id/backbtn"
+            android:layout_toEndOf="@+id/backbtn"
+            android:gravity="center_horizontal"
+            android:text="Upload Exhibit"
+            android:textAlignment="center"
+            android:textSize="28dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/backbtn"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/backbtn" />
+
+    </RelativeLayout>
+
+
 
 
 

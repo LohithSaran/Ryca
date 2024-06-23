@@ -4,6 +4,9 @@
     <item android:title="Report this Exhibitor"
         android:id="@+id/reportShowroom"/>
 
+    <item android:title="Share this profile"
+        android:id="@+id/shareProfile"/>
+
 <!--    <item android:title="Block"-->
 <!--        android:id="@+id/blockShowroom" />-->
 </menu>

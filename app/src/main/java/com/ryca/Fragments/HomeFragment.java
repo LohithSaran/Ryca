@@ -1,5 +1,8 @@
 package com.ryca.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -100,9 +105,40 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
 
 //        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
+        SharedPreferences preferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
 
         populateTheCategories();
+
+        if (isFirstTime) {
+            TapTarget tapTarget = TapTarget.forView(addCategoryBtn, " ", "Add product name you looking for!")
+                    .outerCircleColor(R.color.appgradiant)
+                    .targetCircleColor(R.color.white)
+                    .descriptionTextColor(R.color.black)
+                    .descriptionTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+                    .descriptionTextSize(18)
+                    .dimColor(android.R.color.transparent)
+                    .drawShadow(true)
+                    .cancelable(true)
+                    .targetRadius(40)
+                    .transparentTarget(true);
+
+            // Show the tooltip
+            TapTargetView.showFor(getActivity(), tapTarget, new TapTargetView.Listener() {
+                @Override
+                public void onTargetClick(TapTargetView view) {
+                    super.onTargetClick(view);
+                    showAddCategoryDialog();
+
+                    // Update SharedPreferences to indicate that the tooltip has been shown
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", false);
+                    editor.apply();
+                }
+            });
+        }
+
 
         addCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,7 +268,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                 String location = creatorSnapshot.child("Location").getValue(String.class);
                                 String city = creatorSnapshot.child("City").getValue(String.class);
 
-                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
+                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && userId != null && postId != null && city != null) {
 
                                     checkThePostId(postId, isSaved -> {
                                         PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);
@@ -290,6 +326,9 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                 }
                 // Now that you have your categories, update your UI accordingly
                 updateCategories(fetchedCategories);
+                if (fetchedCategories == null && fetchedCategories.isEmpty()) {
+
+                }
 
             }
 
@@ -317,6 +356,32 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
         if (fetchedCategories != null) {
             fetchAndDisplayPosts();
         }
+//
+//        RecyclerView.Adapter adapter = raddedCategoryRecycler.getAdapter();
+//
+//        if (adapter != null && adapter.getItemCount() == 0) {
+//            TapTarget tapTarget = TapTarget.forView(addCategoryBtn, " ","Add product name you looking for!")
+//                    .outerCircleColor(R.color.appgradiant)
+//                    .targetCircleColor(R.color.white)
+//                    .descriptionTextColor(R.color.black)
+//                    .descriptionTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+//                    .descriptionTextSize(18)
+//                    .dimColor(android.R.color.transparent)
+//                    .drawShadow(true)
+//                    .cancelable(true)
+//                    .targetRadius(40)
+//                    .transparentTarget(true);
+//
+//            // Show the tooltip
+//            TapTargetView.showFor(getActivity(), tapTarget,
+//                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+//                        @Override
+//                        public void onTargetClick(TapTargetView view) {
+//                            super.onTargetClick(view);      // This call is optional
+//                            showAddCategoryDialog();
+//                        }
+//                    });
+//        }
     }
 
 
@@ -338,7 +403,8 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
             @Override
             public void onClick(View v) {
                 String categoryName = editTextCategory.getText().toString().trim();
-                if (!categoryName.isEmpty()) {
+                if (!categoryName.isEmpty() ) {
+                    if (!categoryName.contains(".") && !categoryName.contains("#") && !categoryName.contains("$") && !categoryName.contains("]") && !categoryName.contains("[")) {
                     // Check if the category name already exists, ignoring case
                     boolean exists = false;
                     for (AddCategoryModel existingCategory : categories) {
@@ -362,6 +428,10 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                         Toast.makeText(getActivity(), "Category already exists.", Toast.LENGTH_SHORT).show();
                     }
                 }
+                    else {
+                        Toast.makeText(getActivity(), "Please don't use these symbols '. # $ [ ]' with the category name!", Toast.LENGTH_LONG).show();
+                    }
+            }
                 dialog.dismiss();
             }
         });
@@ -500,7 +570,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
                                                 String city = (String) creatorSnapshot.child("City").getValue();
                                                 // Assuming PostModel and postAdapter are previously defined and set up
-                                                if (shopName!= null && location != null && city != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null ) {
+                                                if (shopName!= null && location != null && city != null && imageUrls != null && prodPrice != null && category != null && userId != null && postId != null ) {
 
                                                     checkThePostId(postId, isSaved -> {
                                                         PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);
@@ -562,7 +632,7 @@ public class HomeFragment extends Fragment implements AddCategoryAdapter.ItemRem
                                                 String location = (String) creatorSnapshot.child("Location").getValue();
                                                 String city = (String) creatorSnapshot.child("City").getValue();
                                                 // Assuming PostModel and postAdapter are previously defined and set up
-                                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && imgDesc != null && userId != null && postId != null && city != null) {
+                                                if (shopName!= null && location != null && imageUrls != null && prodPrice != null && category != null && userId != null && postId != null && city != null) {
 
                                                     checkThePostId(postId, isSaved -> {
                                                         PostModel post = new PostModel(profilePicture, shopName, location, imageUrls, prodPrice, category, imgDesc, userId, postId, city, isSaved);

@@ -76,6 +76,29 @@
     native <methods>;
 }
 
+# Recapcha Library
+-keep class com.google.android.recaptcha.** { *; }
+-dontwarn com.google.android.recaptcha.**
+
+# Glide Library
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keepnames class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+-keepclassmembers class * {
+    @com.bumptech.glide.annotation.GlideExtension *;
+}
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+
+
+# TargetView Library
+-keep class com.getkeepsafe.taptargetview.** { *; }
+-dontwarn com.getkeepsafe.taptargetview.**
+
+
 # Keep names of classes and methods your classes use in XML layouts
 -keepclassmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);

@@ -11,8 +11,8 @@ android {
         applicationId "com.ryca"
         minSdk 23
         targetSdk 33
-        versionCode 6
-        versionName "1.01"
+        versionCode 10
+        versionName "1.05"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,6 +64,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
+
 
 
     testImplementation 'junit:junit:4.13.2'

@@ -23,11 +23,14 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<?> ImageUrls;
     private LayoutInflater layoutInflater;
+    private OnImageClickListener listener;
 
-    public ViewPagerAdapter(Context context, ArrayList<Uri> imageUrls) {
+
+    public ViewPagerAdapter(Context context, ArrayList<Uri> imageUrls, OnImageClickListener listener) {
         this.context = context;
         ImageUrls = imageUrls;
         layoutInflater = LayoutInflater.from(context);
+        this.listener = listener;
 
         // Log the received image URLs
         for (Object imageUrl : ImageUrls) {
@@ -35,17 +38,21 @@ public class ViewPagerAdapter extends PagerAdapter {
         }
     }
 
-    public ViewPagerAdapter(Context context, List<String> imageUrls) {
+    public ViewPagerAdapter(Context context, List<String> imageUrls, OnImageClickListener listener) {
         this.context = context;
         ImageUrls = (ArrayList<?>) imageUrls;
         layoutInflater = LayoutInflater.from(context);
     }
 
-    public ViewPagerAdapter(Context context, ArrayList<?> imageUrls, Class<?> type) {
-        this.context = context;
-        ImageUrls = convertUrls(imageUrls, type);
-        layoutInflater = LayoutInflater.from(context);
+    public interface OnImageClickListener {
+        void onImageClicked(int position);
     }
+
+//    public ViewPagerAdapter(Context context, ArrayList<?> imageUrls, Class<?> type) {
+//        this.context = context;
+//        ImageUrls = convertUrls(imageUrls, type);
+//        layoutInflater = LayoutInflater.from(context);
+//    }
 
     private ArrayList<?> convertUrls(ArrayList<?> urls, Class<?> type) {
         ArrayList<Object> convertedUrls = new ArrayList<>(urls.size());
@@ -57,6 +64,11 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
         }
         return convertedUrls;
+    }
+
+    public void updateImages(ArrayList<Uri> newImageUrls) {
+        ImageUrls = newImageUrls;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -77,6 +89,16 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .load(imageUri)
                 .fitCenter()
                 .into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onImageClicked(position);
+                }
+
+            }
+        });
+
 
         container.addView(view);
         Log.d("ViewPager", "Setting up for position: " + position + ", Image URL: " + imageUri.toString());

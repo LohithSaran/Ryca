@@ -16,6 +16,9 @@
     <item android:title="Saved Exhibits 🔲"
         android:id="@+id/savedExhibits"/>
 
+    <item android:title="Share your profile"
+        android:id="@+id/ShareYourProfile"/>
+
     <item android:title="Settings"
         android:id="@+id/settings" />
 </menu>

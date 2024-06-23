@@ -16,13 +16,14 @@ import com.ryca.Fragments.SearchFragment;
 public class HomeActivity extends AppCompatActivity {
 
     private boolean isNavigationEnabled = true;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(navListener);
 
         // Immediately handle intent to navigate to specific fragment if specified
@@ -109,4 +110,17 @@ public class HomeActivity extends AppCompatActivity {
         return hm;
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (bottomNavigationView.getSelectedItemId() == R.id.homenav) {
+
+            super.onBackPressed();
+            finish();
+        }
+        else {
+            bottomNavigationView.setSelectedItemId(R.id.homenav);
+        }
+
+    }
 }

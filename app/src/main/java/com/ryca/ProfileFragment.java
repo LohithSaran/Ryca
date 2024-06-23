@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -42,6 +43,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.ryca.Fragments.ConnectsList;
 import com.ryca.MenuCodes.EditCategory;
 import com.ryca.MenuCodes.EditPhNoandEmail;
@@ -242,6 +245,7 @@ public class ProfileFragment extends Fragment {
                     MenuItem editCategoryItem = popupMenu.getMenu().findItem(R.id.editCategory);
                     MenuItem editEmailItem = popupMenu.getMenu().findItem(R.id.editemail);
                     MenuItem editMobilenoItem = popupMenu.getMenu().findItem(R.id.editmobnumber);
+                    MenuItem ShareYourProfile = popupMenu.getMenu().findItem(R.id.ShareYourProfile);
 
                     if (editCategoryItem != null) {
                         editCategoryItem.setVisible(false);
@@ -252,6 +256,9 @@ public class ProfileFragment extends Fragment {
                     }
                     if (editMobilenoItem != null) {
                         editMobilenoItem.setVisible(false);
+                    }
+                    if (ShareYourProfile != null) {
+                        ShareYourProfile.setVisible(false);
                     }
                 }
 
@@ -285,6 +292,30 @@ public class ProfileFragment extends Fragment {
                         if (item.getItemId() == R.id.savedExhibits) {
                             Intent intent = new Intent(requireContext(), SavedPost.class);
                             startActivity(intent);
+                            return true;
+                        }
+
+                        if (item.getItemId() == R.id.ShareYourProfile) {
+                            Context context = getContext();
+                            String userId = currentUser.getUid();
+
+                            String deepLink = "https://yourapp.com/post?userId=" + userId ;
+                            FirebaseDynamicLinks.getInstance().createDynamicLink()
+                                    .setLink(Uri.parse(deepLink))
+                                    .setDomainUriPrefix("https://ryca.page.link") // Your dynamic link domain
+                                    .setAndroidParameters(new DynamicLink.AndroidParameters.Builder("com.ryca") // Your package name
+                                            .build())
+                                    .buildShortDynamicLink()
+                                    .addOnSuccessListener(shortDynamicLink -> {
+                                        // Short link created
+                                        Uri dynamicLinkUri = shortDynamicLink.getShortLink();
+                                        // Now, share the link
+                                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                                        shareIntent.setType("text/plain");
+                                        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out my Ryca profile: " + dynamicLinkUri.toString());
+                                        context.startActivity(Intent.createChooser(shareIntent, "Share Exhibitor"));
+                                    })
+                                    .addOnFailureListener(e -> Log.w("DynamicLink", "Error creating dynamic link", e));
                             return true;
                         }
 
@@ -417,31 +448,14 @@ public class ProfileFragment extends Fragment {
                 List<String> postKeys = new ArrayList<>();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    // Assuming each post has an "imageUrl" field
-                    String imageUrl = null;
-                    String postKey = postSnapshot.getKey();
-
-
-                    int breakLoop = 0;
-
-                    for (DataSnapshot imageUrlSnapshot : postSnapshot.child("itemUrls").getChildren()) {
-                        imageUrl = imageUrlSnapshot.getValue(String.class);
-                        if (imageUrl != null) {
-                            breakLoop++;
-                            if (breakLoop == 1) {
-                                break;
-                            }
-                        }
-                    }
-
-
+                    DataSnapshot firstChildSnapshot = postSnapshot.child("itemUrls").getChildren().iterator().next();
+                    String imageUrl = firstChildSnapshot.getValue(String.class);
                     if (imageUrl != null) {
                         postUrls.add(imageUrl);
-                    }
-                    if (postKey != null) {
-                        postKeys.add(postKey);
+                        postKeys.add(postSnapshot.getKey());
                     }
                 }
+
 
                 // Reverse the order of postUrls to display the newest posts first
                 Collections.reverse(postUrls);

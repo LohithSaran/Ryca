@@ -2,6 +2,7 @@ package com.ryca.Profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,11 @@ public class ProfileGridAdapter extends RecyclerView.Adapter<ProfileGridAdapter.
         // Load and display post image using Picasso
         String postUrl = postUrls.get(position);
         String postkeyy = PostId.get(position);
-        Picasso.get().load(postUrl).into(holder.postImageView);
+        Picasso.get()
+                .load(postUrl)
+                .fit()
+                .centerCrop(Gravity.TOP)
+                .into(holder.postImageView);
 
         // Add a click listener to each item to show a Toast with the post URL
         holder.itemView.setOnClickListener(v -> {

@@ -8,12 +8,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +50,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.ryca.R;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,7 +61,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class UploadImage extends AppCompatActivity {
+public class UploadImage extends AppCompatActivity implements ViewPagerAdapter.OnImageClickListener {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private TextView uploadbtn, imgchoose;
@@ -77,6 +84,11 @@ public class UploadImage extends AppCompatActivity {
     private Context context;
     private Uri ImageUri;
     private ArrayList<Uri> ChoseImageList;
+    private int clickedPosition;
+    private static final int REQUEST_CODE_CROP = 123;
+    ViewPagerAdapter adapter;
+    int CropPosition;
+
 
 
 
@@ -287,15 +299,15 @@ public class UploadImage extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 
-                if (requestCode == REQUEST_CODE_PERMISSION) {
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        openImagePicker();
-                    } else {
-                        showPermissionInstructionsDialog();
-                    }
-
+            if (requestCode == REQUEST_CODE_PERMISSION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImagePicker();
+                } else {
+                    showPermissionInstructionsDialog();
                 }
+
             }
+        }
     }
 
     private void showPermissionInstructionsDialog() {
@@ -333,50 +345,50 @@ public class UploadImage extends AppCompatActivity {
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            try {
-                if (data.getData() != null) {
-                    // Single image selected
-                    if (ChoseImageList.size() < 5) {
-                        ImageUri = data.getData();
-                        ChoseImageList.add(ImageUri);
-                        showToast("Image selected successfully!");
-                        SetAdapter();
-                        //uploadImagesToStorage(); // Upload the selected image
-                    } else {
-                        showToast("Maximum limit reached (5 images).");
-                    }
-                } else if (data.getClipData() != null) {
-                    // Multiple images selected
-                    int count = data.getClipData().getItemCount();
-                    int currentSize = ChoseImageList.size();
-                    for (int i = 0; i < count && currentSize < 5; i++) {
-                        ImageUri = data.getClipData().getItemAt(i).getUri();
-                        ChoseImageList.add(ImageUri);
-                        currentSize++;
-                        // uploadImagesToStorage(); // Upload each selected image
-                    }
-                    if (currentSize > 0) {
-                        showToast("Selected " + currentSize + " images successfully!");
-                        SetAdapter();
-                    } else {
-                        showToast("No images selected.");
-                    }
-                } else {
-                    showToast("Image selection canceled or failed. No data received.");
-                }
-            } catch (Exception e) {
-                showToast("!" + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            showToast("Image selection canceled or failed.");
-        }
-    }
-
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+//            try {
+//                if (data.getData() != null) {
+//                    // Single image selected
+//                    if (ChoseImageList.size() < 5) {
+//                        ImageUri = data.getData();
+//                        ChoseImageList.add(ImageUri);
+//                        showToast("Image selected successfully!");
+//                        SetAdapter();
+//                        //uploadImagesToStorage(); // Upload the selected image
+//                    } else {
+//                        showToast("Maximum limit reached (5 images).");
+//                    }
+//                } else if (data.getClipData() != null) {
+//                    // Multiple images selected
+//                    int count = data.getClipData().getItemCount();
+//                    int currentSize = ChoseImageList.size();
+//                    for (int i = 0; i < count && currentSize < 5; i++) {
+//                        ImageUri = data.getClipData().getItemAt(i).getUri();
+//                        ChoseImageList.add(ImageUri);
+//                        currentSize++;
+//                        // uploadImagesToStorage(); // Upload each selected image
+//                    }
+//                    if (currentSize > 0) {
+//                        showToast("Selected " + currentSize + " images successfully!");
+//                        SetAdapter();
+//                    } else {
+//                        showToast("No images selected.");
+//                    }
+//                } else {
+//                    showToast("Image selection canceled or failed. No data received.");
+//                }
+//            } catch (Exception e) {
+//                showToast("!" + e.getMessage());
+//                e.printStackTrace();
+//            }
+//        } else {
+//            showToast("Image selection canceled or failed.");
+//        }
+//    }
+//
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -453,8 +465,7 @@ public class UploadImage extends AppCompatActivity {
 
 
     private void uploadFile() {
-        if (ChoseImageList != null && !imgdesc.getText().toString().trim().isEmpty()
-                && !prodprice.getText().toString().trim().isEmpty()
+        if (ChoseImageList != null && !prodprice.getText().toString().trim().isEmpty()
                 && !category.getText().toString().trim().isEmpty())
         {
             isUploading = true;
@@ -482,9 +493,13 @@ public class UploadImage extends AppCompatActivity {
                                         // Get the current date
                                         String currentDate = getCurrentDate();
 
+                                        String imageDesc = " ";
+                                        if (imgdesc != null){
+                                            imageDesc = imgdesc.getText().toString().trim();
+                                        }
                                         // Create an Upload object with the required data
                                         Upload upload = new Upload(
-                                                imgdesc.getText().toString().trim(),
+                                                imageDesc,
                                                 prodprice.getText().toString().trim(),
                                                 category.getText().toString().trim(),
                                                 currentDate
@@ -571,7 +586,7 @@ public class UploadImage extends AppCompatActivity {
             }
 
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Product photo, product price and product category are mandatory.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -658,9 +673,136 @@ public class UploadImage extends AppCompatActivity {
     }
     private void SetAdapter () {
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this, ChoseImageList);
+        adapter = new ViewPagerAdapter(this, ChoseImageList, this::onImageClicked);
         viewPager.setAdapter(adapter);
 
+    }
+
+
+    public void ImageCrop(int position) {
+        // Store the clicked position
+        CropPosition = position;
+
+        // Get the selected image URI
+        Uri imageUri = ChoseImageList.get(position);
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String fileName = "cropped_" + timeStamp + ".jpg";
+
+        // Set up destination URI for the cropped image
+        File destinationFile = new File(getCacheDir(), fileName);
+        Uri destinationUri = Uri.fromFile(destinationFile);
+
+        // Create UCrop options
+        UCrop.Options options = new UCrop.Options();
+        options.setToolbarTitle("Crop Photo");
+
+        // Set the maximum width and height based on image orientation
+        if (isPortraitOrientation(imageUri)) {
+            options.withMaxResultSize(1080, 1920); // Portrait
+        } else {
+            options.withMaxResultSize(1920, 1080); // Landscape
+        }
+
+        // Start the UCrop activity
+        UCrop.of(imageUri, destinationUri)
+                .withOptions(options)
+                .start(this);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            // Handle image selection result from ChoseImage activity
+            try {
+                if (data.getData() != null) {
+                    // Single image selected
+                    if (ChoseImageList.size() < 5) {
+                        ImageUri = data.getData();
+                        ChoseImageList.add(ImageUri);
+                        showToast("Image selected successfully!");
+                        SetAdapter();
+                        //uploadImagesToStorage(); // Upload the selected image
+                    } else {
+                        showToast("Maximum limit reached (5 images).");
+                    }
+                } else if (data.getClipData() != null) {
+                    // Multiple images selected
+                    int count = data.getClipData().getItemCount();
+                    int currentSize = ChoseImageList.size();
+                    for (int i = 0; i < count && currentSize < 5; i++) {
+                        ImageUri = data.getClipData().getItemAt(i).getUri();
+                        ChoseImageList.add(ImageUri);
+                        currentSize++;
+                        // uploadImagesToStorage(); // Upload each selected image
+                    }
+                    if (currentSize > 0) {
+                        showToast("Selected " + currentSize + " images successfully!");
+                        SetAdapter();
+                    } else {
+                        showToast("No images selected.");
+                    }
+                } else {
+                    showToast("Image selection canceled or failed. No data received.");
+                }
+            } catch (Exception e) {
+                showToast("!" + e.getMessage());
+                e.printStackTrace();
+            }
+
+
+        }
+
+        else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+
+
+                Uri resultUri = UCrop.getOutput(data);
+                Log.d("Listwatch" , String.valueOf(resultUri));
+                if (resultUri != null) {
+                    // Update the imageuri variable
+                    imageuri = resultUri;
+
+                    // Load the image using a Bitmap
+                    Bitmap bitmap = BitmapFactory.decodeFile(imageuri.getPath());
+                    Log.d("Listwatch", "resultUri :" + resultUri);
+                    Log.d("Listwatch", "imageuri :" + imageuri);
+                    Log.d("Listwatch", "bitmap :" + bitmap);
+                     Log.d("Listwatch", "clickedPosition :" + CropPosition);
+
+                    if (CropPosition != -1) {
+                        // Get the result URI
+                        // Update the image URI in the list
+                        ChoseImageList.set(CropPosition, resultUri);
+                        SetAdapter();
+
+                        // Show a toast message
+                        Toast.makeText(this, "Image cropped successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+        }
+    }
+
+    private void handleImageSelectionResult(Intent data) {
+
+    }
+
+    private void handleCropResult(Intent data) {
+
+    }
+
+
+    private boolean isPortraitOrientation(Uri imageUri) {
+        try {
+            ExifInterface exif = new ExifInterface(imageUri.getPath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            return orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false; // Default to false if unable to determine orientation
+        }
     }
 
     private void updateUserPostCount() {
@@ -708,5 +850,10 @@ public class UploadImage extends AppCompatActivity {
         category.getText().clear();
         ChoseImageList.clear();
         SetAdapter();
+    }
+
+    @Override
+    public void onImageClicked(int position) {
+        ImageCrop(position);
     }
 }
